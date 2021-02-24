@@ -1,0 +1,78 @@
+---
+
+# roles/backup-restic/tasks/main.yml
+
+- name: Ensure srv dir is present
+  file:
+    path: "{{ backup_srv_path }}"
+    state: directory
+    owner: root
+    group: root
+  tags:
+    - skip_ansible_lint
+
+- name: Ensure needed dirs are present
+  file:
+    path: "{{ dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0600'
+  loop:
+    - "{{ backup_restic_path }}"
+    - "{{ backup_restic_path }}/backups"
+    - "{{ backup_restic_path }}/bin"
+    - "{{ backup_restic_path }}/scripts"
+  loop_control:
+    loop_var: dir
+
+- name: Install logrotate if needed
+  apt:
+    name: logrotate
+    state: present
+
+- name: Get restic bin from Github releases
+  get_url:
+    url: "https://github.com/restic/restic/releases/download/
+          v{{ backup_restic_version }}/restic_{{ backup_restic_version }}_linux_amd64.bz2"
+    dest: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}.bz2"
+    checksum: sha256:https://github.com/restic/restic/releases/download/v{{ backup_restic_version }}/SHA256SUMS
+
+- name: Unarchive restic release
+  command:
+    cmd: "bzip2 -k -d {{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}.bz2"
+    creates: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}"
+
+- name: Grant exec perm to restic bin
+  file:
+    path: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}"
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Template restic wrapper scripts
+  template:
+    src: "srv/restic/{{ item }}.j2"
+    dest: "{{ backup_restic_path }}/scripts/{{ item }}"
+    owner: root
+    group: root
+    mode: "0700"
+  loop:
+    - "utils.sh"
+    - "utils_alerting.sh"
+    - "restic_wrapper.sh"
+
+- name: Add backups scripts and files
+  include_tasks: "backup.yml"
+  loop: "{{ backup_restic_list }}"
+  loop_control:
+    loop_var: current_backup
+    label: "{{ current_backup.name }}"
+
+- name: Add logrotate confs
+  template:
+    src: "etc/logrotate.d/backup-restic.j2"
+    dest: "/etc/logrotate.d/backup-restic"
+    owner: root
+    group: root
+    mode: '0644'

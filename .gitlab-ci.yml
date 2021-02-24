@@ -1,0 +1,18 @@
+---
+
+stages:
+  - lint
+
+ansible:
+  stage: lint
+  needs: []
+  image: registry.cri.epita.fr/cri/docker/ansible/master
+  script:
+    - ansible-lint
+
+yaml:
+  stage: lint
+  needs: []
+  image: registry.cri.epita.fr/cri/docker/ansible/master
+  script:
+    - yamllint -f colored .

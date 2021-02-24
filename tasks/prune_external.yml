@@ -1,0 +1,56 @@
+---
+
+# roles/backup-restic/tasks/prune_external.yml
+
+- name: Add prune for backup
+  block:
+  - name: create dir for current backup
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: root
+      group: root
+      mode: '0600'
+    loop:
+      - "{{ current_backup_path }}"
+      - "{{ current_backup_path }}/logs"
+    delegate_to: "{{ backup_restic_prune_host }}"
+
+  - name: Template prune script
+    template:
+      src: "srv/restic/{{ item.src }}.j2"
+      dest: "{{ current_backup_path }}/{{ item.dest }}"
+      owner: root
+      group: root
+      mode: "0700"
+    loop:
+      - {src: "cri_restic.sh", dest: "{{ current_backup.name }}.sh"}
+      - {src: "retry_handler.sh", dest: "retry_handler.sh"}
+    vars:
+      is_prune_host: true
+    delegate_to: "{{ backup_restic_prune_host }}"
+  when: current_backup.enabled
+
+- name: Remove prune for backup
+  file:
+    path: "{{ current_backup_path }}"
+    state: absent
+  delegate_to: "{{ backup_restic_prune_host }}"
+  when: not current_backup.enabled
+
+- name: add a cronjob for the prune
+  cron:
+    name: "{{ inventory_hostname }} - {{ current_backup.name }} prune"
+    state: "{{ (current_backup.enabled is defined and current_backup.enabled|bool)|ternary('present', 'absent') }}"
+    minute: "{{ current_backup.prune_cron.minute | d(backup_restic_default_prune_cron_minute) }}"
+    hour: "{{ current_backup.prune_cron.hour | d(backup_restic_default_prune_cron_hour) }}"
+    day: "{{ current_backup.prune_cron.day | d(backup_restic_default_prune_cron_day) }}"
+    weekday: "{{ current_backup.prune_cron.weekday | d(backup_restic_default_prune_cron_weekday) }}"
+    month: "{{ current_backup.prune_cron.month | d(backup_restic_default_prune_cron_month) }}"
+    user: root
+    job: >
+      {{ current_backup_path }}/retry_handler.sh
+      {{ current_backup.prune_cmd | d(backup_restic_default_prune_cmd) }}
+      >> {{ current_backup_path }}/logs/restic_prune.log
+      2>&1
+  delegate_to: "{{ backup_restic_prune_host }}"

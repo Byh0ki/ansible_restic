@@ -1,0 +1,83 @@
+---
+
+# roles/backup-restic/tasks/backup.yml
+
+- name: Register the backups dir path
+  set_fact:
+    current_backup_path: "{{ backup_restic_path }}/backups/{{ backup_restic_hostname }}_{{ current_backup.name }}"
+
+- name: Enable backup
+  block:
+    - name: create dir for current backup
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0600'
+      loop:
+        - "{{ current_backup_path }}"
+        - "{{ current_backup_path }}/hooks"
+        - "{{ current_backup_path }}/logs"
+
+    - name: Template backup files
+      template:
+        src: "srv/restic/{{ item }}.j2"
+        dest: "{{ current_backup_path }}/{{ item }}"
+        owner: root
+        group: root
+        mode: "0600"
+      loop:
+        - "files_to_include"
+        - "files_to_exclude"
+
+    - name: Template hook scripts
+      include_tasks: "hooks.yml"
+      # FIXME It's ugly
+      loop: "{{
+        current_backup.backup_pre_hooks | d([])
+        + current_backup.backup_post_hooks | d([])
+        + current_backup.restore_pre_hooks | d([])
+        + current_backup.restore_post_hooks | d([])
+      }}"
+      loop_control:
+        loop_var: current_hook
+
+    - name: Template backup script
+      template:
+        src: "srv/restic/{{ script.src }}.j2"
+        dest: "{{ current_backup_path }}/{{ script.dest }}"
+        owner: root
+        group: root
+        mode: "0700"
+      loop:
+        - {src: "cri_restic.sh", dest: "{{ current_backup.name }}.sh"}
+        - {src: "retry_handler.sh", dest: "retry_handler.sh"}
+      loop_control:
+        loop_var: script
+  when: current_backup.enabled
+
+- name: Remove backup dir if needed
+  file:
+    path: "{{ current_backup_path }}"
+    state: absent
+  when: not current_backup.enabled
+
+- name: add a cronjob for the backup
+  cron:
+    name: "{{ inventory_hostname }} - {{ current_backup.name }} backup"
+    state: "{{ (current_backup.enabled is defined and current_backup.enabled|bool)|ternary('present', 'absent') }}"
+    minute: "{{ current_backup.backup_cron.minute | d(backup_restic_default_cron_minute) }}"
+    hour: "{{ current_backup.backup_cron.hour | d(backup_restic_default_cron_hour) }}"
+    day: "{{ current_backup.backup_cron.day | d(backup_restic_default_cron_day) }}"
+    weekday: "{{ current_backup.backup_cron.weekday | d(backup_restic_default_cron_weekday) }}"
+    month: "{{ current_backup.backup_cron.month | d(backup_restic_default_cron_month) }}"
+    user: root
+    job: >
+      {{ current_backup_path }}/retry_handler.sh
+      {{ current_backup.backup_cmd | d(backup_restic_default_backup_cmd) }}
+      >> {{ current_backup_path }}/logs/restic_backup.log
+      2>&1
+
+- name: Add prune script
+  include_tasks: "prune.yml"

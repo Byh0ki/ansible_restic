@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+{{ ansible_managed | comment }}
+
+# set -e -o pipefail -o errexit -o errtrace
+
+# Source helper functions
+source {{ backup_restic_path }}/scripts/utils.sh
+source {{ backup_restic_path }}/scripts/utils_alerting.sh
+
+# Retry settings
+{% if is_prune_host | d(false) %}
+MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.prune_max_attempts | d(backup_restic_default_prune_max_attempts) }}}"
+RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.prune_retry_interval | d(backup_restic_default_prune_retry_interval) }}}"
+
+# Alerting settings
+CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (current_backup.prune_alerting | d(backup_restic_prune_alerting) | bool) %}y{% endif %}}"
+{% else %}
+MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
+RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
+
+# Alerting settings
+CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (current_backup.alerting | d(backup_restic_alerting) | bool) %}y{% endif %}}"
+{% endif %}
+
+# Hostname
+export HOSTNAME="{{ backup_restic_hostname }}"
+
+# Functions
+retry_output_wrapper()
+{
+    local restic_rc
+    if [[ -n "${ATTEMPT}" && -n "${MAX_ATTEMPTS}" ]]; then
+        local cmd_attempt_info="echoInfo"
+        if [ "${ATTEMPT}" -gt 1 ]; then
+            cmd_attempt_info="echoWarn"
+        fi
+        ${cmd_attempt_info} "Attempt [${ATTEMPT}/${MAX_ATTEMPTS}].."
+    fi
+
+    {{ current_backup_path }}/{{ current_backup.name }}.sh "$@"
+
+    # Get return code
+    restic_rc="$?"
+
+    if [ "${restic_rc}" -ne "0" ]; then
+        echoErr "rc: ${restic_rc}"
+    fi
+
+    return "${restic_rc}"
+}
+
+alerting_wrapper()
+{
+    # Simple wrapper that duplicated output if needed
+
+    local cmd_rc
+
+    # We only want so send an alert for cri_functions
+    if [[ -z "${CRI_DISABLE_ALERTING}" && "${1}" =~ cri_* ]]; then
+        # Current special cri_function
+        cri_operation="${1}"
+
+        # Create temp file to save restic output
+        local cmd_output_file
+        cmd_output_file="$(mktemp /tmp/restic_output_XXXXXXXXXX.log)"
+
+        # Exec with tee wrapper to duplicate output
+        retry_output_wrapper "$@" > >(tee -a "${cmd_output_file}") 2>&1
+        cmd_rc="$?"
+
+        if [[ -n "${cmd_output_file}" && -f "${cmd_output_file}" ]]; then
+            # Send an alert
+            cri_handle_alerting -r "${cmd_rc}" -t "${cri_operation}" -l "${cmd_output_file}"
+
+            # Clean tmp log file
+            rm -rf "${cmd_output_file}"
+        else
+            cri_handle_alerting -r "${restic_rc}" -t "${cri_operation}"
+        fi
+    else
+        retry_output_wrapper "$@"
+        cmd_rc="$?"
+    fi
+    return "${cmd_rc}"
+}
+
+main()
+{
+    dynamic_retry_interval="${RETRY_INTERVAL}"
+
+    for ATTEMPT in $(seq 1 "$MAX_ATTEMPTS"); do
+        # We only want to sleep after the first fail
+        if [ "${ATTEMPT}" -gt 1 ]; then
+            echoInfo "Next attempt (${ATTEMPT}/${MAX_ATTEMPTS}) in ${dynamic_retry_interval}s.."
+            sleep "${dynamic_retry_interval}"
+            dynamic_retry_interval="$(( ATTEMPT * RETRY_INTERVAL ))"
+        fi
+
+        # Call the target script
+        alerting_wrapper "$@" && rc="$?" && break || rc="$?"
+    done
+
+    if [ "${ATTEMPT}" -ge "${MAX_ATTEMPTS}" ]; then
+      echoErr "Failed after ${MAX_ATTEMPTS} attempts!"
+      exit 1
+    fi
+
+    # Return with the last useful exit code
+    return "${rc}"
+}
+
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && main "$@"

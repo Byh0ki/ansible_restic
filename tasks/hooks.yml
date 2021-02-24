@@ -1,0 +1,16 @@
+---
+
+# roles/backup-restic/tasks/hooks.yml
+
+- name: Template hook scripts
+  template:
+    src: "{{ current_hook_path }}"
+    dest: "{{ current_backup_path }}/hooks/{{ current_hook }}"
+    owner: root
+    group: root
+    mode: "0755"
+  with_first_found:
+    - "{{ backup_restic_hooks_path }}/{{ current_hook }}"
+    - "srv/restic/hooks/{{ current_hook }}"  # Relative to role's template dir
+  loop_control:
+    loop_var: current_hook_path

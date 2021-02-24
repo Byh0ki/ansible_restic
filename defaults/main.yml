@@ -1,0 +1,113 @@
+---
+
+# roles/backup-restic/defaults/main.yml
+
+# Paths for restic install
+backup_srv_path: "/srv"
+backup_restic_path: "{{ backup_srv_path }}/restic"
+
+# Restic version
+# valid values: every version available as a release on github
+backup_restic_version: "0.12.0"
+
+# Prune host
+backup_restic_prune_host: "prune.example.com"
+
+# Hostname used for the backup, restic uses it to access snapshots, etc
+# We need to define it here to ensure that the var will also be
+# available for the prune host
+backup_restic_hostname: "{{ inventory_hostname }}"
+
+# Path for hooks outside of the role
+# Can be anything, most likely a relative path like '../../my_shared_templates'
+backup_restic_hooks_path: ""
+
+# Sensible defaults
+## Alerting
+### Command used to send the mails
+### valid values: sendmail, mail
+backup_restic_mail_command: "sendmail"
+backup_restic_mail_from: "restic@example.com"
+backup_restic_mail_dest: "root@example.com"
+backup_restic_mail_default_body: "Restic default body"
+backup_restic_mail_default_subject: "Restic default subject"
+### Cronjob env var PATH doesn't include `/usr/sbin` by default
+backup_restic_sendmail_path: "/usr/sbin/sendmail"
+backup_restic_alerting: true
+backup_restic_prune_alerting: true
+
+## Retry
+backup_restic_default_max_attempts: 3
+backup_restic_default_retry_interval: 600
+backup_restic_default_prune_max_attempts: 3
+backup_restic_default_prune_retry_interval: 600
+
+## Integrity checks
+### Used to determine how much data is checked after prune and backup.
+### valid values:
+###   - a number between 0 and 100 (with a '%' at the end) that will be the pourcentage of data to check
+###   - a fraction that represent the portion to check (2/5 will check the second data portion)
+###   - 'no-data-read' or 'simple' to perform a simple check on the repo (same as 0%)
+###   - 'all-data' to perform full check on the repo (same as 100%)
+###   - an empty vars mean no check
+backup_restic_default_backup_data_integrity_check: "no-data-read"
+backup_restic_default_prune_data_integrity_check: "25%"
+
+## Commands
+## By default, use the functions defined in restic_wrapper
+backup_restic_default_backup_cmd: "cri_backup"
+backup_restic_default_prune_cmd: "cri_prune"
+
+## Prune
+backup_restic_default_disable_external_prune: false
+backup_restic_default_no_external_prune:
+  - "local"
+  - "sftp"
+  - "rest"
+  - "restic_rest"
+backup_restic_default_forget_policy: "--keep-daily 7 --keep-weekly 8 --keep-monthly 12 --keep-yearly 2"
+
+## Restore
+backup_restic_default_restore_path: "/restore"
+
+## Logrotate
+backup_restic_log_retention_time: 12
+
+## Cron
+backup_restic_default_cron_minute: '0'
+backup_restic_default_cron_hour: '3'
+backup_restic_default_cron_day: '*'
+backup_restic_default_cron_weekday: '*'
+backup_restic_default_cron_month: '*'
+
+backup_restic_default_prune_cron_minute: '0'
+backup_restic_default_prune_cron_hour: '12'
+backup_restic_default_prune_cron_day: '*'
+backup_restic_default_prune_cron_weekday: '*'
+backup_restic_default_prune_cron_month: '*'
+
+# Backends
+## s3|aws|minio|wasabi
+backup_restic_default_s3_host: "s3.example.com"
+backup_restic_default_s3_connection_scheme: "https"
+backup_restic_default_s3_port: "443"
+# backup_restic_default_aws_region: "" # aws
+
+## b2|backblaze
+backup_restic_default_b2_connection_scheme: ""
+backup_restic_default_b2_host: ""
+backup_restic_default_b2_port: ""
+
+## rest|restic_rest
+backup_restic_default_rest_connection_scheme: ""
+backup_restic_default_rest_host: ""
+backup_restic_default_rest_port: ""
+
+## sftp
+## Must be reachable via ssh without password
+backup_restic_default_sftp_host: ""
+backup_restic_default_sftp_port: ""
+
+# Backups definition
+# List of dictionnaries defining the backups
+backup_restic_list: []

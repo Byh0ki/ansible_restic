@@ -1,0 +1,28 @@
+---
+
+# roles/backup-restic/tasks/prune.yml
+
+# External prune
+- name: Add external prune for backup
+  include_tasks: "prune_external.yml"
+  when: not (current_backup.disable_external_prune | d(backup_restic_default_disable_external_prune) | bool)
+        and current_backup.backend.type not in backup_restic_default_no_external_prune
+
+# Local prune
+- name: add a cronjob for the local prune
+  cron:
+    name: "{{ inventory_hostname }} - {{ current_backup.name }} prune"
+    state: "{{ (current_backup.enabled is defined and current_backup.enabled|bool)|ternary('present', 'absent') }}"
+    minute: "{{ current_backup.prune_cron.minute | d(backup_restic_default_prune_cron_minute) }}"
+    hour: "{{ current_backup.prune_cron.hour | d(backup_restic_default_prune_cron_hour) }}"
+    day: "{{ current_backup.prune_cron.day | d(backup_restic_default_prune_cron_day) }}"
+    weekday: "{{ current_backup.prune_cron.weekday | d(backup_restic_default_prune_cron_weekday) }}"
+    month: "{{ current_backup.prune_cron.month | d(backup_restic_default_prune_cron_month) }}"
+    user: root
+    job: >
+      {{ current_backup_path }}/retry_handler.sh
+      {{ current_backup.prune_cmd | d(backup_restic_default_prune_cmd) }}
+      >> {{ current_backup_path }}/logs/restic_prune.log
+      2>&1
+  when: (current_backup.disable_external_prune | d(backup_restic_default_disable_external_prune) | bool)
+        or current_backup.backend.type in backup_restic_default_no_external_prune
