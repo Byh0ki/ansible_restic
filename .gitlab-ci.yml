@@ -2,6 +2,7 @@
 
 stages:
   - lint
+  - molecule
 
 ansible:
   stage: lint
@@ -16,3 +17,14 @@ yaml:
   image: registry.cri.epita.fr/cri/docker/ansible/master
   script:
     - yamllint -f colored .
+
+molecule:
+  stage: molecule
+  needs: []
+  image: quay.io/ansible/molecule:latest
+  tags:
+    - docker
+  variables:
+    PY_COLORS: 1
+  script:
+    - molecule test
