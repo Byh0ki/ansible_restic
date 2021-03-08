@@ -350,6 +350,10 @@ backup_restic_list:
   # By default, these commands refer to the commands defined in `restic_wrapper.sh`
   backup_cmd: "cri_backup"          # (optional if a default var exists)
   prune_cmd: "cri_prune"            # (optional if a default var exists)
+  extra_vars:                       # (optional if a default var exists or not needed)
+    - { name: MYVAR, value: "A VALUE" }
+  extra_vars_prune:                 # (optional if a default var exists or not needed)
+    - { name: MYVAR, value: "A VALUE" }
   backend:
     type: "minio"
     s3_connection_scheme: "https"   # (optional if a default var exists)

@@ -4,6 +4,9 @@
 
 # set -e -o pipefail -o errexit -o errtrace
 
+# Source extra vars
+source {{ current_backup_path }}/extra_vars
+
 # Source helper functions
 source {{ backup_restic_path }}/scripts/utils.sh
 source {{ backup_restic_path }}/scripts/utils_alerting.sh

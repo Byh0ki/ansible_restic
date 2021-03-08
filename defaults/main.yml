@@ -73,6 +73,16 @@ backup_restic_default_restore_path: "/restore"
 ## Logrotate
 backup_restic_log_retention_time: 12
 
+## Extra vars
+backup_restic_default_extra_vars_export: true
+backup_restic_default_extra_vars_prune_export: true
+
+### Vars are being sourced in the retry_handler *and* the backup script
+### valid values:
+###   {var: my_var, value: my_value, export: true|false(optionnal)}
+backup_restic_default_extra_vars: []
+backup_restic_default_extra_vars_prune: []
+
 ## Cron
 backup_restic_default_cron_minute: '0'
 backup_restic_default_cron_hour: '3'
