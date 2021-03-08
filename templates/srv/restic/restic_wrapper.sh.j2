@@ -192,7 +192,7 @@ $(grep --color=never -v '^ *#' "${CRI_BACKUP_PATH}/${excludes_filename}" | sed -
 
 cri_prune()
 {
-    DEFAULT_FORGET_POLICY="--keep-daily 7 --keep-weekly 8 --keep-monthly 12 --keep-yearly 2"
+    DEFAULT_FORGET_POLICY="{{ backup_restic_default_forget_policy }}"
     export BACKUP_FORGET_POLICY="${BACKUP_FORGET_POLICY:-"$DEFAULT_FORGET_POLICY"}"
 
     case "${1}" in

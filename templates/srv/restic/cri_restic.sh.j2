@@ -260,15 +260,13 @@ export CRI_RESTORE_POST_HOOKS="{{ current_backup.restore_post_hooks | d([]) | jo
 ## Restic password, used to encrypt repository content
 export RESTIC_PASSWORD="${RESTIC_PASSWORD:-{{ current_backup.repo_password }}}"
 
-{% if current_backup.forget_policy %}
 ## Restic forget policy, used to tell restic which snapshot it should keep
-export BACKUP_FORGET_POLICY="${BACKUP_FORGET_POLICY:-{{ current_backup.forget_policy }}}"
+export BACKUP_FORGET_POLICY="${BACKUP_FORGET_POLICY:-{{ current_backup.forget_policy | d(backup_restic_default_forget_policy) }}}"
 
 ## Restic integrity checks settings
 export CRI_BACKUP_DATA_INTEGRITY_CHECK="${CRI_BACKUP_DATA_INTEGRITY_CHECK:-{{ current_backup.backup_data_integrity_check | d(backup_restic_default_backup_data_integrity_check) }}}"
 export CRI_PRUNE_DATA_INTEGRITY_CHECK="${CRI_PRUNE_DATA_INTEGRITY_CHECK:-{{ current_backup.prune_data_integrity_check | d(backup_restic_default_prune_data_integrity_check) }}}"
 
-{% endif %}
 # Main functions
 cri_restic()
 {

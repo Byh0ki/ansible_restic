@@ -43,7 +43,7 @@
       loop_control:
         loop_var: current_hook
 
-    - name: Template backup script
+    - name: Template backup scripts
       template:
         src: "srv/restic/{{ script.src }}.j2"
         dest: "{{ current_backup_path }}/{{ script.dest }}"

@@ -1,3 +1,4 @@
+# yamllint disable rule:line-length
 ---
 
 # roles/backup-restic/tasks/main.yml
@@ -33,8 +34,7 @@
 
 - name: Get restic bin from Github releases
   get_url:
-    url: "https://github.com/restic/restic/releases/download/
-          v{{ backup_restic_version }}/restic_{{ backup_restic_version }}_linux_amd64.bz2"
+    url: "https://github.com/restic/restic/releases/download/v{{ backup_restic_version }}/restic_{{ backup_restic_version }}_linux_amd64.bz2"
     dest: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}.bz2"
     checksum: sha256:https://github.com/restic/restic/releases/download/v{{ backup_restic_version }}/SHA256SUMS
 

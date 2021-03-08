@@ -42,7 +42,7 @@ backup_restic_default_retry_interval: 600
 backup_restic_default_prune_max_attempts: 3
 backup_restic_default_prune_retry_interval: 600
 
-## Integrity checks
+## Restic repo integrity checks
 ### Used to determine how much data is checked after prune and backup.
 ### valid values:
 ###   - a number between 0 and 100 (with a '%' at the end) that will be the pourcentage of data to check
