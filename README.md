@@ -341,6 +341,7 @@ Alerting configuration : (Tested([x]) or not([ ]))
 - [x] slack
 - [x] mattermost
 - [ ] healthchecks.io
+- [x] telegram
 
 ### mail
 ```yaml
@@ -377,6 +378,16 @@ alerting:   # or (alerting_prune for prune host)
   healthchecks_io:
     enabled: true
     url: "my-healthchecks.io-url"
+```
+
+### telegram
+Help for the config: [link](https://www.shellhacks.com/telegram-api-send-message-personal-notification-bot/)
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  telegram:
+    enabled: true                   # (optional if a default var exists)
+    api_key: ""                     # (optional if a default var exists)
+    chat_id: ""                     # (optional if a default var exists)
 ```
 
 # Example conf for a host:

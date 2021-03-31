@@ -287,6 +287,63 @@ cri_alerting_healthchecks_io ()
     fi
 }
 
+cri_alerting_telegram ()
+{
+    # Defaults
+    local msg="{{ backup_restic_alerting_telegram_default_msg }}"
+
+    local msg_emoji_fail=$'{{ backup_restic_alerting_telegram_emoji_fail }}'
+    local msg_emoji_success=$'{{ backup_restic_alerting_telegram_emoji_sucess }}'
+
+    # Error state by default, user *must* give the state to the function
+    local operation_rc="1"
+
+    local api_key=""
+    local chat_id=""
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts a:c:m:r: telegram_option; do
+        case "${telegram_option}" in
+            a) api_key="${OPTARG}";;
+            c) chat_id="${OPTARG}";;
+            m) msg="${OPTARG}";;
+            r) operation_rc="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars api_key chat_id msg
+
+    if [ "${operation_rc}" -eq "0" ]; then
+        msg="${msg_emoji_success} ${msg}"
+    else
+        msg="${msg_emoji_fail} ${msg}"
+    fi
+
+    echoInfo "Sending Telegram message..."
+    local curl_out=""
+    # shellcheck disable=SC2059
+    curl_out="$(
+    curl -X POST \
+        --silent \
+        --max-time {{ backup_restic_alerting_telegram_curl_max_time }} \
+        --retry {{ backup_restic_alerting_telegram_curl_retry }} \
+        --data "chat_id=${chat_id}" \
+        --data "text=${msg}" \
+        "https://api.telegram.org/bot${api_key}/sendMessage"
+    )"
+    local curl_rc="$?"
+
+    # We should check this with `jq` but I want to keep the dependencies as low as possible
+    if [[ "${curl_rc}" -ne 0 || "${curl_out}" =~ {\"ok\":true ]]; then
+        echoErr "Telegram alerting failed with:"
+        echoErr "rc: ${curl_rc}"
+        echoErr "output: ${curl_out}"
+    fi
+}
+
 cri_alerting_handler()
 {
     local operation_end_epoch="0"
@@ -369,6 +426,13 @@ cri_alerting_handler()
         fi
         cri_alerting_mattermost -t "${mattermost_title}" -r "${operation_rc}" -b "${mattermost_body}" \
         -c "${CRI_ALERTING_MATTERMOST_CHANNEL}" -w "${CRI_ALERTING_MATTERMOST_WEBHOOK_URL}"
+    fi
+
+    # Telegram
+    if [[ "${CRI_ALERTING_TELEGRAM}" =~ ^(y|Y) ]]; then
+        local telegram_msg="${subject}"
+        cri_alerting_telegram -r "${operation_rc}" -m "${telegram_msg}" \
+        -a "${CRI_ALERTING_TELEGRAM_API_KEY}" -c "${CRI_ALERTING_TELEGRAM_CHAT_ID}"
     fi
 }
 

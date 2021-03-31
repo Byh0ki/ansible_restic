@@ -27,10 +27,12 @@ backup_restic_hooks_path: ""
 backup_restic_alerting: "{{ backup_restic_alerting_mail_default
                         or backup_restic_alerting_slack_default
                         or backup_restic_alerting_mattermost_default
+                        or backup_restic_alerting_telegram_default
                         }}"
 backup_restic_prune_alerting: "{{ backup_restic_prune_alerting_mail_default
                               or backup_restic_prune_alerting_slack_default
                               or backup_restic_prune_alerting_mattermost_default
+                              or backup_restic_prune_alerting_telegram_default
                               }}"
 
 # Enable or disabled alerts when backup is successful
@@ -101,6 +103,21 @@ backup_restic_prune_alerting_mattermost_default_webhook_url: |
 ### Healthchecks.io
 backup_restic_alerting_healthchecks_io_curl_max_time: "10"
 backup_restic_alerting_healthchecks_io_curl_retry: "5"
+
+### Telegram
+backup_restic_alerting_telegram_curl_max_time: "10"
+backup_restic_alerting_telegram_curl_retry: "5"
+backup_restic_alerting_telegram_default_msg: "{{ backup_restic_alerting_default_subject }}"
+backup_restic_alerting_telegram_emoji_fail: '\U0010071' # :exclamation: in Unicode
+backup_restic_alerting_telegram_emoji_sucess: '\U0002705' # :white_check_mark: in Unicode
+
+backup_restic_alerting_telegram_default: false
+backup_restic_alerting_telegram_default_api_key: ""
+backup_restic_alerting_telegram_default_chat_id: ""
+
+backup_restic_prune_alerting_telegram_default: false
+backup_restic_prune_alerting_telegram_default_api_key: "{{ backup_restic_alerting_telegram_default_api_key }}"
+backup_restic_prune_alerting_telegram_default_chat_id: "{{ backup_restic_alerting_telegram_default_chat_id }}"
 
 ## Retry
 backup_restic_default_max_attempts: 3

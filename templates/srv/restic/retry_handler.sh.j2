@@ -50,6 +50,13 @@ export CRI_ALERTING_HEALTHCHECKS_IO="${CRI_ALERTING_HEALTHCHECKS_IO:-y}"
 export CRI_ALERTING_HEALTHCHECKS_IO_URL="${CRI_ALERTING_HEALTHCHECKS_IO_URL:-{{ current_backup.prune_alerting.healthchecks_io.url }}}"
 
 {% endif %}
+{% if current_backup.prune_alerting.telegram.enabled | d(backup_restic_prune_alerting_telegram_default) | bool %}
+## Telegram
+export CRI_ALERTING_TELEGRAM="${CRI_ALERTING_TELEGRAM:-y}"
+export CRI_ALERTING_TELEGRAM_API_KEY="${CRI_ALERTING_TELEGRAM_API_KEY:-{{ current_backup.prune_alerting.telegram.api_key | d(backup_restic_prune_alerting_telegram_api_key) }}}"
+export CRI_ALERTING_TELEGRAM_CHAT_ID="${CRI_ALERTING_TELEGRAM_CHAT_ID:-{{ current_backup.prune_alerting.telegram.chat_id | d(backup_restic_prune_alerting_telegram_chat_id) }}}"
+
+{% endif %}
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
@@ -81,6 +88,13 @@ export CRI_ALERTING_MATTERMOST_WEBHOOK_URL="${CRI_ALERTING_MATTERMOST_WEBHOOK_UR
 ## Healthchecks.io
 export CRI_ALERTING_HEALTHCHECKS_IO="${CRI_ALERTING_HEALTHCHECKS_IO:-y}"
 export CRI_ALERTING_HEALTHCHECKS_IO_URL="${CRI_ALERTING_HEALTHCHECKS_IO_URL:-{{ current_backup.alerting.healthchecks_io.url }}}"
+
+{% endif %}
+{% if current_backup.alerting.telegram.enabled | d(backup_restic_alerting_telegram_default) | bool %}
+## Telegram
+export CRI_ALERTING_TELEGRAM="${CRI_ALERTING_TELEGRAM:-y}"
+export CRI_ALERTING_TELEGRAM_API_KEY="${CRI_ALERTING_TELEGRAM_API_KEY:-{{ current_backup.alerting.telegram.api_key | d(backup_restic_alerting_telegram_api_key) }}}"
+export CRI_ALERTING_TELEGRAM_CHAT_ID="${CRI_ALERTING_TELEGRAM_CHAT_ID:-{{ current_backup.alerting.telegram.chat_id | d(backup_restic_alerting_telegram_chat_id) }}}"
 
 {% endif %}
 {% endif %}
