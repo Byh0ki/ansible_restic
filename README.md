@@ -333,14 +333,33 @@ backend:
   restic_repo: ""
 ```
 
+## Alerting backends
+You can enable and configure multiple alerting backends for each backup.
+
+Alerting configuration : (Tested([x]) or not([ ]))
+- [x] mail
+
+### mail
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  mail:
+    enabled: true                   # (optional if a default var exists)
+    # Comma separated list of recipients
+    dest: "root@localhost"          # (optional if a default var exists)
+```
+
 # Example conf for a host:
 ```yaml
 backup_restic_list:
 - name: my_default_backup
   enabled: true
   repo_password: my_password
-  alerting: true                    # (optional if a default var exists)
-  prune_alerting: true              # (optional if a default var exists)
+  alerting:                         # (optional if a default var exists)
+    mail:
+      enabled: true
+      dest: "root@localhost"
+  alerting_on_sucess: true          # (optional if a default var exists)
+  prune_alerting_on_sucess: true    # (optional if a default var exists)
   max_attempts: "3"                 # (optional if a default var exists)
   retry_interval: "600"             # (optional if a default var exists)
   prune_max_attempts: "2"           # (optional if a default var exists)

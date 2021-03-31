@@ -248,6 +248,10 @@ backend_info()
 
 # Vars
 export HOSTNAME="{{ backup_restic_hostname }}"
+
+## Backup name
+export BACKUP_NAME="{{ current_backup.name }}"
+
 export RESTORE_PATH="${RESTORE_PATH:-{{ current_backup.restore_path | d(backup_restic_default_restore_path) }}}"
 
 export CRI_BACKUP_PATH="{{ current_backup_path }}"
@@ -270,10 +274,11 @@ export CRI_PRUNE_DATA_INTEGRITY_CHECK="${CRI_PRUNE_DATA_INTEGRITY_CHECK:-{{ curr
 # Main functions
 cri_restic()
 {
-    start_time=${SECONDS}
+    local start_time=${SECONDS}
 
     echoInfo "Beggining of the operation"
     echoInfo "Hostname: ${HOSTNAME}"
+    echoInfo "Backup name: ${BACKUP_NAME}"
     backend_info
 
     # Restic wrapper call

@@ -21,9 +21,9 @@ echoErr()
     >&2 echo "[$(date +"${DATE_FORMAT}")][ERR] ${*}" ;
 }
 
-check_env()
+check_vars()
 {
-    # $@: List of env vars to check
+    # $@: List of vars to check
     local cur=""
     local bad_vars=()
     for var in "$@"; do
@@ -34,7 +34,7 @@ check_env()
     done
 
     if [ "{{ '${#bad_vars[@]}' }}" -ne 0 ]; then
-        echoErr "Some ENV vars are needed:"
+        echoErr "Some vars are needed:"
         for bad_var in "${bad_vars[@]}"; do
             echoErr "   ${bad_var}"
         done

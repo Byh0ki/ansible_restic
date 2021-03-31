@@ -58,9 +58,9 @@
     group: root
     mode: "0700"
   loop:
-    - "utils.sh"
-    - "utils_alerting.sh"
+    - "cri_alerting.sh"
     - "restic_wrapper.sh"
+    - "utils.sh"
 
 - name: Add backups scripts and files
   include_tasks: "backup.yml"

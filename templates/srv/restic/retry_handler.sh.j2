@@ -9,7 +9,12 @@ source {{ current_backup_path }}/extra_vars
 
 # Source helper functions
 source {{ backup_restic_path }}/scripts/utils.sh
-source {{ backup_restic_path }}/scripts/utils_alerting.sh
+
+# Hostname
+export HOSTNAME="{{ backup_restic_hostname }}"
+
+# Backup name
+export BACKUP_NAME="{{ current_backup.name }}"
 
 # Retry settings
 {% if is_prune_host | d(false) %}
@@ -17,17 +22,29 @@ MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.prune_max_attempts | d(backup_re
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.prune_retry_interval | d(backup_restic_default_prune_retry_interval) }}}"
 
 # Alerting settings
-CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (current_backup.prune_alerting | d(backup_restic_prune_alerting) | bool) %}y{% endif %}}"
+CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (true in (current_backup.prune_alerting | d({}) | json_query('*.enabled'))) and not backup_restic_prune_alerting %}y{% endif %}}"
+CRI_DISABLE_ALERTING_ON_SUCCESS="${CRI_DISABLE_ALERTING_ON_SUCCESS:-{% if not (current_backup.prune_alerting_on_success | d(backup_restic_prune_alerting_on_success) | bool) %}y{% endif %}}"
+{% if current_backup.prune_alerting.mail.enabled | d(backup_restic_prune_alerting_mail_default) | bool %}
+## Mail
+export CRI_ALERTING_MAIL="${CRI_ALERTING_MAIL:-y}"
+export CRI_ALERTING_MAIL_DEST="${CRI_ALERTING_MAIL_DEST:-{{ current_backup.prune_alerting.mail.dest | d(backup_restic_prune_alerting_mail_default_dest) }}}"
+
+{% endif %}
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
 
 # Alerting settings
-CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (current_backup.alerting | d(backup_restic_alerting) | bool) %}y{% endif %}}"
+CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (true in (current_backup.alerting | d({}) | json_query('*.enabled'))) and not backup_restic_alerting %}y{% endif %}}"
+CRI_DISABLE_ALERTING_ON_SUCCESS="${CRI_DISABLE_ALERTING_ON_SUCCESS:-{% if not (current_backup.alerting_on_success | d(backup_restic_alerting_on_success) | bool) %}y{% endif %}}"
+{% if current_backup.alerting.mail.enabled | d(backup_restic_alerting_mail_default) | bool %}
+## Mail
+export CRI_ALERTING_MAIL="${CRI_ALERTING_MAIL:-y}"
+export CRI_ALERTING_MAIL_DEST="${CRI_ALERTING_MAIL_DEST:-{{ current_backup.alerting.mail.dest | d(backup_restic_alerting_mail_default_dest) }}}"
+
 {% endif %}
 
-# Hostname
-export HOSTNAME="{{ backup_restic_hostname }}"
+{% endif %}
 
 # Functions
 retry_output_wrapper()
@@ -59,8 +76,14 @@ alerting_wrapper()
 
     local cmd_rc
 
+    local start_epoch="0"
+    local end_epoch="0"
+
     # We only want so send an alert for cri_functions
-    if [[ -z "${CRI_DISABLE_ALERTING}" && "${1}" =~ cri_* ]]; then
+    if [[ ! "${CRI_DISABLE_ALERTING}" =~ ^(y|Y) && "${1}" =~ cri_* ]]; then
+
+        start_epoch="$(date +%s)"
+
         # Current special cri_function
         cri_operation="${1}"
 
@@ -72,14 +95,29 @@ alerting_wrapper()
         retry_output_wrapper "$@" > >(tee -a "${cmd_output_file}") 2>&1
         cmd_rc="$?"
 
+        end_epoch="$(date +%s)"
+
         if [[ -n "${cmd_output_file}" && -f "${cmd_output_file}" ]]; then
             # Send an alert
-            cri_handle_alerting -r "${cmd_rc}" -t "${cri_operation}" -l "${cmd_output_file}"
+            if ! {{ backup_restic_path }}/scripts/cri_alerting.sh \
+                -r "${cmd_rc}" \
+                -t "${cri_operation}" \
+                -l "${cmd_output_file}" \
+                -s "${start_epoch}" \
+                -e "${end_epoch}" ; then
+                echoErr "Alerting failed for ${cri_operation}"
+            fi
 
             # Clean tmp log file
             rm -rf "${cmd_output_file}"
         else
-            cri_handle_alerting -r "${restic_rc}" -t "${cri_operation}"
+            if ! {{ backup_restic_path }}/scripts/cri_alerting.sh \
+                -r "${cmd_rc}" \
+                -t "${cri_operation}" \
+                -s "${start_epoch}" \
+                -e "${end_epoch}" ; then
+                echoErr "Alerting failed for ${cri_operation}"
+            fi
         fi
     else
         retry_output_wrapper "$@"

@@ -274,7 +274,7 @@ main()
             ;;
         cri_backup|cri_restore|cri_prune)
             # Check if the proper env vars were given to the script
-            check_env RESTIC_REPOSITORY RESTIC_PASSWORD
+            check_vars RESTIC_REPOSITORY RESTIC_PASSWORD
 
             cri_func="${1}"
             shift 1 # To remove `cri_*` from the args

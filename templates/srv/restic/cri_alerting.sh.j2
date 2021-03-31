@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+{{ ansible_managed | comment }}
+
+# Source helper functions
+source {{ backup_restic_path }}/scripts/utils.sh
+
+cri_alerting_mail()
+{
+    # Defaults
+    local body="{{ backup_restic_alerting_mail_default_body }}"
+    local dest=""
+    local from="{{ backup_restic_alerting_mail_from }}"
+    local subject="{{ backup_restic_alerting_mail_default_subject }}"
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts b:d:f:s: mail_option; do
+        case "${mail_option}" in
+            b) body="${OPTARG}";;
+            d) dest="${OPTARG}";;
+            f) from="${OPTARG}";;
+            s) subject="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars dest
+
+    echoInfo "Sending alerting mail.."
+
+    {% if is_prune_host | d(false) %}
+    {% if backup_restic_prune_alerting_mail_command == "mail" -%}
+    # shellcheck disable=SC2086
+    mail -aFrom:"$from" -s "${subject}" ${dest} <<< "${body}"
+    {# Default to sendmail #}
+    {% else -%}
+    # shellcheck disable=SC2086
+    cat <<EOF | {{ backup_restic_prune_alerting_sendmail_path }} -t
+To: ${dest}
+From: ${from}
+Subject: ${subject}
+
+${body}
+EOF
+    {% endif %}
+    {% else %}
+    {% if backup_restic_alerting_mail_command == "mail" -%}
+    # shellcheck disable=SC2086
+    mail -aFrom:"$from" -s "${subject}" ${dest} <<< "${body}"
+    {# Default to sendmail #}
+    {% else -%}
+    # shellcheck disable=SC2086
+    cat <<EOF | {{ backup_restic_alerting_sendmail_path }} -t
+To: ${dest}
+From: ${from}
+Subject: ${subject}
+
+${body}
+EOF
+    {% endif -%}
+    {% endif -%}
+
+    local mail_rc="$?"
+
+    if [ "${mail_rc}" -ne 0 ]; then
+        echoErr "Mail alerting failed with:"
+        echoErr "rc: ${mail_rc}"
+    fi
+}
+
+cri_alerting_handler()
+{
+    local operation_end_epoch="0"
+    local operation_log_file=""
+    local operation_start_epoch="0"
+    local operation_type="restic"
+
+    # Error state by default, user *must* give the state to the function
+    local operation_rc="1"
+    local output_verb="failed"
+    local operation_state="KO"
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts e:l:r:s:t: alert_option; do
+        case "${alert_option}" in
+            e) operation_end_epoch="${OPTARG}";;
+            l) operation_log_file="${OPTARG}";;
+            r) operation_rc="${OPTARG}";;
+            s) operation_start_epoch="${OPTARG}";;
+            t) operation_type="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    if [ "$operation_rc" -eq "0" ]; then
+        if [[ "${CRI_DISABLE_ALERTING_ON_SUCCESS}" =~ ^(y|Y) ]]; then
+            echoInfo "No alerting because your configuration disables alerting for successful restic operations."
+            return
+        fi
+        output_verb="finished"
+        operation_state="OK"
+    fi
+
+    local subject="${operation_type} ${output_verb} for ${BACKUP_NAME} on ${HOSTNAME}"
+    local body="Operation failed with return code: ${operation_rc}. Please check the logs for more information."
+
+    # Mail
+    if [[ "${CRI_ALERTING_MAIL}" =~ ^(y|Y) ]]; then
+        local mail_body="${body}"
+        local mail_subject="[{{ backup_restic_alerting_mail_tag }}][${operation_state}] ${subject}"
+
+        if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
+            mail_body="$(cat "${operation_log_file}")"
+        fi
+        cri_alerting_mail -s "${mail_subject}" -b "${mail_body}" -d "${CRI_ALERTING_MAIL_DEST}"
+    fi
+
+}
+
+[[ "${0}" == "${BASH_SOURCE[0]}" ]] && cri_alerting_handler "${@}"
