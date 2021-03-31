@@ -98,6 +98,10 @@ backup_restic_prune_alerting_mattermost_default_channel: "{{ backup_restic_alert
 backup_restic_prune_alerting_mattermost_default_webhook_url: |
   "{{ backup_restic_alerting_mattermost_default_webhook_url }}"
 
+### Healthchecks.io
+backup_restic_alerting_healthchecks_io_curl_max_time: "10"
+backup_restic_alerting_healthchecks_io_curl_retry: "5"
+
 ## Retry
 backup_restic_default_max_attempts: 3
 backup_restic_default_retry_interval: 600

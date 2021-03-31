@@ -246,6 +246,47 @@ cri_alerting_mattermost()
     fi
 }
 
+cri_alerting_healthchecks_io ()
+{
+    # Error state by default, user *must* give the state to the function
+    local operation_rc="1"
+
+    local target_url=""
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts r:u: healthchecks_io_option; do
+        case "${healthchecks_io_option}" in
+            r) operation_rc="${OPTARG}";;
+            u) target_url="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars target_url
+
+    if [ "${operation_rc}" -eq "0" ]; then
+        echoInfo "Sending request to Healthchecks.io instance..."
+        local curl_out=""
+        curl_out="$(
+            curl --silent \
+                --max-time {{ backup_restic_alerting_healthchecks_io_curl_max_time }} \
+                --retry {{ backup_restic_alerting_healthchecks_io_curl_retry }} \
+                "${target_url}"
+        )"
+        local curl_rc="$?"
+
+        if [[ "${curl_rc}" -ne 0 || -n "${curl_out}" ]]; then
+            echoErr "Healthchecks.io alerting failed with:"
+            echoErr "rc: ${curl_rc}"
+            echoErr "output: ${curl_out}"
+        fi
+    else
+        echoWarn "Operation return code is not 0, no request sent to Healthchecks.io instance."
+    fi
+}
+
 cri_alerting_handler()
 {
     local operation_end_epoch="0"
@@ -271,6 +312,19 @@ cri_alerting_handler()
             *) echoErr "Unrecognized option"; exit 1;;
         esac
     done
+
+    # Simple request or monitoring without message
+    # They always need to be triggered even when CRI_DISABLE_ALERTING_ON_SUCCESS is at true
+
+    # This should only be triggered for redundant jobs
+    if [[ "${operation_type}" =~ cri_(backup|prune) ]]; then
+        # Healthchecks.io
+        if [[ "${CRI_ALERTING_HEALTHCHECKS_IO}" =~ ^(y|Y) ]]; then
+            cri_alerting_healthchecks_io -r "${operation_rc}" \
+            -u "${CRI_ALERTING_HEALTHCHECKS_IO_URL}"
+        fi
+
+    fi
 
     if [ "$operation_rc" -eq "0" ]; then
         if [[ "${CRI_DISABLE_ALERTING_ON_SUCCESS}" =~ ^(y|Y) ]]; then

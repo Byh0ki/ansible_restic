@@ -340,6 +340,7 @@ Alerting configuration : (Tested([x]) or not([ ]))
 - [x] mail
 - [x] slack
 - [x] mattermost
+- [ ] healthchecks.io
 
 ### mail
 ```yaml
@@ -368,6 +369,14 @@ alerting:   # or (alerting_prune for prune host)
     enabled: true                   # (optional if a default var exists)
     channel: "my-alerting-channel"  # (optional if a default var exists)
     webhook_url: "https://my-mattermost/hooks/..."  # (optional if a default var exists)
+```
+
+### healthchecks.io
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  healthchecks_io:
+    enabled: true
+    url: "my-healthchecks.io-url"
 ```
 
 # Example conf for a host:

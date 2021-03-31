@@ -44,6 +44,12 @@ export CRI_ALERTING_MATTERMOST_CHANNEL="${CRI_ALERTING_MATTERMOST_CHANNEL:-{{ cu
 export CRI_ALERTING_MATTERMOST_WEBHOOK_URL="${CRI_ALERTING_MATTERMOST_WEBHOOK_URL:-{{ current_backup.prune_alerting.mattermost.webhook_url | d(backup_restic_prune_alerting_mattermost_default_webhook_url) }}}"
 
 {% endif %}
+{% if current_backup.prune_alerting.healthchecks_io.enabled | d(false) | bool %}
+## Healthchecks.io
+export CRI_ALERTING_HEALTHCHECKS_IO="${CRI_ALERTING_HEALTHCHECKS_IO:-y}"
+export CRI_ALERTING_HEALTHCHECKS_IO_URL="${CRI_ALERTING_HEALTHCHECKS_IO_URL:-{{ current_backup.prune_alerting.healthchecks_io.url }}}"
+
+{% endif %}
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
@@ -69,6 +75,12 @@ export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ curr
 export CRI_ALERTING_MATTERMOST="${CRI_ALERTING_MATTERMOST:-y}"
 export CRI_ALERTING_MATTERMOST_CHANNEL="${CRI_ALERTING_MATTERMOST_CHANNEL:-{{ current_backup.alerting.mattermost.channel | d(backup_restic_alerting_mattermost_default_channel) }}}"
 export CRI_ALERTING_MATTERMOST_WEBHOOK_URL="${CRI_ALERTING_MATTERMOST_WEBHOOK_URL:-{{ current_backup.alerting.mattermost.webhook_url | d(backup_restic_alerting_mattermost_default_webhook_url) }}}"
+
+{% endif %}
+{% if current_backup.alerting.healthchecks_io.enabled | d(false) | bool %}
+## Healthchecks.io
+export CRI_ALERTING_HEALTHCHECKS_IO="${CRI_ALERTING_HEALTHCHECKS_IO:-y}"
+export CRI_ALERTING_HEALTHCHECKS_IO_URL="${CRI_ALERTING_HEALTHCHECKS_IO_URL:-{{ current_backup.alerting.healthchecks_io.url }}}"
 
 {% endif %}
 {% endif %}
