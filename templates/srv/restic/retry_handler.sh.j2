@@ -57,6 +57,12 @@ export CRI_ALERTING_TELEGRAM_API_KEY="${CRI_ALERTING_TELEGRAM_API_KEY:-{{ curren
 export CRI_ALERTING_TELEGRAM_CHAT_ID="${CRI_ALERTING_TELEGRAM_CHAT_ID:-{{ current_backup.prune_alerting.telegram.chat_id | d(backup_restic_prune_alerting_telegram_chat_id) }}}"
 
 {% endif %}
+{% if current_backup.prune_alerting.rocketchat.enabled | d(backup_restic_prune_alerting_rocketchat_default) | bool %}
+## Rocketchat
+export CRI_ALERTING_ROCKETCHAT="${CRI_ALERTING_ROCKETCHAT:-y}"
+export CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL="${CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL:-{{ current_backup.prune_alerting.rocketchat.webhook_url | d(backup_restic_prune_alerting_rocketchat_default_webhook_url) }}}"
+
+{% endif %}
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
@@ -95,6 +101,12 @@ export CRI_ALERTING_HEALTHCHECKS_IO_URL="${CRI_ALERTING_HEALTHCHECKS_IO_URL:-{{ 
 export CRI_ALERTING_TELEGRAM="${CRI_ALERTING_TELEGRAM:-y}"
 export CRI_ALERTING_TELEGRAM_API_KEY="${CRI_ALERTING_TELEGRAM_API_KEY:-{{ current_backup.alerting.telegram.api_key | d(backup_restic_alerting_telegram_api_key) }}}"
 export CRI_ALERTING_TELEGRAM_CHAT_ID="${CRI_ALERTING_TELEGRAM_CHAT_ID:-{{ current_backup.alerting.telegram.chat_id | d(backup_restic_alerting_telegram_chat_id) }}}"
+
+{% endif %}
+{% if current_backup.alerting.rocketchat.enabled | d(backup_restic_alerting_rocketchat_default) | bool %}
+## Rocketchat
+export CRI_ALERTING_ROCKETCHAT="${CRI_ALERTING_ROCKETCHAT:-y}"
+export CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL="${CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL:-{{ current_backup.alerting.rocketchat.webhook_url | d(backup_restic_alerting_rocketchat_default_webhook_url) }}}"
 
 {% endif %}
 {% endif %}

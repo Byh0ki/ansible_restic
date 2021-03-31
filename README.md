@@ -342,6 +342,7 @@ Alerting configuration : (Tested([x]) or not([ ]))
 - [x] mattermost
 - [ ] healthchecks.io
 - [x] telegram
+- [x] rocketchat
 
 ### mail
 ```yaml
@@ -388,6 +389,15 @@ alerting:   # or (alerting_prune for prune host)
     enabled: true                   # (optional if a default var exists)
     api_key: ""                     # (optional if a default var exists)
     chat_id: ""                     # (optional if a default var exists)
+```
+
+### rocketchat
+Help for the config: [link](https://docs.rocket.chat/guides/administrator-guides/integrations#create-a-new-incoming-webhook)
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  rocketchat:
+    enabled: true                   # (optional if a default var exists)
+    webhook_url: "https://my-rocketchat.tld/hooks/..."  # (optional if a default var exists)
 ```
 
 # Example conf for a host:

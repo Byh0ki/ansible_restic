@@ -344,6 +344,87 @@ cri_alerting_telegram ()
     fi
 }
 
+cri_alerting_rocketchat()
+{
+    # Defaults
+    local body="{{ backup_restic_alerting_rocketchat_default_body }}"
+    local title="{{ backup_restic_alerting_rocketchat_default_title }}"
+
+    local attachment_color_fail="{{ backup_restic_alerting_rocketchat_color_fail }}"
+    local attachment_color_success="{{ backup_restic_alerting_rocketchat_color_sucess }}"
+    local title_emote_fail="{{ backup_restic_alerting_rocketchat_emoji_fail }}"
+    local title_emote_success="{{ backup_restic_alerting_rocketchat_emoji_sucess }}"
+
+    # Error state by default, user *must* give the state to the function
+    local operation_rc="1"
+    local attachment_color="${attachment_color_fail}"
+
+    # shellcheck disable=SC2016
+    local payload_template='{
+                                "text":"%s",
+                                "attachments": [
+                                    {
+                                        "title":"Restic logs",
+                                        "collapsed": true,
+                                        "color":"%s",
+                                        "fields": [
+                                            {
+                                                "short": false,
+                                                "value": "%s"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }'
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts b:r:t:w: rocketchat_option; do
+        case "${rocketchat_option}" in
+            b) body="${OPTARG}";;
+            r) operation_rc="${OPTARG}";;
+            t) title="${OPTARG}";;
+            w) webhook_url="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars webhook_url
+
+    if [ "${operation_rc}" -eq "0" ]; then
+        title="${title_emote_success} ${title}"
+        attachment_color="${attachment_color_success}"
+    else
+        title="${title_emote_fail} ${title}"
+    fi
+
+    echoInfo "Sending Rocketchat message..."
+    local curl_out=""
+    # shellcheck disable=SC2059
+    curl_out="$(
+    curl -X POST \
+        -H 'Content-type: application/json' \
+        --silent \
+        --max-time {{ backup_restic_alerting_rocketchat_curl_max_time }} \
+        --retry {{ backup_restic_alerting_rocketchat_curl_retry }} \
+        --data \
+        "$(printf   "${payload_template}" \
+                    "${title}" \
+                    "${attachment_color}" \
+                    "${body}" \
+        )" \
+        "${webhook_url}"
+    )"
+    local curl_rc="$?"
+
+    if [[ "${curl_rc}" -ne 0 || "${curl_out}" != "{\"success\":true}" ]]; then
+        echoErr "Rocketchat alerting failed with:"
+        echoErr "rc: ${curl_rc}"
+        echoErr "output: ${curl_out}"
+    fi
+}
+
 cri_alerting_handler()
 {
     local operation_end_epoch="0"
@@ -433,6 +514,18 @@ cri_alerting_handler()
         local telegram_msg="${subject}"
         cri_alerting_telegram -r "${operation_rc}" -m "${telegram_msg}" \
         -a "${CRI_ALERTING_TELEGRAM_API_KEY}" -c "${CRI_ALERTING_TELEGRAM_CHAT_ID}"
+    fi
+
+    # Rocket.Chat
+    if [[ "${CRI_ALERTING_ROCKETCHAT}" =~ ^(y|Y) ]]; then
+        local rocketchat_body="${body}"
+        local rocketchat_title="${subject}"
+        if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
+            # Ugly hack to escape the linebreaks
+            rocketchat_body="$(sed ':a;N;$!ba;s/\n/\\n/g' < "${operation_log_file}")"
+        fi
+        cri_alerting_rocketchat -t "${rocketchat_title}" -r "${operation_rc}" -b "${rocketchat_body}" \
+        -w "${CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL}"
     fi
 }
 
