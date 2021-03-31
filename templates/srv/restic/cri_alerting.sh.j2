@@ -501,6 +501,58 @@ cri_alerting_discord()
     fi
 }
 
+cri_alerting_node()
+{
+    # Defaults
+    # Error state by default, user *must* give the state to the function
+    local operation_end_epoch=""
+    local operation_rc="1"
+    local operation_start_epoch=""
+    local operation_type=""
+    local node_dir=""
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts d:e:r:s:t: node_option; do
+        case "${node_option}" in
+            d) node_dir="${OPTARG}";;
+            e) operation_end_epoch="${OPTARG}";;
+            r) operation_rc="${OPTARG}";;
+            s) operation_start_epoch="${OPTARG}";;
+            t) operation_type="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars operation_start_epoch operation_end_epoch operation_type node_dir
+
+    echoInfo "Generating Node exporter metrics file..."
+
+    if [ ! -d "${node_dir}" ]; then
+        echoInfo "Creating node dir: ${node_dir}..."
+        mkdir -p "${node_dir}"
+    fi
+
+    cat << EOF > "${node_dir}/node_restic_${BACKUP_NAME}_${HOSTNAME}.prom"
+# HELP node_restic_job_exit_value Last exit code of restic job.
+# TYPE node_restic_job_exit_value gauge
+node_restic_job_exit_value{name="${operation_type}"} ${operation_rc}
+# HELP node_restic_job_time_start Unix start job time
+# TYPE node_restic_job_time_start gauge
+node_restic_job_time_start{name="${operation_type}"} ${operation_start_epoch}
+# HELP node_restic_job_time_end Unix end job time
+# TYPE node_restic_job_time_end gauge
+node_restic_job_time_end{name="${operation_type}"} ${operation_end_epoch}
+EOF
+    local cat_rc="$?"
+
+    if [ "${cat_rc}" -ne 0 ]; then
+        echoErr "Node exporter - File exporter alerting failed with:"
+        echoErr "rc: ${cat_rc}"
+    fi
+}
+
 cri_alerting_handler()
 {
     local operation_end_epoch="0"
@@ -538,6 +590,13 @@ cri_alerting_handler()
             -u "${CRI_ALERTING_HEALTHCHECKS_IO_URL}"
         fi
 
+    fi
+
+    # Node exporter - File exporter
+    if [[ "${CRI_ALERTING_NODE}" =~ ^(y|Y) ]]; then
+        cri_alerting_node -r "${operation_rc}" -t "${operation_type}" \
+        -s "${operation_start_epoch}" -e "${operation_end_epoch}" \
+        -d "${CRI_ALERTING_NODE_DIR}"
     fi
 
     if [ "$operation_rc" -eq "0" ]; then

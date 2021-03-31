@@ -30,6 +30,7 @@ backup_restic_alerting: "{{ backup_restic_alerting_mail_default
                         or backup_restic_alerting_telegram_default
                         or backup_restic_alerting_rocketchat_default
                         or backup_restic_alerting_discord_default
+                        or backup_restic_alerting_node_default
                         }}"
 backup_restic_prune_alerting: "{{ backup_restic_prune_alerting_mail_default
                               or backup_restic_prune_alerting_slack_default
@@ -37,6 +38,7 @@ backup_restic_prune_alerting: "{{ backup_restic_prune_alerting_mail_default
                               or backup_restic_prune_alerting_telegram_default
                               or backup_restic_prune_alerting_rocketchat_default
                               or backup_restic_prune_alerting_discord_default
+                              or backup_restic_prune_alerting_node_default
                               }}"
 
 # Enable or disabled alerts when backup is successful
@@ -155,6 +157,13 @@ backup_restic_alerting_discord_default_webhook_url: ""
 
 backup_restic_prune_alerting_discord_default: false
 backup_restic_prune_alerting_discord_default_webhook_url: "{{ backup_restic_alerting_discord_default_webhook_url }}"
+
+### Node Exporter - File Exporter
+backup_restic_alerting_node_default: false
+backup_restic_alerting_node_default_dir: "/var/lib/node-exporter/file_exporter/"
+
+backup_restic_prune_alerting_node_default: false
+backup_restic_prune_alerting_node_default_dir: "{{ backup_restic_alerting_node_default_dir }}"
 
 ## Retry
 backup_restic_default_max_attempts: 3

@@ -344,6 +344,7 @@ Alerting configuration : (Tested([x]) or not([ ]))
 - [x] telegram
 - [x] rocketchat
 - [x] discord
+- [x] node
 
 ### mail
 ```yaml
@@ -408,6 +409,14 @@ alerting:   # or (alerting_prune for prune host)
   discord:
     enabled: true                   # (optional if a default var exists)
     webhook_url: "https://discord.com/api/webhooks/..."  # (optional if a default var exists)
+```
+
+### node exporter - file exporter
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  node:
+    enabled: true                   # (optional if a default var exists)
+    dir: "/var/lib/node-exporter/file_exporter/"  # (optional if a default var exists)
 ```
 
 # Example conf for a host:

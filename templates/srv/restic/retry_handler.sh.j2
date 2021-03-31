@@ -69,6 +69,12 @@ export CRI_ALERTING_DISCORD="${CRI_ALERTING_DISCORD:-y}"
 export CRI_ALERTING_DISCORD_WEBHOOK_URL="${CRI_ALERTING_DISCORD_WEBHOOK_URL:-{{ current_backup.prune_alerting.discord.webhook_url | d(backup_restic_prune_alerting_discord_default_webhook_url) }}}"
 
 {% endif %}
+{% if current_backup.prune_alerting.node.enabled | d(backup_restic_prune_alerting_node_default) | bool %}
+## Node exporter - File exporter
+export CRI_ALERTING_NODE="${CRI_ALERTING_NODE:-y}"
+export CRI_ALERTING_NODE_DIR="${CRI_ALERTING_NODE_DIR:-{{ current_backup.prune_alerting.node.dir | d(backup_restic_prune_alerting_node_default_dir) }}}"
+
+{% endif %}
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
@@ -119,6 +125,12 @@ export CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL="${CRI_ALERTING_ROCKETCHAT_WEBHOOK_UR
 ## Discord
 export CRI_ALERTING_DISCORD="${CRI_ALERTING_DISCORD:-y}"
 export CRI_ALERTING_DISCORD_WEBHOOK_URL="${CRI_ALERTING_DISCORD_WEBHOOK_URL:-{{ current_backup.alerting.discord.webhook_url | d(backup_restic_alerting_discord_default_webhook_url) }}}"
+
+{% endif %}
+{% if current_backup.alerting.node.enabled | d(backup_restic_alerting_node_default) | bool %}
+## Node exporter - File exporter
+export CRI_ALERTING_NODE="${CRI_ALERTING_NODE:-y}"
+export CRI_ALERTING_NODE_DIR="${CRI_ALERTING_NODE_DIR:-{{ current_backup.alerting.node.dir | d(backup_restic_alerting_node_default_dir) }}}"
 
 {% endif %}
 {% endif %}
