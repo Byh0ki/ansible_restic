@@ -29,12 +29,14 @@ backup_restic_alerting: "{{ backup_restic_alerting_mail_default
                         or backup_restic_alerting_mattermost_default
                         or backup_restic_alerting_telegram_default
                         or backup_restic_alerting_rocketchat_default
+                        or backup_restic_alerting_discord_default
                         }}"
 backup_restic_prune_alerting: "{{ backup_restic_prune_alerting_mail_default
                               or backup_restic_prune_alerting_slack_default
                               or backup_restic_prune_alerting_mattermost_default
                               or backup_restic_prune_alerting_telegram_default
                               or backup_restic_prune_alerting_rocketchat_default
+                              or backup_restic_prune_alerting_discord_default
                               }}"
 
 # Enable or disabled alerts when backup is successful
@@ -137,6 +139,22 @@ backup_restic_alerting_rocketchat_default_webhook_url: ""
 backup_restic_prune_alerting_rocketchat_default: false
 backup_restic_prune_alerting_rocketchat_default_webhook_url: |
   "{{ backup_restic_alerting_rocketchat_default_webhook_url }}"
+
+### Discord
+backup_restic_alerting_discord_color_fail: "16068399"   # #f52f2f as an int
+backup_restic_alerting_discord_color_sucess: "7454836"  # #71c074 as an int
+backup_restic_alerting_discord_curl_max_time: "10"
+backup_restic_alerting_discord_curl_retry: "5"
+backup_restic_alerting_discord_default_body: "{{ backup_restic_alerting_default_body }}"
+backup_restic_alerting_discord_default_title: "{{ backup_restic_alerting_default_subject }}"
+backup_restic_alerting_discord_emoji_fail: ":exclamation:"
+backup_restic_alerting_discord_emoji_sucess: ":white_check_mark:"
+
+backup_restic_alerting_discord_default: false
+backup_restic_alerting_discord_default_webhook_url: ""
+
+backup_restic_prune_alerting_discord_default: false
+backup_restic_prune_alerting_discord_default_webhook_url: "{{ backup_restic_alerting_discord_default_webhook_url }}"
 
 ## Retry
 backup_restic_default_max_attempts: 3

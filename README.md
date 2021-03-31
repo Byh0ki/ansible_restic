@@ -343,6 +343,7 @@ Alerting configuration : (Tested([x]) or not([ ]))
 - [ ] healthchecks.io
 - [x] telegram
 - [x] rocketchat
+- [x] discord
 
 ### mail
 ```yaml
@@ -398,6 +399,15 @@ alerting:   # or (alerting_prune for prune host)
   rocketchat:
     enabled: true                   # (optional if a default var exists)
     webhook_url: "https://my-rocketchat.tld/hooks/..."  # (optional if a default var exists)
+```
+
+### discord
+Help for the config: [link](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  discord:
+    enabled: true                   # (optional if a default var exists)
+    webhook_url: "https://discord.com/api/webhooks/..."  # (optional if a default var exists)
 ```
 
 # Example conf for a host:
