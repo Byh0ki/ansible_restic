@@ -339,6 +339,7 @@ You can enable and configure multiple alerting backends for each backup.
 Alerting configuration : (Tested([x]) or not([ ]))
 - [x] mail
 - [x] slack
+- [x] mattermost
 
 ### mail
 ```yaml
@@ -357,6 +358,16 @@ alerting:   # or (alerting_prune for prune host)
     enabled: true                   # (optional if a default var exists)
     channel: "my-alerting-channel"  # (optional if a default var exists)
     webhook_url: "https://hooks.slack.com/services/..."  # (optional if a default var exists)
+```
+
+### mattermost
+Help for the config: [link](https://docs.mattermost.com/developer/webhooks-incoming.html)
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  mattermost:
+    enabled: true                   # (optional if a default var exists)
+    channel: "my-alerting-channel"  # (optional if a default var exists)
+    webhook_url: "https://my-mattermost/hooks/..."  # (optional if a default var exists)
 ```
 
 # Example conf for a host:

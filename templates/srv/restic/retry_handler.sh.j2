@@ -37,6 +37,13 @@ export CRI_ALERTING_SLACK_CHANNEL="${CRI_ALERTING_SLACK_CHANNEL:-{{ current_back
 export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ current_backup.prune_alerting.slack.webhook_url | d(backup_restic_prune_alerting_slack_default_webhook_url) }}}"
 
 {% endif %}
+{% if current_backup.prune_alerting.mattermost.enabled | d(backup_restic_prune_alerting_mattermost_default) | bool %}
+## Mattermost
+export CRI_ALERTING_MATTERMOST="${CRI_ALERTING_MATTERMOST:-y}"
+export CRI_ALERTING_MATTERMOST_CHANNEL="${CRI_ALERTING_MATTERMOST_CHANNEL:-{{ current_backup.prune_alerting.mattermost.channel | d(backup_restic_prune_alerting_mattermost_default_channel) }}}"
+export CRI_ALERTING_MATTERMOST_WEBHOOK_URL="${CRI_ALERTING_MATTERMOST_WEBHOOK_URL:-{{ current_backup.prune_alerting.mattermost.webhook_url | d(backup_restic_prune_alerting_mattermost_default_webhook_url) }}}"
+
+{% endif %}
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
@@ -55,6 +62,13 @@ export CRI_ALERTING_MAIL_DEST="${CRI_ALERTING_MAIL_DEST:-{{ current_backup.alert
 export CRI_ALERTING_SLACK="${CRI_ALERTING_SLACK:-y}"
 export CRI_ALERTING_SLACK_CHANNEL="${CRI_ALERTING_SLACK_CHANNEL:-{{ current_backup.alerting.slack.channel | d(backup_restic_alerting_slack_default_channel) }}}"
 export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ current_backup.alerting.slack.webhook_url | d(backup_restic_alerting_slack_default_webhook_url) }}}"
+
+{% endif %}
+{% if current_backup.alerting.mattermost.enabled | d(backup_restic_alerting_mattermost_default) | bool %}
+## Mattermost
+export CRI_ALERTING_MATTERMOST="${CRI_ALERTING_MATTERMOST:-y}"
+export CRI_ALERTING_MATTERMOST_CHANNEL="${CRI_ALERTING_MATTERMOST_CHANNEL:-{{ current_backup.alerting.mattermost.channel | d(backup_restic_alerting_mattermost_default_channel) }}}"
+export CRI_ALERTING_MATTERMOST_WEBHOOK_URL="${CRI_ALERTING_MATTERMOST_WEBHOOK_URL:-{{ current_backup.alerting.mattermost.webhook_url | d(backup_restic_alerting_mattermost_default_webhook_url) }}}"
 
 {% endif %}
 {% endif %}

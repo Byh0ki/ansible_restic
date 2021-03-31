@@ -26,9 +26,11 @@ backup_restic_hooks_path: ""
 ## Alerting
 backup_restic_alerting: "{{ backup_restic_alerting_mail_default
                         or backup_restic_alerting_slack_default
+                        or backup_restic_alerting_mattermost_default
                         }}"
 backup_restic_prune_alerting: "{{ backup_restic_prune_alerting_mail_default
                               or backup_restic_prune_alerting_slack_default
+                              or backup_restic_prune_alerting_mattermost_default
                               }}"
 
 # Enable or disabled alerts when backup is successful
@@ -76,6 +78,25 @@ backup_restic_alerting_slack_default_webhook_url: ""
 backup_restic_prune_alerting_slack_default: false
 backup_restic_prune_alerting_slack_default_channel: "{{ backup_restic_alerting_slack_default_channel }}"
 backup_restic_prune_alerting_slack_default_webhook_url: "{{ backup_restic_alerting_slack_default_webhook_url }}"
+
+### Mattermost
+backup_restic_alerting_mattermost_color_fail: "#f52f2f"
+backup_restic_alerting_mattermost_color_sucess: "#71c074"
+backup_restic_alerting_mattermost_curl_max_time: "10"
+backup_restic_alerting_mattermost_curl_retry: "5"
+backup_restic_alerting_mattermost_default_body: "{{ backup_restic_alerting_default_body }}"
+backup_restic_alerting_mattermost_default_title: "{{ backup_restic_alerting_default_subject }}"
+backup_restic_alerting_mattermost_emoji_fail: ":exclamation:"
+backup_restic_alerting_mattermost_emoji_sucess: ":white_check_mark:"
+
+backup_restic_alerting_mattermost_default: false
+backup_restic_alerting_mattermost_default_channel: "alerts-restic"
+backup_restic_alerting_mattermost_default_webhook_url: ""
+
+backup_restic_prune_alerting_mattermost_default: false
+backup_restic_prune_alerting_mattermost_default_channel: "{{ backup_restic_alerting_mattermost_default_channel }}"
+backup_restic_prune_alerting_mattermost_default_webhook_url: |
+  "{{ backup_restic_alerting_mattermost_default_webhook_url }}"
 
 ## Retry
 backup_restic_default_max_attempts: 3

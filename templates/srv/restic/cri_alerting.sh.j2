@@ -166,6 +166,86 @@ cri_alerting_slack()
     fi
 }
 
+cri_alerting_mattermost()
+{
+    # Defaults
+    local body="{{ backup_restic_alerting_mattermost_default_body }}"
+    local title="{{ backup_restic_alerting_mattermost_default_title }}"
+
+    local attachment_color_fail="{{ backup_restic_alerting_mattermost_color_fail }}"
+    local attachment_color_success="{{ backup_restic_alerting_mattermost_color_sucess }}"
+    local title_emote_fail="{{ backup_restic_alerting_mattermost_emoji_fail }}"
+    local title_emote_success="{{ backup_restic_alerting_mattermost_emoji_sucess }}"
+
+    # Error state by default, user *must* give the state to the function
+    local operation_rc="1"
+    local attachment_color="${attachment_color_fail}"
+
+    # shellcheck disable=SC2016
+    local payload_template='{
+                                "channel": "%s",
+                                "text": "%s",
+                                "attachments": [
+                                    {
+                                        "fallback": "%s",
+                                        "color": "%s",
+                                        "title": "Restic logs",
+                                        "text": "%s"
+                                    }
+                                ]
+                            }'
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts b:c:r:t:w: mattermost_option; do
+        case "${mattermost_option}" in
+            b) body="${OPTARG}";;
+            c) channel="${OPTARG}";;
+            r) operation_rc="${OPTARG}";;
+            t) title="${OPTARG}";;
+            w) webhook_url="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars channel webhook_url
+
+    if [ "${operation_rc}" -eq "0" ]; then
+        title="${title_emote_success} ${title}"
+        attachment_color="${attachment_color_success}"
+    else
+        title="${title_emote_fail} ${title}"
+    fi
+
+    echoInfo "Sending Mattermost message to ${channel}..."
+    local curl_out=""
+    # shellcheck disable=SC2059
+    curl_out="$(
+    curl -X POST \
+        -H 'Content-type: application/json' \
+        --silent \
+        --max-time {{ backup_restic_alerting_mattermost_curl_max_time }} \
+        --retry {{ backup_restic_alerting_mattermost_curl_retry }} \
+        --data \
+        "$(printf   "${payload_template}" \
+                    "${channel}" \
+                    "${title}" \
+                    "${title}" \
+                    "${attachment_color}" \
+                    "${body}" \
+        )" \
+        "${webhook_url}"
+    )"
+    local curl_rc="$?"
+
+    if [[ "${curl_rc}" -ne 0 || "${curl_out}" != "ok" ]]; then
+        echoErr "Mattermost alerting failed with:"
+        echoErr "rc: ${curl_rc}"
+        echoErr "output: ${curl_out}"
+    fi
+}
+
 cri_alerting_handler()
 {
     local operation_end_epoch="0"
@@ -224,6 +304,17 @@ cri_alerting_handler()
         fi
         cri_alerting_slack -t "${slack_title}" -r "${operation_rc}" -b "${slack_body}" \
         -c "${CRI_ALERTING_SLACK_CHANNEL}" -w "${CRI_ALERTING_SLACK_WEBHOOK_URL}"
+    fi
+
+    # Mattermost
+    if [[ "${CRI_ALERTING_MATTERMOST}" =~ ^(y|Y) ]]; then
+        local mattermost_body="${body}"
+        local mattermost_title="${subject}"
+        if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
+            mattermost_body="$(cat "${operation_log_file}")"
+        fi
+        cri_alerting_mattermost -t "${mattermost_title}" -r "${operation_rc}" -b "${mattermost_body}" \
+        -c "${CRI_ALERTING_MATTERMOST_CHANNEL}" -w "${CRI_ALERTING_MATTERMOST_WEBHOOK_URL}"
     fi
 }
 
