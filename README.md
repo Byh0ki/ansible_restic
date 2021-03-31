@@ -338,6 +338,7 @@ You can enable and configure multiple alerting backends for each backup.
 
 Alerting configuration : (Tested([x]) or not([ ]))
 - [x] mail
+- [x] slack
 
 ### mail
 ```yaml
@@ -346,6 +347,16 @@ alerting:   # or (alerting_prune for prune host)
     enabled: true                   # (optional if a default var exists)
     # Comma separated list of recipients
     dest: "root@localhost"          # (optional if a default var exists)
+```
+
+### slack
+Help for the config: [link](https://api.slack.com/messaging/webhooks)
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  slack:
+    enabled: true                   # (optional if a default var exists)
+    channel: "my-alerting-channel"  # (optional if a default var exists)
+    webhook_url: "https://hooks.slack.com/services/..."  # (optional if a default var exists)
 ```
 
 # Example conf for a host:
@@ -358,7 +369,16 @@ backup_restic_list:
     mail:
       enabled: true
       dest: "root@localhost"
+    slack:
+      enabled: true
+      channel: "alerts-restic"
+      webhook_url: "https://hooks.slack.com/services/..."
   alerting_on_sucess: true          # (optional if a default var exists)
+  prune_alerting:                   # (optional if a default var exists)
+    slack:
+      enabled: true
+      channel: "alerts-restic-prune"
+      webhook_url: "https://hooks.slack.com/services/..."
   prune_alerting_on_sucess: true    # (optional if a default var exists)
   max_attempts: "3"                 # (optional if a default var exists)
   retry_interval: "600"             # (optional if a default var exists)

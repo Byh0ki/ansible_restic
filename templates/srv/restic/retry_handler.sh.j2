@@ -30,6 +30,13 @@ export CRI_ALERTING_MAIL="${CRI_ALERTING_MAIL:-y}"
 export CRI_ALERTING_MAIL_DEST="${CRI_ALERTING_MAIL_DEST:-{{ current_backup.prune_alerting.mail.dest | d(backup_restic_prune_alerting_mail_default_dest) }}}"
 
 {% endif %}
+{% if current_backup.prune_alerting.slack.enabled | d(backup_restic_prune_alerting_slack_default) | bool %}
+## Slack
+export CRI_ALERTING_SLACK="${CRI_ALERTING_SLACK:-y}"
+export CRI_ALERTING_SLACK_CHANNEL="${CRI_ALERTING_SLACK_CHANNEL:-{{ current_backup.prune_alerting.slack.channel | d(backup_restic_prune_alerting_slack_default_channel) }}}"
+export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ current_backup.prune_alerting.slack.webhook_url | d(backup_restic_prune_alerting_slack_default_webhook_url) }}}"
+
+{% endif %}
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
@@ -43,7 +50,13 @@ export CRI_ALERTING_MAIL="${CRI_ALERTING_MAIL:-y}"
 export CRI_ALERTING_MAIL_DEST="${CRI_ALERTING_MAIL_DEST:-{{ current_backup.alerting.mail.dest | d(backup_restic_alerting_mail_default_dest) }}}"
 
 {% endif %}
+{% if current_backup.alerting.slack.enabled | d(backup_restic_alerting_slack_default) | bool %}
+## Slack
+export CRI_ALERTING_SLACK="${CRI_ALERTING_SLACK:-y}"
+export CRI_ALERTING_SLACK_CHANNEL="${CRI_ALERTING_SLACK_CHANNEL:-{{ current_backup.alerting.slack.channel | d(backup_restic_alerting_slack_default_channel) }}}"
+export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ current_backup.alerting.slack.webhook_url | d(backup_restic_alerting_slack_default_webhook_url) }}}"
 
+{% endif %}
 {% endif %}
 
 # Functions
