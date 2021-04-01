@@ -98,6 +98,7 @@ the hassle of manually setting up its configuration.
 
 ### Backup pipeline:
 cron -> retry_handler.sh -> backup_name.sh -> restic_wrapper.sh -> restic
+                         -> cri_alerting.sh if alerting is enabled
 
 ## Why use an external host for pruning ?
 The idea is to prevent an attack on the backed up data in the event where an

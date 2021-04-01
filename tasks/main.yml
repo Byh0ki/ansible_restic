@@ -29,7 +29,9 @@
 
 - name: Install logrotate if needed
   apt:
-    name: logrotate
+    name:
+      - curl
+      - logrotate
     state: present
 
 - name: Get restic bin from Github releases
