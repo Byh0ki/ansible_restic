@@ -190,6 +190,7 @@ backup_restic_default_backup_cmd: "cri_backup"
 backup_restic_default_prune_cmd: "cri_prune"
 
 ## Prune
+backup_restic_default_disable_prune: false
 backup_restic_default_disable_external_prune: false
 backup_restic_default_no_external_prune:
   - "local"
