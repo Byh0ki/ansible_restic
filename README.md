@@ -69,6 +69,11 @@ Check the restic repo:
 backup_name.sh check
 ```
 
+Mount the restic repo:
+```bash
+backup_name.sh mount /mnt
+```
+
 Check the restic repo and all the data:
 ```bash
 backup_name.sh check --read-data
@@ -228,7 +233,7 @@ Backends configuration : (Tested([x]) or not([ ]))
 - [ ] local
 - [ ] manual
 
-## s3|aws|minio|wasabi
+### s3|aws|minio|wasabi
 ```yaml
 backend:
   type: "s3"
@@ -243,7 +248,7 @@ backend:
   aws_default_region: ""            # aws only (optionnal)
 ```
 
-## b2|backblaze
+### b2|backblaze
 ```yaml
 backend:
   type: "b2"
@@ -257,7 +262,7 @@ backend:
   b2_bucket_name: ""
 ```
 
-## azure
+### azure
 ```yaml
 backend:
   type: "azure"
@@ -269,7 +274,7 @@ backend:
   azure_bucket_path: ""
 ```
 
-## gs|gcs
+### gs|gcs
 ```yaml
 backend:
   type: "gs"
@@ -288,7 +293,7 @@ backend:
   gs_bucket_path: ""
 ```
 
-## rclone (conf file must be handled outsite of the role)
+### rclone (conf file must be handled outsite of the role)
 ```yaml
 backend:
   type: "rclone"
@@ -298,7 +303,7 @@ backend:
   rclone_bucket_path: ""
 ```
 
-## rest|restic_rest
+### rest|restic_rest
 ```yaml
 backend:
   type: "rest"
@@ -310,7 +315,7 @@ backend:
   rest_path: ""                     # Must be rest_user if using secure repo access
 ```
 
-## sftp
+### sftp
 ```yaml
 backend:
   type: "sftp"
@@ -320,14 +325,14 @@ backend:
   sftp_path: ""
 ```
 
-## local
+### local
 ```yaml
 backend:
   type: "local"
   local_path: ""
 ```
 
-## manual
+### manual
 ```yaml
 backend:
   type: "manual"

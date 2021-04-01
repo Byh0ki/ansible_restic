@@ -179,6 +179,8 @@ backup_restic_default_prune_retry_interval: 600
 ###   - 'no-data-read' or 'simple' to perform a simple check on the repo (same as 0%)
 ###   - 'all-data' to perform full check on the repo (same as 100%)
 ###   - an empty vars mean no check
+###
+### Some of these values are not available for restic < 12
 backup_restic_default_backup_data_integrity_check: "no-data-read"
 backup_restic_default_prune_data_integrity_check: "25%"
 
