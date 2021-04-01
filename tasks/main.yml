@@ -61,8 +61,8 @@
     mode: "0700"
   loop:
     - "cri_alerting.sh"
-    - "restic_wrapper.sh"
-    - "utils.sh"
+    - "cri_restic_wrapper.sh"
+    - "cri_utils.sh"
 
 - name: Add backups scripts and files
   include_tasks: "backup.yml"

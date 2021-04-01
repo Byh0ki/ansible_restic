@@ -8,7 +8,7 @@ set -e -o pipefail -o errexit -o errtrace
 source {{ current_backup_path }}/extra_vars
 
 # Source helper functions
-source {{ backup_restic_path }}/scripts/utils.sh
+source {{ backup_restic_path }}/scripts/cri_utils.sh
 
 # Functions
 
@@ -282,7 +282,7 @@ cri_restic()
     backend_info
 
     # Restic wrapper call
-    "{{ backup_restic_path }}/scripts/restic_wrapper.sh" "$@"
+    "{{ backup_restic_path }}/scripts/cri_restic_wrapper.sh" "$@"
 
     local total_duration_formated
     total_duration_formated="$(TZ=UTC printf '%(%H:%M:%S)T' "$(( SECONDS - start_time ))")"

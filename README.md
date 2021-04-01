@@ -76,7 +76,7 @@ backup_name.sh check --read-data
 
 Use restic in standalone mode (without the helpers):
 ```bash
-restic_wrapper.sh -r "my_repo" stats
+cri_restic_wrapper.sh -r "my_repo" stats
 ```
 
 ## Architecture
@@ -89,7 +89,7 @@ Handles retry and alerting, calls backup_name.sh and handles its output.
 Set the given backup configuration and call the wrapper. It can be used to make
 backups and administrate the restic repo but no alerting will be generated.
 
-#### restic_wrapper.sh
+#### cri_restic_wrapper.sh
 Define some functions for backup, prune and restore. These functions are named
 `cri_*`. This wrapper handles the configuration of the restic repository from
 the configuration given by `backup_name.sh`. You can use the wrapper with other
@@ -97,7 +97,7 @@ restic commands. This is very useful to access the restic repository without
 the hassle of manually setting up its configuration.
 
 ### Backup pipeline:
-cron -> retry_handler.sh -> backup_name.sh -> restic_wrapper.sh -> restic
+cron -> retry_handler.sh -> backup_name.sh -> cri_restic_wrapper.sh -> restic
                          -> cri_alerting.sh if alerting is enabled
 
 ## Why use an external host for pruning ?
