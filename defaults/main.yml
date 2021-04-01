@@ -231,6 +231,23 @@ backup_restic_default_prune_cron_weekday: '*'
 backup_restic_default_prune_cron_month: '*'
 
 # Backends
+available_backends:
+  - "s3"
+  - "aws"
+  - "minio"
+  - "wasabi"
+  - "b2"
+  - "backblaze"
+  - "azure"
+  - "gs"
+  - "gcs"
+  - "rclone"
+  - "rest"
+  - "restic_rest"
+  - "sftp"
+  - "local"
+  - "manual"
+
 ## s3|aws|minio|wasabi
 backup_restic_default_s3_host: "s3.example.com"
 backup_restic_default_s3_connection_scheme: "https"
