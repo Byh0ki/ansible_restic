@@ -477,12 +477,14 @@ backup_restic_list:
   restore_post_hooks: []            # (default to an empty list)
   restore_path: "/restore"          # (optional if a default var exists)
   backup_cron:
+    enable: true                    # (optional if a default var exists)
     minute: '0'                     # (optional if a default var exists)
     hour: '3'                       # (optional if a default var exists)
     day: '*'                        # (optional if a default var exists)
     weekday: '*'                    # (optional if a default var exists)
     month: '*'                      # (optional if a default var exists)
   prune_cron:
+    enable: true                    # (optional if a default var exists)
     minute: '0'                     # (optional if a default var exists)
     hour: '12'                      # (optional if a default var exists)
     day: '*'                        # (optional if a default var exists)

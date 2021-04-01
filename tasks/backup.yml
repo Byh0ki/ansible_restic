@@ -67,7 +67,9 @@
 - name: add a cronjob for the backup
   cron:
     name: "{{ inventory_hostname }} - {{ current_backup.name }} backup"
-    state: "{{ (current_backup.enabled is defined and current_backup.enabled|bool)|ternary('present', 'absent') }}"
+    state: "{{ ((current_backup.enabled | d(false) | bool)
+            and current_backup.backup_cron.enable | d(backup_restic_default_cron))
+            | ternary('present', 'absent') }}"
     minute: "{{ current_backup.backup_cron.minute | d(backup_restic_default_cron_minute) }}"
     hour: "{{ current_backup.backup_cron.hour | d(backup_restic_default_cron_hour) }}"
     day: "{{ current_backup.backup_cron.day | d(backup_restic_default_cron_day) }}"

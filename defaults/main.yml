@@ -213,12 +213,14 @@ backup_restic_default_extra_vars: []
 backup_restic_default_extra_vars_prune: []
 
 ## Cron
+backup_restic_default_cron: true
 backup_restic_default_cron_minute: '0'
 backup_restic_default_cron_hour: '3'
 backup_restic_default_cron_day: '*'
 backup_restic_default_cron_weekday: '*'
 backup_restic_default_cron_month: '*'
 
+backup_restic_default_prune_cron: true
 backup_restic_default_prune_cron_minute: '0'
 backup_restic_default_prune_cron_hour: '12'
 backup_restic_default_prune_cron_day: '*'
