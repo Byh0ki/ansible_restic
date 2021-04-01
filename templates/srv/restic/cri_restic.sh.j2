@@ -26,7 +26,7 @@ export S3_HOST="${S3_HOST:-{{ current_backup.backend.s3_host | d(backup_restic_d
 export S3_PORT="${S3_PORT:-{{ current_backup.backend.s3_port | d(backup_restic_default_s3_port) }}}"
 
 {% if current_backup.backend.type == "aws" %}
-{% if current_backup.backend.aws_default_region is defined or backup_restic_default_aws_region is defined %}
+{% if current_backup.backend.aws_default_region | d(backup_restic_default_aws_region) | length > 0 %}
 export AWS_DEFAULT_REGION="{{ current_backup.backend.aws_default_region | d(backup_restic_default_aws_region) }}"
 {% endif %}
 {% endif %}

@@ -252,7 +252,7 @@ available_backends:
 backup_restic_default_s3_host: "s3.example.com"
 backup_restic_default_s3_connection_scheme: "https"
 backup_restic_default_s3_port: "443"
-# backup_restic_default_aws_region: "" # aws
+backup_restic_default_aws_region: "" # aws (optional)
 
 ## b2|backblaze
 backup_restic_default_b2_connection_scheme: ""
