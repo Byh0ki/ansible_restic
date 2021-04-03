@@ -27,7 +27,7 @@
   loop_control:
     loop_var: dir
 
-- name: Install logrotate if needed
+- name: Install packages and dependencies
   apt:
     name:
       - curl
