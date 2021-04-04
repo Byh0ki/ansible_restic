@@ -3,6 +3,21 @@
 
 # roles/backup-restic/tasks/main.yml
 
+- name: load OS specific variables
+  include_vars: "{{ vars_file }}"
+  with_first_found:
+    - paths:
+        - "vars"
+      files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - "{{ ansible_system }}.yml"
+        - "defaults.yml"
+  loop_control:
+    loop_var: vars_file
+
 - name: Ensure srv dir is present
   file:
     path: "{{ backup_srv_path }}"
@@ -28,10 +43,12 @@
     loop_var: dir
 
 - name: Install packages and dependencies
-  apt:
+  package:
     name:
-      - curl
-      - logrotate
+      - "{{ pkg_bash_name }}"
+      - "{{ pkg_coreutils_name }}"
+      - "{{ pkg_curl_name }}"
+      - "{{ pkg_logrotate_name }}"
     state: present
 
 - name: Get restic bin from Github releases

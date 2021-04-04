@@ -1,0 +1,6 @@
+---
+
+pkg_bash_name: "bash"
+pkg_coreutils_name: "coreutils"
+pkg_curl_name: "curl"
+pkg_logrotate_name: "logrotate"
