@@ -557,6 +557,8 @@ cri_alerting_handler()
 {
     local operation_end_epoch="0"
     local operation_log_file=""
+    local operation_log=""
+    local operation_log_sanitized=""
     local operation_start_epoch="0"
     local operation_type="restic"
 
@@ -589,7 +591,6 @@ cri_alerting_handler()
             cri_alerting_healthchecks_io -r "${operation_rc}" \
             -u "${CRI_ALERTING_HEALTHCHECKS_IO_URL}"
         fi
-
     fi
 
     # Node exporter - File exporter
@@ -611,13 +612,21 @@ cri_alerting_handler()
     local subject="${operation_type} ${output_verb} for ${BACKUP_NAME} on ${HOSTNAME}"
     local body="Operation failed with return code: ${operation_rc}. Please check the logs for more information."
 
+    # Retrieve the log's content and sanitize it for JSON
+    if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
+        operation_log="$(cat "${operation_log_file}")"
+
+        # Escape " to prevent potential JSON failures
+        operation_log_sanitized="$(sed 's/"/\\"/g' <<< "${operation_log}")"
+    fi
+
     # Mail
     if [[ "${CRI_ALERTING_MAIL}" =~ ^(y|Y) ]]; then
         local mail_body="${body}"
         local mail_subject="[{{ backup_restic_alerting_mail_tag }}][${operation_state}] ${subject}"
 
-        if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
-            mail_body="$(cat "${operation_log_file}")"
+        if [ -n "${operation_log}" ]; then
+            mail_body="${operation_log}"
         fi
         cri_alerting_mail -s "${mail_subject}" -b "${mail_body}" -d "${CRI_ALERTING_MAIL_DEST}"
     fi
@@ -626,8 +635,8 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_SLACK}" =~ ^(y|Y) ]]; then
         local slack_body="${body}"
         local slack_title="${subject}"
-        if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
-            slack_body="$(cat "${operation_log_file}")"
+        if [ -n "${operation_log_sanitized}" ]; then
+            slack_body="${operation_log_sanitized}"
         fi
         cri_alerting_slack -t "${slack_title}" -r "${operation_rc}" -b "${slack_body}" \
         -c "${CRI_ALERTING_SLACK_CHANNEL}" -w "${CRI_ALERTING_SLACK_WEBHOOK_URL}"
@@ -637,8 +646,8 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_MATTERMOST}" =~ ^(y|Y) ]]; then
         local mattermost_body="${body}"
         local mattermost_title="${subject}"
-        if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
-            mattermost_body="$(cat "${operation_log_file}")"
+        if [ -n "${operation_log_sanitized}" ]; then
+            mattermost_body="${operation_log_sanitized}"
         fi
         cri_alerting_mattermost -t "${mattermost_title}" -r "${operation_rc}" -b "${mattermost_body}" \
         -c "${CRI_ALERTING_MATTERMOST_CHANNEL}" -w "${CRI_ALERTING_MATTERMOST_WEBHOOK_URL}"
@@ -655,9 +664,9 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_ROCKETCHAT}" =~ ^(y|Y) ]]; then
         local rocketchat_body="${body}"
         local rocketchat_title="${subject}"
-        if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
+        if [ -n "${operation_log_sanitized}" ]; then
             # Ugly hack to escape the linebreaks
-            rocketchat_body="$(sed ':a;N;$!ba;s/\n/\\n/g' < "${operation_log_file}")"
+            rocketchat_body="$(sed ':a;N;$!ba;s/\n/\\n/g' <<< "${operation_log_sanitized}")"
         fi
         cri_alerting_rocketchat -t "${rocketchat_title}" -r "${operation_rc}" -b "${rocketchat_body}" \
         -w "${CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL}"
@@ -667,9 +676,9 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_DISCORD}" =~ ^(y|Y) ]]; then
         local discord_body="${body}"
         local discord_title="${subject}"
-        if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
+        if [ -n "${operation_log_sanitized}" ]; then
             # Ugly hack to escape the linebreaks
-            discord_body="$(sed ':a;N;$!ba;s/\n/\\n/g' < "${operation_log_file}")"
+            discord_body="$(sed ':a;N;$!ba;s/\n/\\n/g' <<< "${operation_log_sanitized}")"
         fi
         cri_alerting_discord -t "${discord_title}" -r "${operation_rc}" -b "${discord_body}" \
         -w "${CRI_ALERTING_DISCORD_WEBHOOK_URL}"
