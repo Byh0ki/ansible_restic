@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2021-04-05
+
+### Added
+
+- Add compatibility for other distros
+
+### Fixed
+
+- Output was not sanitized for JSON based alerting
+
 ## [1.0.0] - 2021-04-01
 
 ### Added
@@ -38,7 +48,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.0.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.1.0...master
+[1.1.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.0.0...1.1.0
 [1.0.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/0.2.0...1.0.0
 [0.2.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/0.1.0...0.2.0
 [0.1.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/releases/0.1.0
