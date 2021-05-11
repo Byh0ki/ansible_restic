@@ -1,0 +1,16 @@
+---
+
+# roles/backup-restic/tasks/logrotate.yml
+
+- name: Install logrotate
+  package:
+    name: "{{ pkg_logrotate_name }}"
+    state: present
+
+- name: Add logrotate conf for restic
+  template:
+    src: "etc/logrotate.d/backup-restic.j2"
+    dest: "/etc/logrotate.d/backup-restic"
+    owner: root
+    group: root
+    mode: '0644'

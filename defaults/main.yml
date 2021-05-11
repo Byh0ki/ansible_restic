@@ -203,6 +203,7 @@ backup_restic_default_forget_policy: "--keep-daily 7 --keep-weekly 8 --keep-mont
 backup_restic_default_restore_path: "/restore"
 
 ## Logrotate
+backup_restic_logrotate: true
 backup_restic_log_retention_time: 12
 
 ## Extra vars

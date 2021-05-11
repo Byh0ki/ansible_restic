@@ -48,8 +48,11 @@
       - "{{ pkg_bash_name }}"
       - "{{ pkg_coreutils_name }}"
       - "{{ pkg_curl_name }}"
-      - "{{ pkg_logrotate_name }}"
     state: present
+
+- name: Install logrotate and configure it
+  include_tasks: "logrotate.yml"
+  when: backup_restic_logrotate
 
 - name: Get restic bin from Github releases
   get_url:
@@ -87,11 +90,3 @@
   loop_control:
     loop_var: current_backup
     label: "{{ current_backup.name }}"
-
-- name: Add logrotate confs
-  template:
-    src: "etc/logrotate.d/backup-restic.j2"
-    dest: "/etc/logrotate.d/backup-restic"
-    owner: root
-    group: root
-    mode: '0644'
