@@ -351,6 +351,7 @@ Alerting configuration : (Tested([x]) or not([ ]))
 - [x] rocketchat
 - [x] discord
 - [x] node
+- [x] libnotify # for systemd desktops only
 
 ### mail
 ```yaml
@@ -423,6 +424,15 @@ alerting:   # or (alerting_prune for prune host)
   node:
     enabled: true                   # (optional if a default var exists)
     dir: "/var/lib/node-exporter/file_exporter/"  # (optional if a default var exists)
+```
+
+### libnotify # systemd desktop only
+```yaml
+alerting:   # or (alerting_prune for prune host)
+  libnotify:
+    enabled: true                   # (optional if a default var exists)
+    # Used to reach the user's X server
+    username: "my_username"         # (optional if a default var exists)
 ```
 
 # Example conf for a host:

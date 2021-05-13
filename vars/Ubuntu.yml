@@ -3,5 +3,5 @@
 pkg_bash_name: "bash"
 pkg_coreutils_name: "coreutils"
 pkg_curl_name: "curl"
-pkg_libnotify_name: "libnotify"
+pkg_libnotify_name: "libnotify-bin"
 pkg_logrotate_name: "logrotate"

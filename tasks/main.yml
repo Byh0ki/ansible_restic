@@ -29,16 +29,17 @@
 
 - name: Ensure needed dirs are present
   file:
-    path: "{{ dir }}"
+    path: "{{ dir.path }}"
     state: directory
-    owner: root
-    group: root
-    mode: '0600'
+    owner: "{{ dir.owner | d('root') }}"
+    group: "{{ dir.group | d('root') }}"
+    mode: "{{ dir.mode | d('0600') }}"
   loop:
-    - "{{ backup_restic_path }}"
-    - "{{ backup_restic_path }}/backups"
-    - "{{ backup_restic_path }}/bin"
-    - "{{ backup_restic_path }}/scripts"
+    - {path: "{{ backup_restic_path }}", mode: "0755"}
+    - {path: "{{ backup_restic_path }}/assets", mode: "0755"}
+    - {path: "{{ backup_restic_path }}/backups"}
+    - {path: "{{ backup_restic_path }}/bin"}
+    - {path: "{{ backup_restic_path }}/scripts"}
   loop_control:
     loop_var: dir
 
@@ -49,6 +50,10 @@
       - "{{ pkg_coreutils_name }}"
       - "{{ pkg_curl_name }}"
     state: present
+
+- name: Install desktop dependencies if needed
+  include_tasks: "desktop_dependencies.yml"
+  when: backup_restic_desktop_host
 
 - name: Install logrotate and configure it
   include_tasks: "logrotate.yml"

@@ -553,6 +553,93 @@ EOF
     fi
 }
 
+{% if backup_restic_desktop_host %}
+# shellcheck disable=SC2034
+# vars are effectively used in the `su` cmd
+cri_alerting_libnotify ()
+{
+    # Defaults
+    local body="{{ backup_restic_alerting_libnotify_default_body }}"
+    local title="{{ backup_restic_alerting_libnotify_default_title }}"
+
+    local body_emoji_fail=$'{{ backup_restic_alerting_libnotify_emoji_fail }}'
+    local body_emoji_success=$'{{ backup_restic_alerting_libnotify_emoji_success }}'
+
+    local category="{{ backup_restic_alerting_libnotify_category }}"
+
+    local icon_path="{{ backup_restic_path }}/assets/notification_icon.png"
+
+    local timeout_fail="{{ backup_restic_alerting_libnotify_timeout_fail }}"
+    local timeout_success="{{ backup_restic_alerting_libnotify_timeout_success }}"
+
+    local urgency_fail="{{ backup_restic_alerting_libnotify_urgency_fail }}"
+    local urgency_success="{{ backup_restic_alerting_libnotify_urgency_success }}"
+
+    local username=""
+    local userid=""
+
+    # Error state by default, user *must* give the state to the function
+    local operation_rc="1"
+    local urgency="${urgency_fail}"
+    local timeout="${timeout_fail}"
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts b:i:r:u: libnotify_option; do
+        case "${libnotify_option}" in
+            b) body="${OPTARG}";;
+            i) icon_path="${OPTARG}";;
+            r) operation_rc="${OPTARG}";;
+            u) username="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars username
+
+    userid="$(id -u "${username}")"
+
+    if [ "${operation_rc}" -eq "0" ]; then
+        body="${body_emoji_success} ${body}"
+        urgency="${urgency_success}"
+        timeout="${timeout_success}"
+    else
+        body="${body_emoji_fail} ${body}"
+    fi
+
+    echoInfo "Sending Libnotify notification..."
+    # We need to export the vars for the su cmd
+    export CRI_ALERTING_LIBNOTIFY_BODY="${body}"
+    export CRI_ALERTING_LIBNOTIFY_CATEGORY="${category}"
+    export CRI_ALERTING_LIBNOTIFY_ICON_PATH="${icon_path}"
+    export CRI_ALERTING_LIBNOTIFY_TIMEOUT="${timeout}"
+    export CRI_ALERTING_LIBNOTIFY_TITLE="${title}"
+    export CRI_ALERTING_LIBNOTIFY_URGENCY="${urgency}"
+    export CRI_ALERTING_LIBNOTIFY_USERID="${userid}"
+    export CRI_ALERTING_LIBNOTIFY_USERNAME="${username}"
+
+    local cmd_out=""
+    # shellcheck disable=SC1004,SC2016
+    cmd_out="$(
+    su "${CRI_ALERTING_LIBNOTIFY_USERNAME}" -c 'DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"${CRI_ALERTING_LIBNOTIFY_USERID}"/bus \
+    notify-send -u "${CRI_ALERTING_LIBNOTIFY_URGENCY}" \
+                -t "${CRI_ALERTING_LIBNOTIFY_TIMEOUT}" \
+                -i "${CRI_ALERTING_LIBNOTIFY_ICON_PATH}" \
+                -c "${CRI_ALERTING_LIBNOTIFY_CATEGORY}" \
+                "${CRI_ALERTING_LIBNOTIFY_TITLE}" \
+                "${CRI_ALERTING_LIBNOTIFY_BODY}"' \
+    )"
+    local cmd_rc="$?"
+
+    if [ "${cmd_rc}" -ne 0 ]; then
+        echoErr "Libnotify notification failed with:"
+        echoErr "rc: ${cmd_rc}"
+        echoErr "output: ${cmd_out}"
+    fi
+}
+
+{% endif %}
 cri_alerting_handler()
 {
     local operation_end_epoch="0"
@@ -683,6 +770,15 @@ cri_alerting_handler()
         cri_alerting_discord -t "${discord_title}" -r "${operation_rc}" -b "${discord_body}" \
         -w "${CRI_ALERTING_DISCORD_WEBHOOK_URL}"
     fi
+{% if backup_restic_desktop_host %}
+
+    # Libnotify
+    if [[ "${CRI_ALERTING_LIBNOTIFY}" =~ ^(y|Y) ]]; then
+        local libnotify_body="${subject}"
+        cri_alerting_libnotify -r "${operation_rc}" -b "${libnotify_body}" \
+        -u "${CRI_ALERTING_LIBNOTIFY_USERNAME}"
+    fi
+{% endif %}
 }
 
 [[ "${0}" == "${BASH_SOURCE[0]}" ]] && cri_alerting_handler "${@}"

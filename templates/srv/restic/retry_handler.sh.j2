@@ -75,6 +75,14 @@ export CRI_ALERTING_NODE="${CRI_ALERTING_NODE:-y}"
 export CRI_ALERTING_NODE_DIR="${CRI_ALERTING_NODE_DIR:-{{ current_backup.prune_alerting.node.dir | d(backup_restic_prune_alerting_node_default_dir) }}}"
 
 {% endif %}
+{% if backup_restic_desktop_host | d(false) %}
+{% if current_backup.prune_alerting.libnotify.enabled | d(backup_restic_prune_alerting_libnotify_default) | bool %}
+## Libnotify
+export CRI_ALERTING_LIBNOTIFY="${CRI_ALERTING_LIBNOTIFY:-y}"
+export CRI_ALERTING_LIBNOTIFY_USERNAME="${CRI_ALERTING_LIBNOTIFY_USERNAME:-{{ current_backup.prune_alerting.libnotify.username | d(backup_restic_prune_alerting_libnotify_default_username) }}}"
+
+{% endif %}
+{% endif %}
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
@@ -132,6 +140,14 @@ export CRI_ALERTING_DISCORD_WEBHOOK_URL="${CRI_ALERTING_DISCORD_WEBHOOK_URL:-{{ 
 export CRI_ALERTING_NODE="${CRI_ALERTING_NODE:-y}"
 export CRI_ALERTING_NODE_DIR="${CRI_ALERTING_NODE_DIR:-{{ current_backup.alerting.node.dir | d(backup_restic_alerting_node_default_dir) }}}"
 
+{% endif %}
+{% if backup_restic_desktop_host | d(false) %}
+{% if current_backup.alerting.libnotify.enabled | d(backup_restic_alerting_libnotify_default) | bool %}
+## Libnotify
+export CRI_ALERTING_LIBNOTIFY="${CRI_ALERTING_LIBNOTIFY:-y}"
+export CRI_ALERTING_LIBNOTIFY_USERNAME="${CRI_ALERTING_LIBNOTIFY_USERNAME:-{{ current_backup.alerting.libnotify.username | d(backup_restic_alerting_libnotify_default_username) }}}"
+
+{% endif %}
 {% endif %}
 {% endif %}
 

@@ -6,6 +6,10 @@
 backup_srv_path: "/srv"
 backup_restic_path: "{{ backup_srv_path }}/restic"
 
+# Type of host
+# This will be used for some types of desktop alerting
+backup_restic_desktop_host: false
+
 # Restic version
 # valid values: every version available as a release on github
 backup_restic_version: "0.12.0"
@@ -31,6 +35,7 @@ backup_restic_alerting: "{{ backup_restic_alerting_mail_default
                         or backup_restic_alerting_rocketchat_default
                         or backup_restic_alerting_discord_default
                         or backup_restic_alerting_node_default
+                        or backup_restic_alerting_libnotify_default
                         }}"
 backup_restic_prune_alerting: "{{ backup_restic_prune_alerting_mail_default
                               or backup_restic_prune_alerting_slack_default
@@ -39,6 +44,7 @@ backup_restic_prune_alerting: "{{ backup_restic_prune_alerting_mail_default
                               or backup_restic_prune_alerting_rocketchat_default
                               or backup_restic_prune_alerting_discord_default
                               or backup_restic_prune_alerting_node_default
+                              or backup_restic_prune_alerting_libnotify_default
                               }}"
 
 # Enable or disabled alerts when backup is successful
@@ -176,6 +182,27 @@ backup_restic_alerting_node_default_dir: "/var/lib/node-exporter/file_exporter/"
 backup_restic_prune_alerting_node_default: false
 backup_restic_prune_alerting_node_default_dir: "{{ backup_restic_alerting_node_default_dir }}"
 
+### Desktop notifications
+
+#### Comma separated list of notification categories
+backup_restic_alerting_libnotify_category: "restic"
+backup_restic_alerting_libnotify_default_body: "{{ backup_restic_alerting_default_body }}"
+backup_restic_alerting_libnotify_default_title: "Restic"
+backup_restic_alerting_libnotify_emoji_fail: "{{ backup_restic_alerting_default_emoji_fail }}"
+backup_restic_alerting_libnotify_emoji_success: "{{ backup_restic_alerting_default_emoji_success }}"
+#### This must be a png
+backup_restic_alerting_libnotify_icon_url: "https://github.com/restic/restic/raw/master/doc/logo/logo.png"
+backup_restic_alerting_libnotify_timeout_fail: "30000"
+backup_restic_alerting_libnotify_timeout_success: "10000"
+backup_restic_alerting_libnotify_urgency_fail: "critical"
+backup_restic_alerting_libnotify_urgency_success: "normal"
+
+backup_restic_alerting_libnotify_default: false
+backup_restic_alerting_libnotify_default_username: ""
+
+backup_restic_prune_alerting_libnotify_default: false
+backup_restic_prune_alerting_libnotify_default_username: ""
+
 ## Retry
 backup_restic_default_max_attempts: 3
 backup_restic_default_retry_interval: 600
@@ -264,7 +291,8 @@ available_backends:
 backup_restic_default_s3_host: "s3.example.com"
 backup_restic_default_s3_connection_scheme: "https"
 backup_restic_default_s3_port: "443"
-backup_restic_default_aws_region: "" # aws (optional)
+# only for aws (optional)
+backup_restic_default_aws_region: ""
 
 ## b2|backblaze
 backup_restic_default_b2_connection_scheme: ""
