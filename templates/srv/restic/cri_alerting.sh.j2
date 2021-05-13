@@ -77,9 +77,9 @@ cri_alerting_slack()
     local title="{{ backup_restic_alerting_slack_default_title }}"
 
     local attachment_color_fail="{{ backup_restic_alerting_slack_color_fail }}"
-    local attachment_color_success="{{ backup_restic_alerting_slack_color_sucess }}"
+    local attachment_color_success="{{ backup_restic_alerting_slack_color_success }}"
     local title_emote_fail="{{ backup_restic_alerting_slack_emoji_fail }}"
-    local title_emote_success="{{ backup_restic_alerting_slack_emoji_sucess }}"
+    local title_emote_success="{{ backup_restic_alerting_slack_emoji_success }}"
 
     # Error state by default, user *must* give the state to the function
     local operation_rc="1"
@@ -173,9 +173,9 @@ cri_alerting_mattermost()
     local title="{{ backup_restic_alerting_mattermost_default_title }}"
 
     local attachment_color_fail="{{ backup_restic_alerting_mattermost_color_fail }}"
-    local attachment_color_success="{{ backup_restic_alerting_mattermost_color_sucess }}"
+    local attachment_color_success="{{ backup_restic_alerting_mattermost_color_success }}"
     local title_emote_fail="{{ backup_restic_alerting_mattermost_emoji_fail }}"
-    local title_emote_success="{{ backup_restic_alerting_mattermost_emoji_sucess }}"
+    local title_emote_success="{{ backup_restic_alerting_mattermost_emoji_success }}"
 
     # Error state by default, user *must* give the state to the function
     local operation_rc="1"
@@ -293,7 +293,7 @@ cri_alerting_telegram ()
     local msg="{{ backup_restic_alerting_telegram_default_msg }}"
 
     local msg_emoji_fail=$'{{ backup_restic_alerting_telegram_emoji_fail }}'
-    local msg_emoji_success=$'{{ backup_restic_alerting_telegram_emoji_sucess }}'
+    local msg_emoji_success=$'{{ backup_restic_alerting_telegram_emoji_success }}'
 
     # Error state by default, user *must* give the state to the function
     local operation_rc="1"
@@ -351,9 +351,9 @@ cri_alerting_rocketchat()
     local title="{{ backup_restic_alerting_rocketchat_default_title }}"
 
     local attachment_color_fail="{{ backup_restic_alerting_rocketchat_color_fail }}"
-    local attachment_color_success="{{ backup_restic_alerting_rocketchat_color_sucess }}"
+    local attachment_color_success="{{ backup_restic_alerting_rocketchat_color_success }}"
     local title_emote_fail="{{ backup_restic_alerting_rocketchat_emoji_fail }}"
-    local title_emote_success="{{ backup_restic_alerting_rocketchat_emoji_sucess }}"
+    local title_emote_success="{{ backup_restic_alerting_rocketchat_emoji_success }}"
 
     # Error state by default, user *must* give the state to the function
     local operation_rc="1"
@@ -432,9 +432,9 @@ cri_alerting_discord()
     local title="{{ backup_restic_alerting_discord_default_title }}"
 
     local attachment_color_fail="{{ backup_restic_alerting_discord_color_fail }}"
-    local attachment_color_success="{{ backup_restic_alerting_discord_color_sucess }}"
+    local attachment_color_success="{{ backup_restic_alerting_discord_color_success }}"
     local title_emote_fail="{{ backup_restic_alerting_discord_emoji_fail }}"
-    local title_emote_success="{{ backup_restic_alerting_discord_emoji_sucess }}"
+    local title_emote_success="{{ backup_restic_alerting_discord_emoji_success }}"
 
     # Error state by default, user *must* give the state to the function
     local operation_rc="1"

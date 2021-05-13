@@ -48,6 +48,17 @@ backup_restic_prune_alerting_on_success: true
 backup_restic_alerting_default_body: "Restic default body"
 backup_restic_alerting_default_subject: "Restic default subject"
 
+backup_restic_alerting_default_color_fail: "#f52f2f"
+backup_restic_alerting_default_color_success: "#71c074"
+
+backup_restic_alerting_default_curl_max_time: "10"
+backup_restic_alerting_default_curl_retry: "5"
+
+backup_restic_alerting_default_emoji_fail: '\U0010071'      # :exclamation: in Unicode
+backup_restic_alerting_default_emoji_success: '\U0002705'   # :white_check_mark: in Unicode
+backup_restic_alerting_default_emote_fail: ":exclamation:"
+backup_restic_alerting_default_emote_success: ":white_check_mark:"
+
 ### Mail
 backup_restic_alerting_mail_default_body: "{{ backup_restic_alerting_default_body }}"
 backup_restic_alerting_mail_default_subject: "{{ backup_restic_alerting_default_subject }}"
@@ -70,14 +81,14 @@ backup_restic_prune_alerting_mail_default: false
 backup_restic_prune_alerting_mail_default_dest: "{{ backup_restic_alerting_mail_default_dest }}"
 
 ### Slack
-backup_restic_alerting_slack_color_fail: "#f52f2f"
-backup_restic_alerting_slack_color_sucess: "#71c074"
-backup_restic_alerting_slack_curl_max_time: "10"
-backup_restic_alerting_slack_curl_retry: "5"
+backup_restic_alerting_slack_color_fail: "{{ backup_restic_alerting_default_color_fail }}"
+backup_restic_alerting_slack_color_success: "{{ backup_restic_alerting_default_color_success }}"
+backup_restic_alerting_slack_curl_max_time: "{{ backup_restic_alerting_default_curl_max_time }}"
+backup_restic_alerting_slack_curl_retry: "{{ backup_restic_alerting_default_curl_retry }}"
 backup_restic_alerting_slack_default_body: "{{ backup_restic_alerting_default_body }}"
 backup_restic_alerting_slack_default_title: "{{ backup_restic_alerting_default_subject }}"
-backup_restic_alerting_slack_emoji_fail: ":exclamation:"
-backup_restic_alerting_slack_emoji_sucess: ":white_check_mark:"
+backup_restic_alerting_slack_emoji_fail: "{{ backup_restic_alerting_default_emote_fail }}"
+backup_restic_alerting_slack_emoji_success: "{{ backup_restic_alerting_default_emote_success }}"
 
 backup_restic_alerting_slack_default: false
 backup_restic_alerting_slack_default_channel: "alerts-restic"
@@ -88,14 +99,14 @@ backup_restic_prune_alerting_slack_default_channel: "{{ backup_restic_alerting_s
 backup_restic_prune_alerting_slack_default_webhook_url: "{{ backup_restic_alerting_slack_default_webhook_url }}"
 
 ### Mattermost
-backup_restic_alerting_mattermost_color_fail: "#f52f2f"
-backup_restic_alerting_mattermost_color_sucess: "#71c074"
-backup_restic_alerting_mattermost_curl_max_time: "10"
-backup_restic_alerting_mattermost_curl_retry: "5"
+backup_restic_alerting_mattermost_color_fail: "{{ backup_restic_alerting_default_color_fail }}"
+backup_restic_alerting_mattermost_color_success: "{{ backup_restic_alerting_default_color_success }}"
+backup_restic_alerting_mattermost_curl_max_time: "{{ backup_restic_alerting_default_curl_max_time }}"
+backup_restic_alerting_mattermost_curl_retry: "{{ backup_restic_alerting_default_curl_retry }}"
 backup_restic_alerting_mattermost_default_body: "{{ backup_restic_alerting_default_body }}"
 backup_restic_alerting_mattermost_default_title: "{{ backup_restic_alerting_default_subject }}"
-backup_restic_alerting_mattermost_emoji_fail: ":exclamation:"
-backup_restic_alerting_mattermost_emoji_sucess: ":white_check_mark:"
+backup_restic_alerting_mattermost_emoji_fail: "{{ backup_restic_alerting_default_emote_fail }}"
+backup_restic_alerting_mattermost_emoji_success: "{{ backup_restic_alerting_default_emote_success }}"
 
 backup_restic_alerting_mattermost_default: false
 backup_restic_alerting_mattermost_default_channel: "alerts-restic"
@@ -107,15 +118,15 @@ backup_restic_prune_alerting_mattermost_default_webhook_url: |
   "{{ backup_restic_alerting_mattermost_default_webhook_url }}"
 
 ### Healthchecks.io
-backup_restic_alerting_healthchecks_io_curl_max_time: "10"
-backup_restic_alerting_healthchecks_io_curl_retry: "5"
+backup_restic_alerting_healthchecks_io_curl_max_time: "{{ backup_restic_alerting_default_curl_max_time }}"
+backup_restic_alerting_healthchecks_io_curl_retry: "{{ backup_restic_alerting_default_curl_retry }}"
 
 ### Telegram
-backup_restic_alerting_telegram_curl_max_time: "10"
-backup_restic_alerting_telegram_curl_retry: "5"
+backup_restic_alerting_telegram_curl_max_time: "{{ backup_restic_alerting_default_curl_max_time }}"
+backup_restic_alerting_telegram_curl_retry: "{{ backup_restic_alerting_default_curl_retry }}"
 backup_restic_alerting_telegram_default_msg: "{{ backup_restic_alerting_default_subject }}"
-backup_restic_alerting_telegram_emoji_fail: '\U0010071' # :exclamation: in Unicode
-backup_restic_alerting_telegram_emoji_sucess: '\U0002705' # :white_check_mark: in Unicode
+backup_restic_alerting_telegram_emoji_fail: "{{ backup_restic_alerting_default_emoji_fail }}"
+backup_restic_alerting_telegram_emoji_success: "{{ backup_restic_alerting_default_emoji_success }}"
 
 backup_restic_alerting_telegram_default: false
 backup_restic_alerting_telegram_default_api_key: ""
@@ -126,14 +137,14 @@ backup_restic_prune_alerting_telegram_default_api_key: "{{ backup_restic_alertin
 backup_restic_prune_alerting_telegram_default_chat_id: "{{ backup_restic_alerting_telegram_default_chat_id }}"
 
 ### Rocket.Chat
-backup_restic_alerting_rocketchat_color_fail: "#f52f2f"
-backup_restic_alerting_rocketchat_color_sucess: "#71c074"
-backup_restic_alerting_rocketchat_curl_max_time: "10"
-backup_restic_alerting_rocketchat_curl_retry: "5"
+backup_restic_alerting_rocketchat_color_fail: "{{ backup_restic_alerting_default_color_fail }}"
+backup_restic_alerting_rocketchat_color_success: "{{ backup_restic_alerting_default_color_success }}"
+backup_restic_alerting_rocketchat_curl_max_time: "{{ backup_restic_alerting_default_curl_max_time }}"
+backup_restic_alerting_rocketchat_curl_retry: "{{ backup_restic_alerting_default_curl_retry }}"
 backup_restic_alerting_rocketchat_default_body: "{{ backup_restic_alerting_default_body }}"
 backup_restic_alerting_rocketchat_default_title: "{{ backup_restic_alerting_default_subject }}"
-backup_restic_alerting_rocketchat_emoji_fail: ":exclamation:"
-backup_restic_alerting_rocketchat_emoji_sucess: ":white_check_mark:"
+backup_restic_alerting_rocketchat_emoji_fail: "{{ backup_restic_alerting_default_emote_fail }}"
+backup_restic_alerting_rocketchat_emoji_success: "{{ backup_restic_alerting_default_emote_success }}"
 
 backup_restic_alerting_rocketchat_default: false
 backup_restic_alerting_rocketchat_default_webhook_url: ""
@@ -144,13 +155,13 @@ backup_restic_prune_alerting_rocketchat_default_webhook_url: |
 
 ### Discord
 backup_restic_alerting_discord_color_fail: "16068399"   # #f52f2f as an int
-backup_restic_alerting_discord_color_sucess: "7454836"  # #71c074 as an int
-backup_restic_alerting_discord_curl_max_time: "10"
-backup_restic_alerting_discord_curl_retry: "5"
+backup_restic_alerting_discord_color_success: "7454836"  # #71c074 as an int
+backup_restic_alerting_discord_curl_max_time: "{{ backup_restic_alerting_default_curl_max_time }}"
+backup_restic_alerting_discord_curl_retry: "{{ backup_restic_alerting_default_curl_retry }}"
 backup_restic_alerting_discord_default_body: "{{ backup_restic_alerting_default_body }}"
 backup_restic_alerting_discord_default_title: "{{ backup_restic_alerting_default_subject }}"
-backup_restic_alerting_discord_emoji_fail: ":exclamation:"
-backup_restic_alerting_discord_emoji_sucess: ":white_check_mark:"
+backup_restic_alerting_discord_emoji_fail: "{{ backup_restic_alerting_default_emote_fail }}"
+backup_restic_alerting_discord_emoji_success: "{{ backup_restic_alerting_default_emote_success }}"
 
 backup_restic_alerting_discord_default: false
 backup_restic_alerting_discord_default_webhook_url: ""

@@ -441,13 +441,13 @@ backup_restic_list:
       enabled: true
       channel: "alerts-restic"
       webhook_url: "https://hooks.slack.com/services/..."
-  alerting_on_sucess: true          # (optional if a default var exists)
+  alerting_on_success: true         # (optional if a default var exists)
   prune_alerting:                   # (optional if a default var exists)
     slack:
       enabled: true
       channel: "alerts-restic-prune"
       webhook_url: "https://hooks.slack.com/services/..."
-  prune_alerting_on_sucess: true    # (optional if a default var exists)
+  prune_alerting_on_success: true   # (optional if a default var exists)
   max_attempts: "3"                 # (optional if a default var exists)
   retry_interval: "600"             # (optional if a default var exists)
   prune_max_attempts: "2"           # (optional if a default var exists)
