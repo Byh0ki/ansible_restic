@@ -6,6 +6,17 @@
 backup_srv_path: "/srv"
 backup_restic_path: "{{ backup_srv_path }}/restic"
 
+# Arch map
+backup_restic_host_arch_map:
+  aarch64: 'arm64'
+  armv6l: 'arm'
+  armv7l: 'arm'
+  i386: '386'
+  x86_64: 'amd64'
+
+# Host arch
+backup_restic_host_arch: "{{ backup_restic_host_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+
 # Type of host
 # This will be used for some types of desktop alerting
 backup_restic_desktop_host: false

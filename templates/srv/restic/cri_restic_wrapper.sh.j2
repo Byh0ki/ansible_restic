@@ -89,7 +89,7 @@ cri_post_hooks()
 # Replace restic with restic binary path
 restic()
 {
-    {{ backup_restic_path }}/bin/restic_{{ backup_restic_version }} "$@"
+    {{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}_{{ backup_restic_host_arch }} "$@"
 }
 
 cri_integrity_check()

@@ -61,18 +61,18 @@
 
 - name: Get restic bin from Github releases
   get_url:
-    url: "https://github.com/restic/restic/releases/download/v{{ backup_restic_version }}/restic_{{ backup_restic_version }}_linux_amd64.bz2"
-    dest: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}.bz2"
+    url: "https://github.com/restic/restic/releases/download/v{{ backup_restic_version }}/restic_{{ backup_restic_version }}_linux_{{ backup_restic_host_arch }}.bz2"
+    dest: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}_{{ backup_restic_host_arch }}.bz2"
     checksum: sha256:https://github.com/restic/restic/releases/download/v{{ backup_restic_version }}/SHA256SUMS
 
 - name: Unarchive restic release
   command:
-    cmd: "bzip2 -k -d {{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}.bz2"
-    creates: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}"
+    cmd: "bzip2 -k -d {{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}_{{ backup_restic_host_arch }}.bz2"
+    creates: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}_{{ backup_restic_host_arch }}"
 
 - name: Grant exec perm to restic bin
   file:
-    path: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}"
+    path: "{{ backup_restic_path }}/bin/restic_{{ backup_restic_version }}_{{ backup_restic_host_arch }}"
     owner: root
     group: root
     mode: '0700'
