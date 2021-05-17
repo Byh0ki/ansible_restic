@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since last release
+## [unreleased] - since 1.3.0
+
+## [1.3.0] - 2021-05-17
+
+### Changed
+
+- Change `KO` tag for `FAIL` in mail alerting
 
 ## [1.2.0] - 2021-05-13
 
@@ -65,7 +71,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.2.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.3.0...master
+[1.3.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.2.0...1.3.0
 [1.2.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.1.0...1.2.0
 [1.1.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.0.0...1.1.0
 [1.0.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/0.2.0...1.0.0
