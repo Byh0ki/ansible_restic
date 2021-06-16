@@ -258,7 +258,7 @@ you want to procede ? (y/N): " user_ack
     # Hint: --path
     restic restore --host "${HOSTNAME}" --target "${RESTORE_PATH}" "$@"
 
-    cri_post_hooks "${CRI_RESTORE_PRE_HOOKS}"
+    cri_post_hooks "${CRI_RESTORE_POST_HOOKS}"
 
     echoInfo "$(TZ=UTC printf 'Restoration finished in %(%H:%M:%S)T\n' "$(( SECONDS - start_time ))")"
 }
