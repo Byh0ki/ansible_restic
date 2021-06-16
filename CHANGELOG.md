@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 1.4.0
+## [unreleased] - since 1.4.1
+
+## [1.4.1] - 2021-06-16
+
+### Changed
+
+- Allow hostname change per backup
+
+### Fixed
+
+- Fix typo in restore post hooks
 
 ## [1.4.0] - 2021-06-05
 
@@ -77,7 +87,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.4.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.4.1...master
+[1.4.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.4.0...1.4.1
 [1.4.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.3.0...1.4.0
 [1.3.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.2.0...1.3.0
 [1.2.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.1.0...1.2.0
