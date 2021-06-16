@@ -441,6 +441,7 @@ backup_restic_list:
 - name: my_default_backup
   enabled: true
   repo_password: my_password
+  hostname: "my_hostname"           # (optional if a default var exists)
   disable_prune: false              # (optional if a default var exists)
   disable_external_prune: false     # (optional if a default var exists)
   alerting:                         # (optional if a default var exists)

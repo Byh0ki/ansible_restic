@@ -247,7 +247,7 @@ backend_info()
 {% endif %}
 
 # Vars
-export HOSTNAME="{{ backup_restic_hostname }}"
+export HOSTNAME="{{ current_backup.hostname | d(backup_restic_hostname) }}"
 
 ## Backup name
 export BACKUP_NAME="{{ current_backup.name }}"
