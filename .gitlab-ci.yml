@@ -1,18 +1,21 @@
 ---
 
+include:
+  - project: cri/iac/infrastructure
+    file: .gitlab/ci/templates.yml
+
 stages:
   - lint
+  - qa
 
 ansible:
-  stage: lint
-  needs: []
-  image: registry.cri.epita.fr/cri/docker/ansible/master
-  script:
-    - ansible-lint
+  extends: .ansible
 
-yaml:
-  stage: lint
-  needs: []
-  image: registry.cri.epita.fr/cri/docker/ansible/master
-  script:
-    - yamllint -f colored .
+black:
+  extends: .black
+
+checkov:
+  extends: .checkov
+
+yamllint:
+  extends: .yamllint
