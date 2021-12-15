@@ -1,6 +1,7 @@
 ---
 
 pkg_bash_name: "bash"
+pkg_bzip2_name: "bzip2"
 pkg_coreutils_name: "coreutils"
 pkg_curl_name: "curl"
 pkg_libnotify_name: "libnotify"

@@ -47,6 +47,7 @@
   package:
     name:
       - "{{ pkg_bash_name }}"
+      - "{{ pkg_bzip2_name }}"
       - "{{ pkg_coreutils_name }}"
       - "{{ pkg_curl_name }}"
     state: present
