@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 1.4.1
+## [unreleased] - since 1.5.0
+
+## [1.5.0] - 2022-01-14
+
+### Added
+
+- Install `bzip2` package as it's not installed by default on all distro
 
 ## [1.4.1] - 2021-06-16
 
