@@ -1,11 +1,13 @@
 ---
 
 include:
+  - template: Security/SAST-IaC.latest.gitlab-ci.yml
   - project: cri/iac/infrastructure
     file: .gitlab/ci/templates.yml
 
 stages:
   - lint
+  - test
   - qa
 
 ansible:
@@ -14,8 +16,8 @@ ansible:
 black:
   extends: .black
 
-checkov:
-  extends: .checkov
+kics-iac-sast:
+  needs: []
 
 yamllint:
   extends: .yamllint
