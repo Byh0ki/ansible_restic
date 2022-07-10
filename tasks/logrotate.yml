@@ -3,12 +3,12 @@
 # roles/backup-restic/tasks/logrotate.yml
 
 - name: Install logrotate
-  package:
+  ansible.builtin.package:
     name: "{{ pkg_logrotate_name }}"
     state: present
 
 - name: Add logrotate conf for restic
-  template:
+  ansible.builtin.template:
     src: "etc/logrotate.d/backup-restic.j2"
     dest: "/etc/logrotate.d/backup-restic"
     owner: root

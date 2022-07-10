@@ -4,13 +4,13 @@
 
 # External prune
 - name: Add external prune for backup
-  include_tasks: "prune_external.yml"
+  ansible.builtin.include_tasks: "prune_external.yml"
   when: not (current_backup.disable_external_prune | d(backup_restic_default_disable_external_prune) | bool)
         and current_backup.backend.type not in backup_restic_default_no_external_prune
 
 # Local prune
 - name: add a cronjob for the local prune
-  cron:
+  ansible.builtin.cron:
     name: "{{ inventory_hostname }} - {{ current_backup.name }} prune"
     state: "{{ ((current_backup.enabled | d(false) | bool)
             and current_backup.prune_cron.enable | d(backup_restic_default_prune_cron))

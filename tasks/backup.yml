@@ -3,7 +3,7 @@
 # roles/backup-restic/tasks/backup.yml
 
 - name: Check if backup backend is valid
-  assert:
+  ansible.builtin.assert:
     that:
       - current_backup.backend is defined
       - current_backup.backend.type in available_backends
@@ -11,13 +11,13 @@
     success_msg: "{{ current_backup.name }} has a valid backend configuration"
 
 - name: Register the backups dir path
-  set_fact:
+  ansible.builtin.set_fact:
     current_backup_path: "{{ backup_restic_path }}/backups/{{ backup_restic_hostname }}_{{ current_backup.name }}"
 
 - name: Enable backup
   block:
     - name: create dir for current backup
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         owner: root
@@ -29,7 +29,7 @@
         - "{{ current_backup_path }}/logs"
 
     - name: Template backup files
-      template:
+      ansible.builtin.template:
         src: "srv/restic/{{ item }}.j2"
         dest: "{{ current_backup_path }}/{{ item }}"
         owner: root
@@ -40,7 +40,7 @@
         - "files_to_exclude"
 
     - name: Template hook scripts
-      include_tasks: "hooks.yml"
+      ansible.builtin.include_tasks: "hooks.yml"
       # FIXME It's ugly
       loop: "{{
         current_backup.backup_pre_hooks | d([])
@@ -52,7 +52,7 @@
         loop_var: current_hook
 
     - name: Template backup scripts
-      template:
+      ansible.builtin.template:
         src: "srv/restic/{{ script.src }}.j2"
         dest: "{{ current_backup_path }}/{{ script.dest }}"
         owner: root
@@ -67,13 +67,13 @@
   when: current_backup.enabled
 
 - name: Remove backup dir if needed
-  file:
+  ansible.builtin.file:
     path: "{{ current_backup_path }}"
     state: absent
   when: not current_backup.enabled
 
 - name: add a cronjob for the backup
-  cron:
+  ansible.builtin.cron:
     name: "{{ inventory_hostname }} - {{ current_backup.name }} backup"
     state: "{{ ((current_backup.enabled | d(false) | bool)
             and current_backup.backup_cron.enable | d(backup_restic_default_cron))
@@ -91,5 +91,5 @@
       2>&1
 
 - name: Add prune scripts
-  include_tasks: "prune.yml"
+  ansible.builtin.include_tasks: "prune.yml"
   when: not (current_backup.disable_prune | d(backup_restic_default_disable_prune))

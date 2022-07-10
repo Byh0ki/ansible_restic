@@ -3,7 +3,7 @@
 # roles/backup-restic/tasks/hooks.yml
 
 - name: Template hook scripts
-  template:
+  ansible.builtin.template:
     src: "{{ current_hook_path }}"
     dest: "{{ current_backup_path }}/hooks/{{ current_hook }}"
     owner: root
