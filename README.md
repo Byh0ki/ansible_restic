@@ -489,7 +489,15 @@ backup_restic_list:
   # Can be used in your templated hooks
   hooks_settings: {}
   # Simple yaml list of the hooks filenames
-  backup_pre_hooks: []              # (default to an empty list)
+  backup_pre_hooks:                 # (default to an empty list)
+    - cmd:
+      - "echo"
+      - "This is a prehook"
+      type: ""                      # (default to an empty string)
+    - cmd:
+      - "my_awesome_script.sh"
+      - "This is a prehook"
+      type: "template"              # (can also be a file if no templating is needed)
   backup_post_hooks: []             # (default to an empty list)
   restore_pre_hooks: []             # (default to an empty list)
   restore_post_hooks: []            # (default to an empty list)

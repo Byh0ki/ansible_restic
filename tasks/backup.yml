@@ -39,17 +39,8 @@
         - "files_to_include"
         - "files_to_exclude"
 
-    - name: Template hook scripts
-      ansible.builtin.include_tasks: "hooks.yml"
-      # FIXME It's ugly
-      loop: "{{
-        current_backup.backup_pre_hooks | d([])
-        + current_backup.backup_post_hooks | d([])
-        + current_backup.restore_pre_hooks | d([])
-        + current_backup.restore_post_hooks | d([])
-      }}"
-      loop_control:
-        loop_var: current_hook
+    - name: Handle hooks
+      include_tasks: "hooks_handler.yml"
 
     - name: Template backup scripts
       ansible.builtin.template:

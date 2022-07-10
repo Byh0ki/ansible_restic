@@ -61,14 +61,9 @@ cri_hooks()
     else
         local hook_start_time="${SECONDS}"
         echoInfo "Running ${hooks_type}-hooks.."
-        for hook in ${hooks}; do
-            if [ -x "${CRI_BACKUP_PATH}/hooks/${hook}" ]; then
-                echoInfo "${hook}.."
-                "${CRI_BACKUP_PATH}/hooks/${hook}"
-            else
-                # FIXME Warn or Err ?
-                echoWarn "\"${hook}\" doesn't have the proper permission."
-            fi
+        for hook in "${hooks[@]}"; do
+            echoInfo "${hook}.."
+            ${hook}
         done
         echoInfo "$(TZ=UTC printf '%s ran in %(%H:%M:%S)T\n' "${hook}" "$(( SECONDS - hook_start_time ))")"
     fi

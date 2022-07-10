@@ -35,6 +35,9 @@ backup_restic_hostname: "{{ inventory_hostname }}"
 
 # Path for hooks outside of the role
 # Can be anything, most likely a relative path like '../../my_shared_templates'
+backup_restic_files_hooks_path: ""
+backup_restic_templates_hooks_path: ""
+# Next after the previous paths
 backup_restic_hooks_path: ""
 
 # Sensible defaults

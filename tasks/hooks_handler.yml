@@ -1,0 +1,53 @@
+# yamllint disable rule:line-length
+---
+
+# roles/backup-restic/tasks/hooks_handler.yml
+
+- name: Register the list of all hooks
+  ansible.builtin.set_fact:
+    current_backup_hooks: "{{ current_backup.backup_pre_hooks | d([])
+      + current_backup.backup_post_hooks | d([])
+      + current_backup.restore_pre_hooks | d([])
+      + current_backup.restore_post_hooks | d([])
+    }}"
+    current_backup_hooks_installed: []
+
+- name: Copy or template the hooks
+  ansible.builtin.include_tasks: "hook.yml"
+  loop: "{{ current_backup_hooks }}"
+  loop_control:
+    loop_var: current_hook
+  when: current_hook.cmd | first not in current_backup_hooks_installed
+        and (current_hook.type | d("") == "file"
+        or current_hook.type | d("") == "template")
+
+# We need to prefix the templates and files with the path where they are
+# copied by Ansible as the user should not need to be aware of the dest
+
+- name: Register pre-backup hooks list
+  set_fact:
+    current_backup_pre_hooks: "{% if current_hook.type | d() %}{{ current_backup_pre_hooks | d([]) + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}{% else %}{{ current_backup_pre_hooks | d([]) + [current_hook.cmd] }}{% endif %}"
+  loop: "{{ current_backup.backup_pre_hooks | d([]) }}"
+  loop_control:
+    loop_var: current_hook
+
+- name: Register post-backup hooks list
+  set_fact:
+    current_backup_post_hooks: "{% if current_hook.type | d() %}{{ current_backup_post_hooks | d([]) + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}{% else %}{{ current_backup_post_hooks | d([]) + [current_hook.cmd] }}{% endif %}"
+  loop: "{{ current_backup.backup_post_hooks | d([]) }}"
+  loop_control:
+    loop_var: current_hook
+
+- name: Register pre-restore hooks list
+  set_fact:
+    current_backup_restore_pre_hooks: "{% if current_hook.type | d() %}{{ current_backup_restore_pre_hooks | d([]) + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}{% else %}{{ current_backup_restore_pre_hooks | d([]) + [current_hook.cmd] }}{% endif %}"
+  loop: "{{ current_backup.restore_pre_hooks | d([]) }}"
+  loop_control:
+    loop_var: current_hook
+
+- name: Register post-restore hooks list
+  set_fact:
+    current_backup_restore_post_hooks: "{% if current_hook.type | d() %}{{ current_backup_restore_post_hooks | d([]) + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}{% else %}{{ current_backup_restore_post_hooks | d([]) + [current_hook.cmd] }}{% endif %}"
+  loop: "{{ current_backup.restore_post_hooks | d([]) }}"
+  loop_control:
+    loop_var: current_hook
