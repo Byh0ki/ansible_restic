@@ -3,6 +3,50 @@
 
 # roles/backup-restic/tasks/hooks_patcher.yml
 
-- name: Patch hooks list
+- name: Register pre-backup hooks list
   ansible.builtin.set_fact:
-    "{{ current_hook_patched_list }}": "{% if current_hook.type | d() %}{{ vars[current_hook_patched_list] + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}{% else %}{{ vars[current_hook_patched_list] + [current_hook.cmd] }}{% endif %}"
+    current_backup_pre_hooks: >
+      {%- if current_hook.type | d() -%}
+        {{ current_backup_pre_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
+      {%- else -%}
+        {{ current_backup_pre_hooks + [current_hook.cmd] }}
+      {%- endif -%}
+  loop: "{{ current_backup.backup_pre_hooks | d([]) }}"
+  loop_control:
+    loop_var: current_hook
+
+- name: Register post-backup hooks list
+  ansible.builtin.set_fact:
+    current_backup_post_hooks: >
+      {%- if current_hook.type | d() -%}
+        {{ current_backup_post_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
+      {%- else -%}
+        {{ current_backup_post_hooks + [current_hook.cmd] }}
+      {%- endif -%}
+  loop: "{{ current_backup.backup_post_hooks | d([]) }}"
+  loop_control:
+    loop_var: current_hook
+
+- name: Register pre-restore hooks list
+  ansible.builtin.set_fact:
+    current_backup_restore_pre_hooks: >
+      {%- if current_hook.type | d() -%}
+        {{ current_backup_restore_pre_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
+      {%- else -%}
+        {{ current_backup_restore_pre_hooks + [current_hook.cmd] }}
+      {%- endif -%}
+  loop: "{{ current_backup.restore_pre_hooks | d([]) }}"
+  loop_control:
+    loop_var: current_hook
+
+- name: Register post-restore hooks list
+  ansible.builtin.set_fact:
+    current_backup_restore_post_hooks: >
+      {%- if current_hook.type | d() -%}
+        {{ current_backup_restore_post_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
+      {%- else -%}
+        {{ current_backup_restore_post_hooks + [current_hook.cmd] }}
+      {%- endif -%}
+  loop: "{{ current_backup.restore_post_hooks | d([]) }}"
+  loop_control:
+    loop_var: current_hook

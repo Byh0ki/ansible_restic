@@ -26,35 +26,5 @@
 
 # We need to prefix the templates and files with the path where they are
 # copied by Ansible as the user should not need to be aware of the dest
-
-- name: Register pre-backup hooks list
+- name: Patch the hooks lists
   ansible.builtin.include_tasks: "hooks_patcher.yml"
-  vars:
-    current_hook_patched_list: "current_backup_pre_hooks"
-  loop: "{{ current_backup.backup_pre_hooks | d([]) }}"
-  loop_control:
-    loop_var: current_hook
-
-- name: Register post-backup hooks list
-  ansible.builtin.include_tasks: "hooks_patcher.yml"
-  vars:
-    current_hook_patched_list: "current_backup_post_hooks"
-  loop: "{{ current_backup.backup_post_hooks | d([]) }}"
-  loop_control:
-    loop_var: current_hook
-
-- name: Register pre-restore hooks list
-  ansible.builtin.include_tasks: "hooks_patcher.yml"
-  vars:
-    current_hook_patched_list: "current_backup_restore_pre_hooks"
-  loop: "{{ current_backup.restore_pre_hooks | d([]) }}"
-  loop_control:
-    loop_var: current_hook
-
-- name: Register post-restore hooks list
-  ansible.builtin.include_tasks: "hooks_patcher.yml"
-  vars:
-    current_hook_patched_list: "current_backup_restore_post_hooks"
-  loop: "{{ current_backup.restore_post_hooks | d([]) }}"
-  loop_control:
-    loop_var: current_hook
