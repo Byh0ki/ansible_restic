@@ -6,36 +6,39 @@
   ansible.builtin.set_fact:
     current_hook_script_name: "{{ current_hook.cmd | first }}"
 
-- name: Copy files hook scripts
-  ansible.builtin.copy:
-    src: "{{ current_hook_path }}"
-    dest: "{{ current_backup_path }}/hooks/{{ current_hook_script_name }}"
-    owner: root
-    group: root
-    mode: "0755"
-  with_first_found:
-    - "{{ backup_restic_files_hooks_path }}/{{ current_hook_script_name }}"
-    - "{{ backup_restic_hooks_path }}/{{ current_hook_script_name }}"
-    - "srv/restic/hooks/{{ current_hook_script_name }}"  # Relative to role's files dir
-  loop_control:
-    loop_var: current_hook_path
-  when: current_hook.type | d("") == "file"
+- name: Copy or template hook scripts if needed
+  block:
+    - name: Copy files hook scripts
+      ansible.builtin.copy:
+        src: "{{ current_hook_path }}"
+        dest: "{{ current_backup_path }}/hooks/{{ current_hook_script_name }}"
+        owner: root
+        group: root
+        mode: "0755"
+      with_first_found:
+        - "{{ backup_restic_files_hooks_path }}/{{ current_hook_script_name }}"
+        - "{{ backup_restic_hooks_path }}/{{ current_hook_script_name }}"
+        - "srv/restic/hooks/{{ current_hook_script_name }}"  # Relative to role's files dir
+      loop_control:
+        loop_var: current_hook_path
+      when: current_hook.type | d("") == "file"
 
-- name: Template hook scripts
-  ansible.builtin.template:
-    src: "{{ current_hook_path }}"
-    dest: "{{ current_backup_path }}/hooks/{{ current_hook_script_name }}"
-    owner: root
-    group: root
-    mode: "0755"
-  with_first_found:
-    - "{{ backup_restic_templates_hooks_path }}/{{ current_hook_script_name }}"
-    - "{{ backup_restic_hooks_path }}/{{ current_hook_script_name }}"
-    - "srv/restic/hooks/{{ current_hook_script_name }}"  # Relative to role's template dir
-  loop_control:
-    loop_var: current_hook_path
-  when: current_hook.type | d("") == "template"
+    - name: Template hook scripts
+      ansible.builtin.template:
+        src: "{{ current_hook_path }}"
+        dest: "{{ current_backup_path }}/hooks/{{ current_hook_script_name }}"
+        owner: root
+        group: root
+        mode: "0755"
+      with_first_found:
+        - "{{ backup_restic_templates_hooks_path }}/{{ current_hook_script_name }}"
+        - "{{ backup_restic_hooks_path }}/{{ current_hook_script_name }}"
+        - "srv/restic/hooks/{{ current_hook_script_name }}"  # Relative to role's template dir
+      loop_control:
+        loop_var: current_hook_path
+      when: current_hook.type | d("") == "template"
 
-- name: Register current hook as installed
-  ansible.builtin.set_fact:
-    current_backup_hooks_installed: "{{ current_backup_hooks_installed + [ current_hook_script_name ] }}"
+    - name: Register current hook as installed
+      ansible.builtin.set_fact:
+        current_backup_hooks_installed: "{{ current_backup_hooks_installed + [ current_hook_script_name ] }}"
+  when: current_hook_script_name not in current_backup_hooks_installed

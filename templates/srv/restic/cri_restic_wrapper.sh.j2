@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-{{ ansible_managed|comment }}
+{{ ansible_managed | comment }}
 
 set -eo pipefail -o errexit -o errtrace
 
@@ -48,37 +48,60 @@ usage_restore()
     exit "${1:-1}"
 }
 
+get_cri_hooks()
+{
+    if [ -r "${CRI_BACKUP_PATH}/hooks_vars" ]; then
+        echoInfo "Sourcing hooks file \"${CRI_BACKUP_PATH}/hooks_vars\"..."
+        source "${CRI_BACKUP_PATH}/hooks_vars"
+    else
+        echoInfo "No hooks file detected at \"${CRI_BACKUP_PATH}/hooks_vars\", defaulting to empty hooks..."
+    fi
+}
+
 cri_hooks()
 {
     # $1: type of hook: pre|post
-    # $2: hooks to run
+    # $2: array of array of hooks to run
 
-    local hooks_type="$1"
-    local hooks="$2"
+    local hooks_type="$1"; shift
+    local hooks=( "$@" )
 
-    if [ -z "${hooks}" ]; then
+    local nb_hooks="{{ "${#hooks[@]}" }}"
+    local current_hook_nb="1"
+
+    if [ "${nb_hooks}" -eq "0" ]; then
         echoInfo "No ${hooks_type}-hook."
     else
-        local hook_start_time="${SECONDS}"
+        local hook_start_time="0"
         echoInfo "Running ${hooks_type}-hooks.."
+        echoInfo "Number of ${hooks_type}-hooks: ${nb_hooks}"
+
         for hook in "${hooks[@]}"; do
-            echoInfo "${hook}.."
-            ${hook}
+            hook_start_time="${SECONDS}"
+
+            # shellcheck disable=SC1087
+            current_hook="$hook[@]"
+            echoInfo "${hooks_type}-hook ${current_hook_nb}/${nb_hooks}: ${!current_hook}"
+            "${!current_hook}"
+
+            echoInfo "$(TZ=UTC printf '%s ran in %(%H:%M:%S)T\n' "${hooks_type}-hook ${current_hook_nb}" "$(( SECONDS - hook_start_time ))")"
+
+            (( current_hook_nb = current_hook_nb + 1 ))
         done
-        echoInfo "$(TZ=UTC printf '%s ran in %(%H:%M:%S)T\n' "${hook}" "$(( SECONDS - hook_start_time ))")"
+
     fi
 }
 
 cri_pre_hooks()
 {
-    # $1: hooks to run
-    cri_hooks "pre" "${1}"
+    # $@: hooks array to run
+    cri_hooks "pre" "$@"
 }
 
 cri_post_hooks()
 {
-    # $1: hooks to run
-    cri_hooks "post" "${1}"
+    # $@: hooks array to run
+    cri_hooks "post" "$@"
 }
 
 # Replace restic with restic binary path
@@ -143,6 +166,8 @@ cri_backup()
         usage_backup 1
     fi
 
+    get_cri_hooks
+
     local start_time="${SECONDS}"
 
     # Oh wait it's illegal...
@@ -171,14 +196,14 @@ $(grep --color=never -v '^ *#' "${CRI_BACKUP_PATH}/${excludes_filename}" | sed -
         fi
     fi
 
-    cri_pre_hooks "${CRI_BACKUP_PRE_HOOKS}"
+    cri_pre_hooks "${CRI_BACKUP_PRE_HOOKS[@]}"
 
     # Actual backup
     restic backup -H "${HOSTNAME}" --files-from "${CRI_BACKUP_PATH}/${includes_filename}" \
     --exclude-file "${CRI_BACKUP_PATH}/${excludes_filename}" \
     "$@"
 
-    cri_post_hooks "${CRI_BACKUP_POST_HOOKS}"
+    cri_post_hooks "${CRI_BACKUP_POST_HOOKS[@]}"
 
     cri_integrity_check "${CRI_BACKUP_DATA_INTEGRITY_CHECK}"
 
@@ -240,20 +265,22 @@ you want to procede ? (y/N): " user_ack
 
     mkdir -p "${RESTORE_PATH}"
 
+    get_cri_hooks
+
     start_time=${SECONDS}
 
     echo
     echoInfo "Starting restoration"
     echoInfo "Restoration destination: ${RESTORE_PATH}"
 
-    cri_pre_hooks "${CRI_RESTORE_PRE_HOOKS}"
+    cri_pre_hooks "${CRI_RESTORE_PRE_HOOKS[@]}"
 
     #
     # TODO ADD A WAY TO RESTORE ONLY A PATH IN THE SNAPSHOT
     # Hint: --path
     restic restore --host "${HOSTNAME}" --target "${RESTORE_PATH}" "$@"
 
-    cri_post_hooks "${CRI_RESTORE_POST_HOOKS}"
+    cri_post_hooks "${CRI_RESTORE_POST_HOOKS[@]}"
 
     echoInfo "$(TZ=UTC printf 'Restoration finished in %(%H:%M:%S)T\n' "$(( SECONDS - start_time ))")"
 }

@@ -42,7 +42,7 @@
     - name: Handle hooks
       include_tasks: "hooks_handler.yml"
 
-    - name: Template backup scripts
+    - name: Template backup scripts and files
       ansible.builtin.template:
         src: "srv/restic/{{ script.src }}.j2"
         dest: "{{ current_backup_path }}/{{ script.dest }}"
@@ -52,6 +52,7 @@
       loop:
         - {src: "cri_restic.sh", dest: "{{ current_backup.name }}.sh"}
         - {src: "extra_vars", dest: "extra_vars"}
+        - {src: "hooks_vars", dest: "hooks_vars"}
         - {src: "retry_handler.sh", dest: "retry_handler.sh"}
       loop_control:
         loop_var: script

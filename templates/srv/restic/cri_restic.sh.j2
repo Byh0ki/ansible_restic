@@ -256,11 +256,6 @@ export RESTORE_PATH="${RESTORE_PATH:-{{ current_backup.restore_path | d(backup_r
 
 export CRI_BACKUP_PATH="{{ current_backup_path }}"
 
-export CRI_BACKUP_PRE_HOOKS=( {% for hook in current_backup_pre_hooks | d([]) %}"{{ hook | join(" ") }}" {% endfor %})
-export CRI_BACKUP_POST_HOOKS=( {% for hook in current_backup_post_hooks | d([]) %}"{{ hook | join(" ") }}" {% endfor %})
-export CRI_RESTORE_PRE_HOOKS=( {% for hook in current_backup_restore_pre_hooks | d([]) %}"{{ hook | join(" ") }}" {% endfor %})
-export CRI_RESTORE_POST_HOOKS=( {% for hook in current_backup_restore_post_hooks | d([]) %}"{{ hook | join(" ") }}" {% endfor %})
-
 ## Restic password, used to encrypt repository content
 export RESTIC_PASSWORD="${RESTIC_PASSWORD:-{{ current_backup.repo_password }}}"
 

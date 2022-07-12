@@ -1,0 +1,20 @@
+{{ ansible_managed | comment }}
+
+# Generating array of array in bash...
+{% for cmd_list in current_backup_pre_hooks | d([]) %}
+export CRI_BACKUP_PRE_HOOKS_{{ loop.index }}=( {% for cmd in cmd_list %}"{{ cmd }}" {% endfor %})
+{% endfor %}
+{% for cmd_list in current_backup_post_hooks | d([]) %}
+export CRI_BACKUP_POST_HOOKS_{{ loop.index }}=( {% for cmd in cmd_list %}"{{ cmd }}" {% endfor %})
+{% endfor %}
+{% for cmd_list in current_backup_restore_pre_hooks | d([]) %}
+export CRI_RESTORE_PRE_HOOKS_{{ loop.index }}=( {% for cmd in cmd_list %}"{{ cmd }}" {% endfor %})
+{% endfor %}
+{% for cmd_list in current_backup_restore_post_hooks | d([]) %}
+export CRI_RESTORE_POST_HOOKS_{{ loop.index }}=( {% for cmd in cmd_list %}"{{ cmd }}" {% endfor %})
+{% endfor %}
+
+export CRI_BACKUP_PRE_HOOKS=( {% for hook in current_backup_pre_hooks | d([]) %}"CRI_BACKUP_PRE_HOOKS_{{ loop.index }}" {% endfor %})
+export CRI_BACKUP_POST_HOOKS=( {% for hook in current_backup_post_hooks | d([]) %}"CRI_BACKUP_POST_HOOKS_{{ loop.index }}" {% endfor %})
+export CRI_RESTORE_PRE_HOOKS=( {% for hook in current_backup_restore_pre_hooks | d([]) %}"CRI_RESTORE_PRE_HOOKS_{{ loop.index }}" {% endfor %})
+export CRI_RESTORE_POST_HOOKS=( {% for hook in current_backup_restore_post_hooks | d([]) %}"CRI_RESTORE_POST_HOOKS_{{ loop.index }}" {% endfor %})
