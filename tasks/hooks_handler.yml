@@ -16,6 +16,20 @@
     current_backup_restore_pre_hooks: []
     current_backup_restore_post_hooks: []
 
+- name: Fail if the hooks dict doesn't contain the expected keys
+  ansible.builtin.assert:
+    that:
+      - current_hook.cmd | d([]) | length != 0
+      - current_hook.type | d("") == ""
+        or current_hook.type | d("") == "file"
+        or current_hook.type | d("") == "template"
+    fail_msg: "{{ current_hook.name | d('Hook number ' + current_hook_index | string) }} doesn't have a valid configuration"
+    success_msg: "{{ current_hook.name | d('Hook number ' + current_hook_index | string) }} has a valid configuration"
+  loop: "{{ current_backup_hooks }}"
+  loop_control:
+    loop_var: current_hook
+    index_var: current_hook_index
+
 - name: Copy or template the hooks
   ansible.builtin.include_tasks: "hook.yml"
   loop: "{{ current_backup_hooks }}"

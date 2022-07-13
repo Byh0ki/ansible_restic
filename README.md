@@ -494,6 +494,7 @@ backup_restic_list:
       - "echo"
       - "This is a prehook"
       type: ""                      # (default to an empty string)
+      name: "echo-cmd"              # (optional, only used for deployment output)
     - cmd:
       - "my_awesome_script.sh"
       - "This is a prehook"
