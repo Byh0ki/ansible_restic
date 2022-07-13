@@ -67,12 +67,12 @@ cri_hooks()
     local hooks=( "$@" )
 
     local nb_hooks="{{ "${#hooks[@]}" }}"
-    local current_hook_nb="1"
 
     if [ "${nb_hooks}" -eq "0" ]; then
         echoInfo "No ${hooks_type}-hook."
     else
         local hook_start_time="0"
+        local current_hook_nb="1"
         echoInfo "Running ${hooks_type}-hooks.."
         echoInfo "Number of ${hooks_type}-hooks: ${nb_hooks}"
 

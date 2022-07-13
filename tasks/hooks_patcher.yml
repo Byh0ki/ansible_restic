@@ -7,9 +7,9 @@
   ansible.builtin.set_fact:
     current_backup_pre_hooks: >
       {%- if current_hook.type | d() -%}
-        {{ current_backup_pre_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
+      {{ current_backup_pre_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
       {%- else -%}
-        {{ current_backup_pre_hooks + [current_hook.cmd] }}
+      {{ current_backup_pre_hooks + [current_hook.cmd] }}
       {%- endif -%}
   loop: "{{ current_backup.backup_pre_hooks | d([]) }}"
   loop_control:
@@ -19,9 +19,9 @@
   ansible.builtin.set_fact:
     current_backup_post_hooks: >
       {%- if current_hook.type | d() -%}
-        {{ current_backup_post_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
+      {{ current_backup_post_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
       {%- else -%}
-        {{ current_backup_post_hooks + [current_hook.cmd] }}
+      {{ current_backup_post_hooks + [current_hook.cmd] }}
       {%- endif -%}
   loop: "{{ current_backup.backup_post_hooks | d([]) }}"
   loop_control:
@@ -31,9 +31,9 @@
   ansible.builtin.set_fact:
     current_backup_restore_pre_hooks: >
       {%- if current_hook.type | d() -%}
-        {{ current_backup_restore_pre_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
+      {{ current_backup_restore_pre_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
       {%- else -%}
-        {{ current_backup_restore_pre_hooks + [current_hook.cmd] }}
+      {{ current_backup_restore_pre_hooks + [current_hook.cmd] }}
       {%- endif -%}
   loop: "{{ current_backup.restore_pre_hooks | d([]) }}"
   loop_control:
@@ -43,9 +43,9 @@
   ansible.builtin.set_fact:
     current_backup_restore_post_hooks: >
       {%- if current_hook.type | d() -%}
-        {{ current_backup_restore_post_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
+      {{ current_backup_restore_post_hooks + [([ current_backup_path + '/hooks/' + current_hook.cmd[0]] + current_hook.cmd[1:])] }}
       {%- else -%}
-        {{ current_backup_restore_post_hooks + [current_hook.cmd] }}
+      {{ current_backup_restore_post_hooks + [current_hook.cmd] }}
       {%- endif -%}
   loop: "{{ current_backup.restore_post_hooks | d([]) }}"
   loop_control:
