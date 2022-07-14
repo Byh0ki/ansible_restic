@@ -1,17 +1,45 @@
 {{ ansible_managed | comment }}
 
-# Generating array of array in bash...
+# Generating bash functions that will contain the hooks
+# Backup pre-hooks
 {% for cmd_list in current_backup_pre_hooks | d([]) %}
-CRI_BACKUP_PRE_HOOKS_{{ loop.index }}=( {% for cmd in cmd_list %}"{{ cmd }}" {% endfor %})
+CRI_BACKUP_PRE_HOOKS_{{ loop.index }}()
+{
+  "{{ cmd_list | join('" "') }}"
+}
+{% if loop.index != cmd_list | length %}
+
+{% endif %}
 {% endfor %}
+# Backup post-hooks
 {% for cmd_list in current_backup_post_hooks | d([]) %}
-CRI_BACKUP_POST_HOOKS_{{ loop.index }}=( {% for cmd in cmd_list %}"{{ cmd }}" {% endfor %})
+CRI_BACKUP_POST_HOOKS_{{ loop.index }}()
+{
+  "{{ cmd_list | join('" "') }}"
+}
+{% if loop.index != cmd_list | length %}
+
+{% endif %}
 {% endfor %}
+# Restore pre-hooks
 {% for cmd_list in current_backup_restore_pre_hooks | d([]) %}
-CRI_RESTORE_PRE_HOOKS_{{ loop.index }}=( {% for cmd in cmd_list %}"{{ cmd }}" {% endfor %})
+CRI_RESTORE_PRE_HOOKS_{{ loop.index }}()
+{
+  "{{ cmd_list | join('" "') }}"
+}
+{% if loop.index != cmd_list | length %}
+
+{% endif %}
 {% endfor %}
+# Restore post-hooks
 {% for cmd_list in current_backup_restore_post_hooks | d([]) %}
-CRI_RESTORE_POST_HOOKS_{{ loop.index }}=( {% for cmd in cmd_list %}"{{ cmd }}" {% endfor %})
+CRI_RESTORE_POST_HOOKS_{{ loop.index }}()
+{
+  "{{ cmd_list | join('" "') }}"
+}
+{% if loop.index != cmd_list | length %}
+
+{% endif %}
 {% endfor %}
 
 CRI_BACKUP_PRE_HOOKS=( {% for hook in current_backup_pre_hooks | d([]) %}"CRI_BACKUP_PRE_HOOKS_{{ loop.index }}" {% endfor %})

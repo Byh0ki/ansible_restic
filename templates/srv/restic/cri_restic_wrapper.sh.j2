@@ -79,16 +79,14 @@ cri_hooks()
         for hook in "${hooks[@]}"; do
             hook_start_time="${SECONDS}"
 
-            # shellcheck disable=SC1087
-            current_hook="$hook[@]"
-            echoInfo "${hooks_type}-hook ${current_hook_nb}/${nb_hooks}: ${!current_hook}"
-            "${!current_hook}"
+            current_hook="${hook}"
+            echoInfo "${hooks_type^}-hook ${current_hook_nb}/${nb_hooks}:"
+            "${current_hook}"
 
-            echoInfo "$(TZ=UTC printf '%s ran in %(%H:%M:%S)T\n' "${hooks_type}-hook ${current_hook_nb}" "$(( SECONDS - hook_start_time ))")"
+            echoInfo "$(TZ=UTC printf '%s ran in %(%H:%M:%S)T\n' "${hooks_type^}-hook ${current_hook_nb}" "$(( SECONDS - hook_start_time ))")"
 
             (( current_hook_nb = current_hook_nb + 1 ))
         done
-
     fi
 }
 
