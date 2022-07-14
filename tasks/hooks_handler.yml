@@ -23,7 +23,8 @@
       - current_hook.type | d("") == ""
         or current_hook.type | d("") == "file"
         or current_hook.type | d("") == "template"
-    fail_msg: "{{ current_hook.name | d('Hook number ' + current_hook_index | string) }} doesn't have a valid configuration"
+    fail_msg: |
+      {{ current_hook.name | d('Hook number ' + current_hook_index | string) }} doesn't have a valid configuration
     success_msg: "{{ current_hook.name | d('Hook number ' + current_hook_index | string) }} has a valid configuration"
   loop: "{{ current_backup_hooks }}"
   loop_control:
