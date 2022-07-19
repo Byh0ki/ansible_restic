@@ -23,6 +23,7 @@ backup_restic_desktop_host: false
 
 # Restic version
 # valid values: every version available as a release on github
+# renovate: repository="restic/restic"
 backup_restic_version: "0.13.1"
 
 # Prune host

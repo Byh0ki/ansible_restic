@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>cri/iac/infrastructure//renovate-presets"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["defaults/.+\\.ya?ml$"],
+      "matchStrings": [
+        "# renovate: repository=\"?(?<depName>[^\"]*?)\"?\n *backup_restic_version: \"?(?<currentValue>[^\" ]*)\"?"
+      ],
+      "datasourceTemplate": "github-releases"
+    }
   ]
 }
