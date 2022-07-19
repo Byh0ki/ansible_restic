@@ -323,3 +323,6 @@ backup_restic_default_sftp_port: ""
 # Backups definition
 # List of dictionnaries defining the backups
 backup_restic_list: []
+
+# This list will allow the user to deploy only a subset of the backups
+backup_restic_list_partial: []

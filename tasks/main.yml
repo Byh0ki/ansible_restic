@@ -99,3 +99,5 @@
   loop_control:
     loop_var: current_backup
     label: "{{ current_backup.name }}"
+  when: current_backup.name in backup_restic_list_partial
+        or backup_restic_list_partial | length == 0
