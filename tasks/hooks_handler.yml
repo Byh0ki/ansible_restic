@@ -2,7 +2,7 @@
 
 # roles/backup-restic/tasks/hooks_handler.yml
 
-- name: Register the list of all hooks
+- name: Register some facts to properly handle the hooks
   ansible.builtin.set_fact:
     current_backup_hooks: "{{ current_backup.backup_pre_hooks | d([])
       + current_backup.backup_post_hooks | d([])
@@ -10,11 +10,12 @@
       + current_backup.restore_post_hooks | d([])
     }}"
     current_backup_hooks_installed: []
-    # lists that will be used in the rest of the role
-    current_backup_pre_hooks: []
-    current_backup_post_hooks: []
-    current_backup_restore_pre_hooks: []
-    current_backup_restore_post_hooks: []
+    # Creating a dict with all the hooks lists that will be used during the hooks templating phase
+    current_backup_hooks_dict:
+      CRI_BACKUP_PRE_HOOKS: "{{ current_backup.backup_pre_hooks | d([]) }}"
+      CRI_BACKUP_POST_HOOKS: "{{ current_backup.backup_post_hooks | d([]) }}"
+      CRI_BACKUP_RESTORE_PRE_HOOKS: "{{ current_backup.restore_pre_hooks | d([]) }}"
+      CRI_BACKUP_RESTORE_POST_HOOKS: "{{ current_backup.restore_post_hooks | d([]) }}"
 
 - name: Fail if the hooks dict doesn't contain the expected keys
   ansible.builtin.assert:
@@ -38,8 +39,3 @@
     loop_var: current_hook
   when: current_hook.type | d("") == "file"
         or current_hook.type | d("") == "template"
-
-# We need to prefix the templates and files with the path where they are
-# copied by Ansible as the user should not need to be aware of the dest
-- name: Patch the hooks lists
-  ansible.builtin.include_tasks: "hooks_patcher.yml"
