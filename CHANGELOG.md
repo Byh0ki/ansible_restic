@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 1.5.0
+## [unreleased] - since 1.7.0
+
+## [1.7.0] - 2022-07-19
+
+### Added
+
+- Allow partial deployment of the backups
+
+## [1.6.0] - 2022-07-19
+
+### Changed
+
+- Bump default restic version to 0.13.1
 
 ## [1.5.0] - 2022-01-14
 
@@ -93,7 +105,10 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.4.1...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.7.0...master
+[1.7.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.6.0...1.7.0
+[1.6.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.5.0...1.6.0
+[1.5.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.4.1...1.5.0
 [1.4.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.4.0...1.4.1
 [1.4.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.3.0...1.4.0
 [1.3.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.2.0...1.3.0
