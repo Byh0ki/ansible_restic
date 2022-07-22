@@ -28,6 +28,8 @@ RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.prune_retry_interval | d(bac
 # Alerting settings
 CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (true in (current_backup.prune_alerting | d({}) | json_query('*.enabled'))) and not backup_restic_prune_alerting %}y{% endif %}}"
 CRI_DISABLE_ALERTING_ON_SUCCESS="${CRI_DISABLE_ALERTING_ON_SUCCESS:-{% if not (current_backup.prune_alerting_on_success | d(backup_restic_prune_alerting_on_success) | bool) %}y{% endif %}}"
+CRI_ALERTING_ON_SUCCESS_CANARY="${CRI_ALERTING_ON_SUCCESS_CANARY:-{% if current_backup.prune_alerting_on_success_canary | d(backup_restic_prune_alerting_on_success_canary) | bool) %}y{% endif %}}"
+CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT="${CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT:-{{ current_backup.prune_alerting_on_success_canary_percent | d(backup_restic_prune_alerting_on_success_canary_percent) }}"
 {% if current_backup.prune_alerting.mail.enabled | d(backup_restic_prune_alerting_mail_default) | bool %}
 ## Mail
 export CRI_ALERTING_MAIL="${CRI_ALERTING_MAIL:-y}"
@@ -94,6 +96,8 @@ RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_re
 # Alerting settings
 CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (true in (current_backup.alerting | d({}) | json_query('*.enabled'))) and not backup_restic_alerting %}y{% endif %}}"
 CRI_DISABLE_ALERTING_ON_SUCCESS="${CRI_DISABLE_ALERTING_ON_SUCCESS:-{% if not (current_backup.alerting_on_success | d(backup_restic_alerting_on_success) | bool) %}y{% endif %}}"
+CRI_ALERTING_ON_SUCCESS_CANARY="${CRI_ALERTING_ON_SUCCESS_CANARY:-{% if current_backup.alerting_on_success_canary | d(backup_restic_alerting_on_success_canary) | bool) %}y{% endif %}}"
+CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT="${CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT:-{{ current_backup.alerting_on_success_canary_percent | d(backup_restic_alerting_on_success_canary_percent) }}"
 {% if current_backup.alerting.mail.enabled | d(backup_restic_alerting_mail_default) | bool %}
 ## Mail
 export CRI_ALERTING_MAIL="${CRI_ALERTING_MAIL:-y}"

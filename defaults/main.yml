@@ -63,7 +63,11 @@ backup_restic_prune_alerting: "{{ backup_restic_prune_alerting_mail_default
 
 # Enable or disabled alerts when backup is successful
 backup_restic_alerting_on_success: true
+backup_restic_alerting_on_success_canary: false
+backup_restic_alerting_on_success_canary_percent: "5"
 backup_restic_prune_alerting_on_success: true
+backup_restic_prune_alerting_on_success_canary: false
+backup_restic_prune_alerting_on_success_canary_percent: "5"
 
 backup_restic_alerting_default_body: "Restic default body"
 backup_restic_alerting_default_subject: "Restic default subject"
