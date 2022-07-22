@@ -16,6 +16,10 @@ export HOSTNAME="{{ backup_restic_hostname }}"
 # Backup name
 export BACKUP_NAME="{{ current_backup.name }}"
 
+# Max CPU load
+CPU_LOAD_CHECK_ENABLED="${CPU_LOAD_CHECK_ENABLED:-{% if current_backup.cpu_load_check_enabled | d(backup_restic_default_cpu_load_check_enabled) | bool) %}y{% endif %}}"
+CPU_LOAD_THRESHOLD="${CPU_LOAD_THRESHOLD:-{{ current_backup.cpu_load_threshold | d(backup_restic_default_cpu_load_threshold) }}}"
+
 # Retry settings
 {% if is_prune_host | d(false) %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.prune_max_attempts | d(backup_restic_default_prune_max_attempts) }}}"
@@ -152,6 +156,29 @@ export CRI_ALERTING_LIBNOTIFY_USERNAME="${CRI_ALERTING_LIBNOTIFY_USERNAME:-{{ cu
 {% endif %}
 
 # Functions
+cpu_load_check()
+{
+    local threshold="${CPU_LOAD_THRESHOLD}"
+    local current_cpu_load=""
+
+    if [ -z "$threshold" ]; then
+        # if threshold is not defined by the user, use nb of cores as a default value
+        local nb_cores="$(grep -c '^processor' /proc/cpuinfo 2>/dev/null)"
+
+        [ "$nb_cores" -eq "0" ] && nb_cores=1
+        threshold="${nb_cores:-1}"
+    fi
+
+    current_cpu_load="$(cut -f1 -d ' ' /proc/loadavg)"
+
+    echoInfo "CPU load: ${current_cpu_load}"
+    if [ "$(echo "$current_cpu_load < $threshold" | bc)" -eq 0 ]; then
+        echoWarn "Load is too high ($current_cpu_load > $threshold), aborting.."
+        return 1
+    fi
+    return 0
+}
+
 retry_output_wrapper()
 {
     local restic_rc
@@ -161,6 +188,12 @@ retry_output_wrapper()
             cmd_attempt_info="echoWarn"
         fi
         ${cmd_attempt_info} "Attempt [${ATTEMPT}/${MAX_ATTEMPTS}].."
+    fi
+
+    if [[ "${CPU_LOAD_CHECK_ENABLED}" =~ ^(y|Y) ]]; then
+        if ! cpu_load_check; then
+            return 254
+        fi
     fi
 
     {{ current_backup_path }}/{{ current_backup.name }}.sh "$@"

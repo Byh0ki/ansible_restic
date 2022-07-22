@@ -463,6 +463,8 @@ backup_restic_list:
   retry_interval: "600"             # (optional if a default var exists)
   prune_max_attempts: "2"           # (optional if a default var exists)
   prune_retry_interval: "300"       # (optional if a default var exists)
+  cpu_load_check_enabled: true      # (optional if a default var exists)
+  cpu_load_threshold: "8"           # (optional if a default var exists)
   backup_data_integrity_check: "0%" # (optional if a default var exists)
   prune_data_integrity_check: "25%" # (optional if a default var exists)
   # By default, these commands refer to the commands defined in `restic_wrapper.sh`
