@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 1.7.0
+## [unreleased] - since 2.0.0
+
+## [2.0.0] - 2022-08-02
+
+### Added
+
+- Add support for non files/templates hooks
+- Add hook checking during deployment
 
 ## [1.7.0] - 2022-07-19
 
@@ -105,7 +112,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.7.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.0...master
+[2.0.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.7.0...2.0.0
 [1.7.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.6.0...1.7.0
 [1.6.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.5.0...1.6.0
 [1.5.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.4.1...1.5.0
