@@ -17,7 +17,7 @@ export HOSTNAME="{{ backup_restic_hostname }}"
 export BACKUP_NAME="{{ current_backup.name }}"
 
 # Max CPU load
-CPU_LOAD_CHECK_ENABLED="${CPU_LOAD_CHECK_ENABLED:-{% if current_backup.cpu_load_check_enabled | d(backup_restic_default_cpu_load_check_enabled) | bool) %}y{% endif %}}"
+CPU_LOAD_CHECK_ENABLED="${CPU_LOAD_CHECK_ENABLED:-{% if current_backup.cpu_load_check_enabled | d(backup_restic_default_cpu_load_check_enabled) | bool %}y{% endif %}}"
 CPU_LOAD_THRESHOLD="${CPU_LOAD_THRESHOLD:-{{ current_backup.cpu_load_threshold | d(backup_restic_default_cpu_load_threshold) }}}"
 
 # Retry settings
