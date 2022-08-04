@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.1.0
+## [unreleased] - since 2.2.0
+
+## [2.2.0] - 2022-08-04
+
+### Added
+
+- Add "canary" alerting when alerting is disabled on success
 
 ## [2.1.0] - 2022-08-04
 
@@ -124,7 +130,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.1.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.2.0...master
+[2.2.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.1.0...2.2.0
 [2.1.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.1...2.1.0
 [2.0.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.0...2.0.1
 [2.0.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.7.0...2.0.0
