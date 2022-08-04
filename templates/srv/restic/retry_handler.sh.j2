@@ -16,14 +16,14 @@ export HOSTNAME="{{ backup_restic_hostname }}"
 # Backup name
 export BACKUP_NAME="{{ current_backup.name }}"
 
-# Max CPU load
-CPU_LOAD_CHECK_ENABLED="${CPU_LOAD_CHECK_ENABLED:-{% if current_backup.cpu_load_check_enabled | d(backup_restic_default_cpu_load_check_enabled) | bool %}y{% endif %}}"
-CPU_LOAD_THRESHOLD="${CPU_LOAD_THRESHOLD:-{{ current_backup.cpu_load_threshold | d(backup_restic_default_cpu_load_threshold) }}}"
-
 # Retry settings
 {% if is_prune_host | d(false) %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.prune_max_attempts | d(backup_restic_default_prune_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.prune_retry_interval | d(backup_restic_default_prune_retry_interval) }}}"
+
+# Max CPU load
+CPU_LOAD_CHECK_ENABLED="${CPU_LOAD_CHECK_ENABLED:-{% if current_backup.prune_cpu_load_check_enabled | d(backup_restic_default_prune_cpu_load_check_enabled) | bool %}y{% endif %}}"
+CPU_LOAD_THRESHOLD="${CPU_LOAD_THRESHOLD:-{{ current_backup.prune_cpu_load_threshold | d(backup_restic_default_prune_cpu_load_threshold) }}}"
 
 # Alerting settings
 CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (true in (current_backup.prune_alerting | d({}) | json_query('*.enabled'))) and not backup_restic_prune_alerting %}y{% endif %}}"
@@ -93,6 +93,10 @@ export CRI_ALERTING_LIBNOTIFY_USERNAME="${CRI_ALERTING_LIBNOTIFY_USERNAME:-{{ cu
 {% else %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
+
+# Max CPU load
+CPU_LOAD_CHECK_ENABLED="${CPU_LOAD_CHECK_ENABLED:-{% if current_backup.cpu_load_check_enabled | d(backup_restic_default_cpu_load_check_enabled) | bool %}y{% endif %}}"
+CPU_LOAD_THRESHOLD="${CPU_LOAD_THRESHOLD:-{{ current_backup.cpu_load_threshold | d(backup_restic_default_cpu_load_threshold) }}}"
 
 # Alerting settings
 CRI_DISABLE_ALERTING="${CRI_DISABLE_ALERTING:-{% if not (true in (current_backup.alerting | d({}) | json_query('*.enabled'))) and not backup_restic_alerting %}y{% endif %}}"

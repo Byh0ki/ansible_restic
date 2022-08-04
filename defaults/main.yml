@@ -229,8 +229,10 @@ backup_restic_default_prune_retry_interval: 600
 
 ## CPU load
 backup_restic_default_cpu_load_check_enabled: false
+backup_restic_default_prune_cpu_load_check_enabled: false
 ### Use nb of cores by default
 backup_restic_default_cpu_load_threshold: "{{ ansible_processor_vcpus | d('') }}"
+backup_restic_default_prune_cpu_load_threshold: ""
 
 ## Restic repo integrity checks
 ### Used to determine how much data is checked after prune and backup.
