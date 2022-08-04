@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.0.1
+## [unreleased] - since 2.1.0
+
+## [2.1.0] - 2022-08-04
+
+### Added
+
+- Add opt-in check on cpu load before any operation
 
 ## [2.0.1] - 2022-08-04
 
@@ -118,7 +124,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.1...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.1.0...master
+[2.1.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.1...2.1.0
 [2.0.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.0...2.0.1
 [2.0.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.7.0...2.0.0
 [1.7.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.6.0...1.7.0
