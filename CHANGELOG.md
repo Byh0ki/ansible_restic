@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.0.0
+## [unreleased] - since 2.0.1
+
+## [2.0.1] - 2022-08-04
+
+### Fixed
+
+- Fix hooks template/copy when only one type of hook is used
 
 ## [2.0.0] - 2022-08-02
 
@@ -112,7 +118,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.1...master
+[2.0.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.0.0...2.0.1
 [2.0.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.7.0...2.0.0
 [1.7.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.6.0...1.7.0
 [1.6.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/1.5.0...1.6.0
