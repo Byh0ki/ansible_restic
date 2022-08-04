@@ -689,15 +689,17 @@ cri_alerting_handler()
 
     if [ "$operation_rc" -eq "0" ]; then
         if [[ "${CRI_DISABLE_ALERTING_ON_SUCCESS}" =~ ^(y|Y) ]]; then
-            local no_alerting_msg="No alerting because your configuration disables alerting for successful restic operations."
             if [[ "${CRI_ALERTING_ON_SUCCESS_CANARY}" =~ ^(y|Y) ]]; then
+                echoInfo "Canary alerting is enabled, alerting will happen in ${CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT}% of the cases."
                 local random_percent="$((1 + RANDOM % 100))"
                 if [ "${random_percent}" -gt "${CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT}" ]; then
-                    echoInfo "${no_alerting_msg}"
+                    echoInfo "Canary test has failed, alerting is will be skipped."
                     return
+                else
+                    echoInfo "Canary test has succeeded, proceeding with alerting.."
                 fi
             else
-                echoInfo "${no_alerting_msg}"
+                echoInfo "No alerting because your configuration disables alerting for successful restic operations."
                 return
             fi
         fi
