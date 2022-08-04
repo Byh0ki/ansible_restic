@@ -166,10 +166,11 @@ cpu_load_check()
 {
     local threshold="${CPU_LOAD_THRESHOLD}"
     local current_cpu_load=""
+    local nb_cores=""
 
     if [ -z "$threshold" ]; then
         # if threshold is not defined by the user, use nb of cores as a default value
-        local nb_cores="$(grep -c '^processor' /proc/cpuinfo 2>/dev/null)"
+        nb_cores="$(grep -c '^processor' /proc/cpuinfo 2>/dev/null)"
 
         [ "$nb_cores" -eq "0" ] && nb_cores=1
         threshold="${nb_cores:-1}"
