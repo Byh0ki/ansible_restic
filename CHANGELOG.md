@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.2.1
+## [unreleased] - since 2.4.0
+
+## [2.4.0] - 2022-08-06
+
+### Added
+
+- Allow CPU load check to be configured for backuped host and prune host separatly
+
+### Changed
+
+- Improved the log messages when using the "cpu load check" feature
 
 ## [2.3.0] - 2022-08-04
 
@@ -147,7 +157,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.3.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.4.0...master
+[2.4.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.3.0...2.4.0
 [2.3.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.2.1...2.3.0
 [2.2.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.2.0...2.2.1
 [2.2.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.1.0...2.2.0
