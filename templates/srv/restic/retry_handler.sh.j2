@@ -174,9 +174,13 @@ cpu_load_check()
 
     if [ -z "$threshold" ]; then
         # if threshold is not defined by the user, use nb of cores as a default value
+        echoInfo "No CPU load threshold was defined by the user, number of cores will be used as a default."
         nb_cores="$(grep -c '^processor' /proc/cpuinfo 2>/dev/null)"
 
-        [ "$nb_cores" -eq "0" ] && nb_cores=1
+        if [ "$nb_cores" -eq "0" ]; then
+            echoWarn "Failed to get the number of cores, defaulting to threshold = 1"
+            nb_cores=1
+        fi
         threshold="${nb_cores:-1}"
     fi
 
