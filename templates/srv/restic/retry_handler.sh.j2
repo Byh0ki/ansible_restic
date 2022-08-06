@@ -24,6 +24,17 @@ export CRI_BACKUP_HAS_FAILED_ONCE="0"
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.prune_max_attempts | d(backup_restic_default_prune_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.prune_retry_interval | d(backup_restic_default_prune_retry_interval) }}}"
 
+{% if backup_restic_desktop_host | d(false) %}
+BATTERY_CHECK_ENABLED="${BATTERY_CHECK_ENABLED:-{% if current_backup.prune_battery_check_enabled | d(backup_restic_default_prune_battery_check_enabled) | bool %}y{% endif %}}"
+BATTERY_NAME="${BATTERY_NAME:-{{ current_backup.prune_battery_name | d(backup_restic_default_prune_battery_name) }}}"
+
+BATTERY_CHECK_CAPACITY_THRESHOLD_ENABLED="${BATTERY_CHECK_CAPACITY_THRESHOLD_ENABLED:-{% if current_backup.prune_battery_check_capacity_threshold_enabled | d(backup_restic_default_prune_battery_check_capacity_threshold_enabled) | bool %}y{% endif %}}"
+BATTERY_CAPACITY_THRESHOLD="${BATTERY_CAPACITY_THRESHOLD:-{{ current_backup.prune_battery_threshold | d(backup_restic_default_prune_battery_threshold) }}}"
+
+BATTERY_CHECK_CAPACITY_CHARGING_THRESHOLD_ENABLED="${BATTERY_CHECK_CAPACITY_CHARGING_THRESHOLD_ENABLED:-{% if current_backup.prune_battery_check_capacity_charging_threshold_enabled | d(backup_restic_default_prune_battery_check_capacity_charging_threshold_enabled) | bool %}y{% endif %}}"
+BATTERY_CAPACITY_CHARGING_THRESHOLD="${BATTERY_CAPACITY_CHARGING_THRESHOLD:-{{ current_backup.prune_battery_charging_threshold | d(backup_restic_default_prune_battery_charging_threshold) }}}"
+
+{% endif %}
 # Max CPU load
 CPU_LOAD_CHECK_ENABLED="${CPU_LOAD_CHECK_ENABLED:-{% if current_backup.prune_cpu_load_check_enabled | d(backup_restic_default_prune_cpu_load_check_enabled) | bool %}y{% endif %}}"
 CPU_LOAD_THRESHOLD="${CPU_LOAD_THRESHOLD:-{{ current_backup.prune_cpu_load_threshold | d(backup_restic_default_prune_cpu_load_threshold) }}}"
@@ -103,6 +114,17 @@ export CRI_ALERTING_LIBNOTIFY_USERNAME="${CRI_ALERTING_LIBNOTIFY_USERNAME:-{{ cu
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.max_attempts | d(backup_restic_default_max_attempts) }}}"
 RETRY_INTERVAL="${RETRY_INTERVAL:-{{ current_backup.retry_interval | d(backup_restic_default_retry_interval) }}}"
 
+{% if backup_restic_desktop_host | d(false) %}
+BATTERY_CHECK_ENABLED="${BATTERY_CHECK_ENABLED:-{% if current_backup.battery_check_enabled | d(backup_restic_default_battery_check_enabled) | bool %}y{% endif %}}"
+BATTERY_NAME="${BATTERY_NAME:-{{ current_backup.battery_name | d(backup_restic_default_battery_name) }}}"
+
+BATTERY_CHECK_CAPACITY_THRESHOLD_ENABLED="${BATTERY_CHECK_CAPACITY_THRESHOLD_ENABLED:-{% if current_backup.battery_check_capacity_threshold_enabled | d(backup_restic_default_battery_check_capacity_threshold_enabled) | bool %}y{% endif %}}"
+BATTERY_CAPACITY_THRESHOLD="${BATTERY_CAPACITY_THRESHOLD:-{{ current_backup.battery_threshold | d(backup_restic_default_battery_threshold) }}}"
+
+BATTERY_CHECK_CAPACITY_CHARGING_THRESHOLD_ENABLED="${BATTERY_CHECK_CAPACITY_CHARGING_THRESHOLD_ENABLED:-{% if current_backup.battery_check_capacity_charging_threshold_enabled | d(backup_restic_default_battery_check_capacity_charging_threshold_enabled) | bool %}y{% endif %}}"
+BATTERY_CAPACITY_CHARGING_THRESHOLD="${BATTERY_CAPACITY_CHARGING_THRESHOLD:-{{ current_backup.battery_charging_threshold | d(backup_restic_default_battery_charging_threshold) }}}"
+
+{% endif %}
 # Max CPU load
 CPU_LOAD_CHECK_ENABLED="${CPU_LOAD_CHECK_ENABLED:-{% if current_backup.cpu_load_check_enabled | d(backup_restic_default_cpu_load_check_enabled) | bool %}y{% endif %}}"
 CPU_LOAD_THRESHOLD="${CPU_LOAD_THRESHOLD:-{{ current_backup.cpu_load_threshold | d(backup_restic_default_cpu_load_threshold) }}}"
@@ -181,6 +203,73 @@ export CRI_ALERTING_LIBNOTIFY_USERNAME="${CRI_ALERTING_LIBNOTIFY_USERNAME:-{{ cu
 {% endif %}
 
 # Functions
+{% if backup_restic_desktop_host | d(false) %}
+battery_capacity_check()
+{
+    # Defaults
+    local battery_capacity=""
+    local battery_capacity_threshold=""
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts c:t: battery_capacity_option; do
+        case "${battery_capacity_option}" in
+            c) battery_capacity="${OPTARG}";;
+            t) battery_capacity_threshold="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars battery_capacity battery_capacity_threshold
+
+    echo "Capacity threshold check is enabled.."
+    if [ "${battery_capacity}" -gt "${battery_capacity_threshold}" ]; then
+        echo "Battery capacity is above the threshold (${battery_capacity_threshold}%), proceeding with the remaining of the script.."
+        return 0
+    fi
+    echo "Battery capacity is below the threshold (${battery_capacity_threshold}%), aborting.."
+    return 1
+}
+
+battery_check()
+{
+    local battery_capacity=""
+    local battery_status=""
+
+    if ! [ -d "/sys/class/power_supply/${BATTERY_NAME}" ]; then
+        echo "Battery \"${BATTERY_NAME}\" doesn't exist, aborting.."
+        return 1
+    fi
+
+    battery_capacity="$(< "/sys/class/power_supply/${BATTERY_NAME}/capacity")"
+    battery_status="$(< "/sys/class/power_supply/${BATTERY_NAME}/status")"
+
+    echo "Battery infos:"
+    echo "  name: ${BATTERY_NAME}"
+    echo "  status: ${battery_status}"
+    echo "  capacity ${battery_capacity}"
+
+    # Battery is not discharging
+    if [ "${battery_status}" != "Discharging" ]; then
+        if [[ "${BATTERY_CHECK_CAPACITY_CHARGING_THRESHOLD_ENABLED}" =~ ^(y|Y) ]]; then
+            battery_capacity_check -c "${battery_capacity}" -t "${BATTERY_CAPACITY_CHARGING_THRESHOLD}"
+            return "$?"
+        fi
+        echo "Battery is not discharging, proceeding with the remaining of the script.. "
+        return 0
+    fi
+
+    # Battery is discharging
+    if [[ "${BATTERY_CHECK_CAPACITY_THRESHOLD_ENABLED}" =~ ^(y|Y) ]]; then
+        battery_capacity_check -c "${battery_capacity}" -t "${BATTERY_CAPACITY_THRESHOLD}"
+        return "$?"
+    fi
+    echo "Battery is discharging, aborting.."
+    return 1
+}
+
+{% endif %}
 cpu_load_check()
 {
     local threshold="${CPU_LOAD_THRESHOLD}"
@@ -219,6 +308,14 @@ retry_output_wrapper()
         fi
         ${cmd_attempt_info} "Attempt [${ATTEMPT}/${MAX_ATTEMPTS}].."
     fi
+{% if backup_restic_desktop_host | d(false) %}
+
+    if [[ "${BATTERY_CHECK_ENABLED}" =~ ^(y|Y) ]]; then
+        if ! battery_check; then
+            return 253
+        fi
+    fi
+{% endif %}
 
     if [[ "${CPU_LOAD_CHECK_ENABLED}" =~ ^(y|Y) ]]; then
         if ! cpu_load_check; then

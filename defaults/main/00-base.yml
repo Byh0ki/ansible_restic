@@ -76,6 +76,24 @@ backup_restic_default_retry_interval: 600
 backup_restic_default_prune_max_attempts: 3
 backup_restic_default_prune_retry_interval: 600
 
+## Battery
+### Battery check will disable, postpone or abort a backup if backuped laptop is not plugged
+backup_restic_default_battery_check_enabled: false
+backup_restic_default_battery_name: "BAT0"
+### If you still want to proceed, you can define a threshold that will allow the backup to continue
+backup_restic_default_battery_check_capacity_threshold_enabled: false
+backup_restic_default_battery_threshold: "70"
+### You can also define threshold for a charging battery
+backup_restic_default_battery_check_capacity_charging_threshold_enabled: false
+backup_restic_default_battery_charging_threshold: "70"
+
+backup_restic_default_prune_battery_check_enabled: false
+backup_restic_default_prune_battery_name: "BAT0"
+backup_restic_default_prune_battery_check_capacity_threshold_enabled: false
+backup_restic_default_prune_battery_threshold: "70"
+backup_restic_default_prune_battery_check_capacity_charging_threshold_enabled: false
+backup_restic_default_prune_battery_charging_threshold: "70"
+
 ## CPU load
 backup_restic_default_cpu_load_check_enabled: false
 backup_restic_default_prune_cpu_load_check_enabled: false
