@@ -5,6 +5,8 @@
 # Source helper functions
 source {{ backup_restic_path }}/scripts/cri_utils.sh
 
+BODY_MAX_LENGTH="${BODY_MAX_LENGTH:-{{ backup_restic_alerting_body_max_length }}}"
+
 cri_alerting_mail()
 {
     # Defaults
@@ -640,6 +642,52 @@ cri_alerting_libnotify ()
 }
 
 {% endif %}
+reduce_body_length()
+{
+    local input_string=""
+    local tmp_buffer=""
+    local nb_chars_max=""
+
+    # Options parsing
+    ## Reset OPTIND
+    OPTIND=1
+    while getopts i:l: body_length_option; do
+        case "${body_length_option}" in
+            i) input_string="${OPTARG}";;
+            l) nb_chars_max="${OPTARG}";;
+            *) echoErr "Unrecognized option"; exit 1;;
+        esac
+    done
+
+    check_vars input_string nb_chars_max
+
+    # We use nb_chars_max and the number of char we use to display a warning
+    local nb_chars_half="$(( (nb_chars_max - 300) / 2 ))"
+
+    tmp_buffer="$(head -c "${nb_chars_half}" <<< "${input_string}")"
+    if [ "$(tail -n 1 <<< "${tmp_buffer}")" != '\n' ]; then
+        # Last line of the first half is cut, removing it
+        printf "%s\n" "$(head -n -1 <<< "${tmp_buffer}")"
+    else
+        printf "%s" "${tmp_buffer}"
+    fi
+
+    echoWarn
+    echoWarn "###################################################"
+    echoWarn "Output log has been reduced, please check the local"
+    echoWarn "logs if needed"
+    echoWarn "###################################################"
+    echoWarn
+
+    tmp_buffer="$(tail -c "${nb_chars_half}" <<< "${input_string}")"
+    if [ "$(head -n 1 <<< "${tmp_buffer}")" != '\n' ]; then
+        # First line of the second half is cut, removing it
+        printf "%s" "$(tail -n +2 <<< "${tmp_buffer}")"
+    else
+        printf "%s" "${tmp_buffer}"
+    fi
+}
+
 cri_alerting_handler()
 {
     local operation_end_epoch="0"
@@ -718,6 +766,11 @@ cri_alerting_handler()
         operation_log_sanitized="$(sed 's/"/\\"/g' <<< "${operation_log}")"
     fi
 
+    if [ "$(wc -c <<< "${operation_log_sanitized}")" -gt "${BODY_MAX_LENGTH}" ]; then
+        # Remove content from the middle of the body
+        operation_log_reduced="$(reduce_body_length -l "${BODY_MAX_LENGTH}" -i "${operation_log_sanitized}")"
+    fi
+
     # Mail
     if [[ "${CRI_ALERTING_MAIL}" =~ ^(y|Y) ]]; then
         local mail_body="${body}"
@@ -733,7 +786,9 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_SLACK}" =~ ^(y|Y) ]]; then
         local slack_body="${body}"
         local slack_title="${subject}"
-        if [ -n "${operation_log_sanitized}" ]; then
+        if [ -n "${operation_log_reduced}" ]; then
+            slack_body="${operation_log_reduced}"
+        elif [ -n "${operation_log_sanitized}" ]; then
             slack_body="${operation_log_sanitized}"
         fi
         cri_alerting_slack -t "${slack_title}" -r "${operation_rc}" -b "${slack_body}" \

@@ -73,6 +73,9 @@ backup_restic_prune_alerting_on_success_canary_percent: "5"
 backup_restic_alerting_default_body: "Restic default body"
 backup_restic_alerting_default_subject: "Restic default subject"
 
+# Slack max body length
+backup_restic_alerting_body_max_length: "3001"
+
 backup_restic_alerting_default_color_fail: "#f52f2f"
 backup_restic_alerting_default_color_success: "#71c074"
 
