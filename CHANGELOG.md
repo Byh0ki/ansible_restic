@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.4.0
+## [unreleased] - since 2.5.0
+
+## [2.5.0] - 2022-08-21
+
+### Added
+
+- Add automatic alerting body reduction when body is too long for API based alerting, only enabled for Slack for the moment
 
 ## [2.4.0] - 2022-08-06
 
@@ -157,7 +163,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.4.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.5.0...master
+[2.5.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.4.0...2.5.0
 [2.4.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.3.0...2.4.0
 [2.3.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.2.1...2.3.0
 [2.2.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.2.0...2.2.1
