@@ -737,7 +737,9 @@ cri_alerting_handler()
 
     if [ "$operation_rc" -eq "0" ]; then
         if [[ "${CRI_DISABLE_ALERTING_ON_SUCCESS}" =~ ^(y|Y) ]]; then
-            if [[ "${CRI_ALERTING_ON_SUCCESS_CANARY}" =~ ^(y|Y) ]]; then
+            if [ "${CRI_BACKUP_HAS_FAILED_ONCE}" -eq "1" ]; then
+                echoInfo "Alerting will be send even if it's usually disabled on success because the script has failed at least once before."
+            elif [[ "${CRI_ALERTING_ON_SUCCESS_CANARY}" =~ ^(y|Y) ]]; then
                 echoInfo "Canary alerting is enabled, alerting will happen in ${CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT}% of the cases."
                 local random_percent="$((1 + RANDOM % 100))"
                 if [ "${random_percent}" -gt "${CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT}" ]; then

@@ -16,6 +16,9 @@ export HOSTNAME="{{ backup_restic_hostname }}"
 # Backup name
 export BACKUP_NAME="{{ current_backup.name }}"
 
+# Script state
+export CRI_BACKUP_HAS_FAILED_ONCE="0"
+
 # Retry settings
 {% if is_prune_host | d(false) %}
 MAX_ATTEMPTS="${MAX_ATTEMPTS:-{{ current_backup.prune_max_attempts | d(backup_restic_default_prune_max_attempts) }}}"
@@ -247,6 +250,10 @@ alerting_wrapper()
         # Exec with tee wrapper to duplicate output
         retry_output_wrapper "$@" > >(tee -a "${cmd_output_file}") 2>&1
         cmd_rc="$?"
+
+        if [ "${cmd_rc}" -ne "0" ]; then
+            export CRI_BACKUP_HAS_FAILED_ONCE="1"
+        fi
 
         end_epoch="$(date +%s)"
 
