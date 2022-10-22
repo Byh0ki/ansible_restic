@@ -258,6 +258,11 @@ export CRI_BACKUP_PATH="{{ current_backup_path }}"
 
 ## Restic password, used to encrypt repository content
 export RESTIC_PASSWORD="${RESTIC_PASSWORD:-{{ current_backup.repo_password }}}"
+{% if current_backup.compression_level | d(backup_restic_default_compression_level) %}
+
+## Restic compression level
+export RESTIC_COMPRESSION="${RESTIC_COMPRESSION:-{{ current_backup.compression_level | d(backup_restic_default_compression_level) }}}"
+{% endif %}
 
 ## Restic forget policy, used to tell restic which snapshot it should keep
 export BACKUP_FORGET_POLICY="${BACKUP_FORGET_POLICY:-{{ current_backup.forget_policy | d(backup_restic_default_forget_policy) }}}"
