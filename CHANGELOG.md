@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased] - since 2.6.0
 
+### Fixed
+
+- Add missing `bc` package to the list of installed packages
+
 ## [2.6.0] - 2022-11-23
 
 ### Added
