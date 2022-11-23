@@ -536,7 +536,8 @@ cri_alerting_node()
         mkdir -p "${node_dir}"
     fi
 
-    cat << EOF > "${node_dir}/node_restic_${BACKUP_NAME}_${HOSTNAME}.prom"
+    set -o pipefail
+    cat << EOF | sponge "${node_dir}/node_restic_${BACKUP_NAME}_${HOSTNAME}.prom"
 # HELP node_restic_job_exit_value Last exit code of restic job.
 # TYPE node_restic_job_exit_value gauge
 node_restic_job_exit_value{host="${HOSTNAME}", name="${BACKUP_NAME}",operation="${operation_type}"} ${operation_rc}
@@ -548,6 +549,7 @@ node_restic_job_time_start{host="${HOSTNAME}", name="${BACKUP_NAME}",operation="
 node_restic_job_time_end{host="${HOSTNAME}", name="${BACKUP_NAME}",operation="${operation_type}"} ${operation_end_epoch}
 EOF
     local cat_rc="$?"
+    set +o pipefail
 
     if [ "${cat_rc}" -ne 0 ]; then
         echoErr "Node exporter - File exporter alerting failed with:"

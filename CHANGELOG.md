@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Add a `host` label in node-exporter alerting identifying the host from which
   the backup originated.
 
+### Fixed
+
+- Node-exporter alerting now writes its metrics atomically.
+
 ## [2.6.1] - 2022-11-24
 
 ### Fixed

@@ -51,6 +51,7 @@
       - "{{ pkg_bzip2_name }}"
       - "{{ pkg_coreutils_name }}"
       - "{{ pkg_curl_name }}"
+      - "{{ pkg_moreutils_name }}"
     state: present
 
 - name: Install desktop dependencies if needed
