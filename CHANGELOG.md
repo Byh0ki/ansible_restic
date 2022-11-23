@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix restic download link when using the version type handled by renovatebot (prefixed by a `v`)
 - Add missing `bc` package to the list of installed packages
 
 ## [2.6.0] - 2022-11-23
