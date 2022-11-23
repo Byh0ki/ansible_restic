@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased] - since 2.6.1
 
+### Added
+
+- Add a `host` label in node-exporter alerting identifying the host from which
+  the backup originated.
+
 ## [2.6.1] - 2022-11-24
 
 ### Fixed
