@@ -37,12 +37,14 @@ export CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT="${CRI_ALERTING_ON_SUCCESS_CANARY_
 {% if current_backup.prune_alerting.mail.enabled | d(backup_restic_prune_alerting_mail_default) | bool %}
 ## Mail
 export CRI_ALERTING_MAIL="${CRI_ALERTING_MAIL:-y}"
+export CRI_ALERTING_MAIL_INCLUDE_LOGS="${CRI_ALERTING_MAIL_INCLUDE_LOGS:-{{ current_backup.prune_alerting.mail.include_logs | d(backup_restic_prune_alerting_mail_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_MAIL_DEST="${CRI_ALERTING_MAIL_DEST:-{{ current_backup.prune_alerting.mail.dest | d(backup_restic_prune_alerting_mail_default_dest) }}}"
 
 {% endif %}
 {% if current_backup.prune_alerting.slack.enabled | d(backup_restic_prune_alerting_slack_default) | bool %}
 ## Slack
 export CRI_ALERTING_SLACK="${CRI_ALERTING_SLACK:-y}"
+export CRI_ALERTING_SLACK_INCLUDE_LOGS="${CRI_ALERTING_SLACK_INCLUDE_LOGS:-{{ current_backup.prune_alerting.slack.include_logs | d(backup_restic_prune_alerting_slack_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_SLACK_CHANNEL="${CRI_ALERTING_SLACK_CHANNEL:-{{ current_backup.prune_alerting.slack.channel | d(backup_restic_prune_alerting_slack_default_channel) }}}"
 export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ current_backup.prune_alerting.slack.webhook_url | d(backup_restic_prune_alerting_slack_default_webhook_url) }}}"
 
@@ -50,6 +52,7 @@ export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ curr
 {% if current_backup.prune_alerting.mattermost.enabled | d(backup_restic_prune_alerting_mattermost_default) | bool %}
 ## Mattermost
 export CRI_ALERTING_MATTERMOST="${CRI_ALERTING_MATTERMOST:-y}"
+export CRI_ALERTING_MATTERMOST_INCLUDE_LOGS="${CRI_ALERTING_MATTERMOST_INCLUDE_LOGS:-{{ current_backup.prune_alerting.mattermost.include_logs | d(backup_restic_prune_alerting_mattermost_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_MATTERMOST_CHANNEL="${CRI_ALERTING_MATTERMOST_CHANNEL:-{{ current_backup.prune_alerting.mattermost.channel | d(backup_restic_prune_alerting_mattermost_default_channel) }}}"
 export CRI_ALERTING_MATTERMOST_WEBHOOK_URL="${CRI_ALERTING_MATTERMOST_WEBHOOK_URL:-{{ current_backup.prune_alerting.mattermost.webhook_url | d(backup_restic_prune_alerting_mattermost_default_webhook_url) }}}"
 
@@ -70,12 +73,14 @@ export CRI_ALERTING_TELEGRAM_CHAT_ID="${CRI_ALERTING_TELEGRAM_CHAT_ID:-{{ curren
 {% if current_backup.prune_alerting.rocketchat.enabled | d(backup_restic_prune_alerting_rocketchat_default) | bool %}
 ## Rocketchat
 export CRI_ALERTING_ROCKETCHAT="${CRI_ALERTING_ROCKETCHAT:-y}"
+export CRI_ALERTING_ROCKETCHAT_INCLUDE_LOGS="${CRI_ALERTING_ROCKETCHAT_INCLUDE_LOGS:-{{ current_backup.prune_alerting.rocketchat.include_logs | d(backup_restic_prune_alerting_rocketchat_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL="${CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL:-{{ current_backup.prune_alerting.rocketchat.webhook_url | d(backup_restic_prune_alerting_rocketchat_default_webhook_url) }}}"
 
 {% endif %}
 {% if current_backup.prune_alerting.discord.enabled | d(backup_restic_prune_alerting_discord_default) | bool %}
 ## Discord
 export CRI_ALERTING_DISCORD="${CRI_ALERTING_DISCORD:-y}"
+export CRI_ALERTING_DISCORD_INCLUDE_LOGS="${CRI_ALERTING_DISCORD_INCLUDE_LOGS:-{{ current_backup.prune_alerting.discord.include_logs | d(backup_restic_prune_alerting_discord_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_DISCORD_WEBHOOK_URL="${CRI_ALERTING_DISCORD_WEBHOOK_URL:-{{ current_backup.prune_alerting.discord.webhook_url | d(backup_restic_prune_alerting_discord_default_webhook_url) }}}"
 
 {% endif %}
@@ -110,12 +115,14 @@ export CRI_ALERTING_ON_SUCCESS_CANARY_PERCENT="${CRI_ALERTING_ON_SUCCESS_CANARY_
 {% if current_backup.alerting.mail.enabled | d(backup_restic_alerting_mail_default) | bool %}
 ## Mail
 export CRI_ALERTING_MAIL="${CRI_ALERTING_MAIL:-y}"
+export CRI_ALERTING_MAIL_INCLUDE_LOGS="${CRI_ALERTING_MAIL_INCLUDE_LOGS:-{{ current_backup.alerting.mail.include_logs | d(backup_restic_alerting_mail_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_MAIL_DEST="${CRI_ALERTING_MAIL_DEST:-{{ current_backup.alerting.mail.dest | d(backup_restic_alerting_mail_default_dest) }}}"
 
 {% endif %}
 {% if current_backup.alerting.slack.enabled | d(backup_restic_alerting_slack_default) | bool %}
 ## Slack
 export CRI_ALERTING_SLACK="${CRI_ALERTING_SLACK:-y}"
+export CRI_ALERTING_SLACK_INCLUDE_LOGS="${CRI_ALERTING_SLACK_INCLUDE_LOGS:-{{ current_backup.alerting.slack.include_logs | d(backup_restic_alerting_slack_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_SLACK_CHANNEL="${CRI_ALERTING_SLACK_CHANNEL:-{{ current_backup.alerting.slack.channel | d(backup_restic_alerting_slack_default_channel) }}}"
 export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ current_backup.alerting.slack.webhook_url | d(backup_restic_alerting_slack_default_webhook_url) }}}"
 
@@ -123,6 +130,7 @@ export CRI_ALERTING_SLACK_WEBHOOK_URL="${CRI_ALERTING_SLACK_WEBHOOK_URL:-{{ curr
 {% if current_backup.alerting.mattermost.enabled | d(backup_restic_alerting_mattermost_default) | bool %}
 ## Mattermost
 export CRI_ALERTING_MATTERMOST="${CRI_ALERTING_MATTERMOST:-y}"
+export CRI_ALERTING_MATTERMOST_INCLUDE_LOGS="${CRI_ALERTING_MATTERMOST_INCLUDE_LOGS:-{{ current_backup.alerting.mattermost.include_logs | d(backup_restic_alerting_mattermost_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_MATTERMOST_CHANNEL="${CRI_ALERTING_MATTERMOST_CHANNEL:-{{ current_backup.alerting.mattermost.channel | d(backup_restic_alerting_mattermost_default_channel) }}}"
 export CRI_ALERTING_MATTERMOST_WEBHOOK_URL="${CRI_ALERTING_MATTERMOST_WEBHOOK_URL:-{{ current_backup.alerting.mattermost.webhook_url | d(backup_restic_alerting_mattermost_default_webhook_url) }}}"
 
@@ -143,12 +151,14 @@ export CRI_ALERTING_TELEGRAM_CHAT_ID="${CRI_ALERTING_TELEGRAM_CHAT_ID:-{{ curren
 {% if current_backup.alerting.rocketchat.enabled | d(backup_restic_alerting_rocketchat_default) | bool %}
 ## Rocketchat
 export CRI_ALERTING_ROCKETCHAT="${CRI_ALERTING_ROCKETCHAT:-y}"
+export CRI_ALERTING_ROCKETCHAT_INCLUDE_LOGS="${CRI_ALERTING_ROCKETCHAT_INCLUDE_LOGS:-{{ current_backup.alerting.rocketchat.include_logs | d(backup_restic_alerting_rocketchat_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL="${CRI_ALERTING_ROCKETCHAT_WEBHOOK_URL:-{{ current_backup.alerting.rocketchat.webhook_url | d(backup_restic_alerting_rocketchat_default_webhook_url) }}}"
 
 {% endif %}
 {% if current_backup.alerting.discord.enabled | d(backup_restic_alerting_discord_default) | bool %}
 ## Discord
 export CRI_ALERTING_DISCORD="${CRI_ALERTING_DISCORD:-y}"
+export CRI_ALERTING_DISCORD_INCLUDE_LOGS="${CRI_ALERTING_DISCORD_INCLUDE_LOGS:-{{ current_backup.alerting.discord.include_logs | d(backup_restic_alerting_discord_default_include_logs) | ternary('y', 'n') }}}"
 export CRI_ALERTING_DISCORD_WEBHOOK_URL="${CRI_ALERTING_DISCORD_WEBHOOK_URL:-{{ current_backup.alerting.discord.webhook_url | d(backup_restic_alerting_discord_default_webhook_url) }}}"
 
 {% endif %}

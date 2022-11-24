@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased] - since 2.7.0
 
+### Added
+
+- Support for disabling sending logs in alerting.
+
 ## [2.7.0] - 2022-11-24
 
 ### Added
