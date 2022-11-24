@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.6.1
+## [unreleased] - since 2.7.0
+
+## [2.7.0] - 2022-11-24
 
 ### Added
 
@@ -12,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Node-exporter alerting now writes its metrics atomically.
+- Fix restic SHA256SUMS download link when using the version type handled by renovatebot (prefixed by a `v`)
 
 ## [2.6.1] - 2022-11-24
 
@@ -190,7 +193,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.6.1...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.7.0...master
+[2.7.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.6.1...2.7.0
 [2.6.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.6.0...2.6.1
 [2.6.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.5.0...2.6.0
 [2.5.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.4.0...2.5.0
