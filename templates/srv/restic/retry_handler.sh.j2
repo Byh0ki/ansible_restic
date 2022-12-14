@@ -302,7 +302,7 @@ main()
         alerting_wrapper "$@" && rc="$?" && break || rc="$?"
     done
 
-    if [ "${ATTEMPT}" -ge "${MAX_ATTEMPTS}" ]; then
+    if [ "${ATTEMPT}" -gt "${MAX_ATTEMPTS}" ]; then
       echoErr "Failed after ${MAX_ATTEMPTS} attempts!"
       exit 1
     fi
