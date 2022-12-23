@@ -760,7 +760,7 @@ cri_alerting_handler()
     fi
 
     local subject="${operation_type} ${output_verb} for ${BACKUP_NAME} on ${HOSTNAME}"
-    local body="Operation failed with return code: ${operation_rc}. Please check the logs for more information."
+    local body="Operation ended with return code: ${operation_rc}. Please check the logs for more information."
 
     # Retrieve the log's content and sanitize it for JSON
     if [[ -n "${operation_log_file}" && -f "${operation_log_file}" ]]; then
