@@ -780,7 +780,7 @@ cri_alerting_handler()
         local mail_body="${body}"
         local mail_subject="[{{ backup_restic_alerting_mail_tag }}][${operation_state}] ${subject}"
 
-        if [[ "${CRI_ALERTING_MAIL_INCLUDE_LOGS}" =~ ^(y/Y) ]] && [ -n "${operation_log}" ]; then
+        if [[ "${CRI_ALERTING_MAIL_INCLUDE_LOGS}" =~ ^(y|Y) ]] && [ -n "${operation_log}" ]; then
             mail_body="${operation_log}"
         fi
         cri_alerting_mail -s "${mail_subject}" -b "${mail_body}" -d "${CRI_ALERTING_MAIL_DEST}"
@@ -790,7 +790,7 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_SLACK}" =~ ^(y|Y) ]]; then
         local slack_body="${body}"
         local slack_title="${subject}"
-        if [[ "${CRI_ALERTING_SLACK_INCLUDE_LOGS}" =~ ^(y/Y) ]]; then
+        if [[ "${CRI_ALERTING_SLACK_INCLUDE_LOGS}" =~ ^(y|Y) ]]; then
             if [ -n "${operation_log_reduced}" ]; then
                 slack_body="${operation_log_reduced}"
             elif [ -n "${operation_log_sanitized}" ]; then
@@ -805,7 +805,7 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_MATTERMOST}" =~ ^(y|Y) ]]; then
         local mattermost_body="${body}"
         local mattermost_title="${subject}"
-        if [[ "${CRI_ALERTING_MATTERMOST_INCLUDE_LOGS}" =~ ^(y/Y) ]] && [ -n "${operation_log_sanitized}" ]; then
+        if [[ "${CRI_ALERTING_MATTERMOST_INCLUDE_LOGS}" =~ ^(y|Y) ]] && [ -n "${operation_log_sanitized}" ]; then
             mattermost_body="${operation_log_sanitized}"
         fi
         cri_alerting_mattermost -t "${mattermost_title}" -r "${operation_rc}" -b "${mattermost_body}" \
@@ -823,7 +823,7 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_ROCKETCHAT}" =~ ^(y|Y) ]]; then
         local rocketchat_body="${body}"
         local rocketchat_title="${subject}"
-        if [[ "${CRI_ALERTING_ROCKETCHAT_INCLUDE_LOGS}" =~ ^(y/Y) ]] && [ -n "${operation_log_sanitized}" ]; then
+        if [[ "${CRI_ALERTING_ROCKETCHAT_INCLUDE_LOGS}" =~ ^(y|Y) ]] && [ -n "${operation_log_sanitized}" ]; then
             # Ugly hack to escape the linebreaks
             rocketchat_body="$(sed ':a;N;$!ba;s/\n/\\n/g' <<< "${operation_log_sanitized}")"
         fi
@@ -835,7 +835,7 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_DISCORD}" =~ ^(y|Y) ]]; then
         local discord_body="${body}"
         local discord_title="${subject}"
-        if [[ "${CRI_ALERTING_DISCORD_INCLUDE_LOGS}" =~ ^(y/Y) ]] && [ -n "${operation_log_sanitized}" ]; then
+        if [[ "${CRI_ALERTING_DISCORD_INCLUDE_LOGS}" =~ ^(y|Y) ]] && [ -n "${operation_log_sanitized}" ]; then
             # Ugly hack to escape the linebreaks
             discord_body="$(sed ':a;N;$!ba;s/\n/\\n/g' <<< "${operation_log_sanitized}")"
         fi

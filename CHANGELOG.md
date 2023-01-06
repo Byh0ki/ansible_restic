@@ -2,13 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.8.0
+## [unreleased] - since 2.8.1
+
+## [2.8.1] - 2023-01-06
+
+### Fixed
+
+- Fix condition for disabling sending logs
 
 ## [2.8.0] - 2023-01-04
 
 ### Added
 
-- Support for disabling sending logs in alerting.
+- Add support for disabling sending logs in alerting.
 
 ### Fixed
 
@@ -204,7 +210,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.8.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.8.1...master
+[2.8.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.8.0...2.8.1
 [2.8.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.7.0...2.8.0
 [2.7.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.6.1...2.7.0
 [2.6.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.6.0...2.6.1
