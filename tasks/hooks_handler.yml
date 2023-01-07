@@ -1,7 +1,5 @@
 ---
 
-# roles/backup-restic/tasks/hooks_handler.yml
-
 - name: Register some facts to properly handle the hooks
   ansible.builtin.set_fact:
     current_backup_hooks: "{{ current_backup.backup_pre_hooks | d([])

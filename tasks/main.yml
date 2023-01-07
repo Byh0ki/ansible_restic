@@ -1,8 +1,6 @@
 # yamllint disable rule:line-length
 ---
 
-# roles/backup-restic/tasks/main.yml
-
 - name: load OS specific variables
   ansible.builtin.include_vars: "{{ vars_file }}"
   with_first_found:

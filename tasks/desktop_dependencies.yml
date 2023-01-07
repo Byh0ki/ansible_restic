@@ -1,7 +1,5 @@
 ---
 
-# roles/backup-restic/tasks/desktop_dependencies.yml
-
 - name: Install libnotify
   ansible.builtin.package:
     name: "{{ pkg_libnotify_name }}"

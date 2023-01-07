@@ -1,7 +1,5 @@
 ---
 
-# roles/backup-restic/tasks/hook.yml
-
 - name: Register current hook name
   ansible.builtin.set_fact:
     current_hook_script_name: "{{ current_hook.cmd | first }}"

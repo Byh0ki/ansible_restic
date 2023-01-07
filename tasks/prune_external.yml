@@ -1,7 +1,5 @@
 ---
 
-# roles/backup-restic/tasks/prune_external.yml
-
 - name: Add prune for backup
   block:
   - name: create dir for current backup

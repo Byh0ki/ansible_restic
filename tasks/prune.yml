@@ -1,7 +1,5 @@
 ---
 
-# roles/backup-restic/tasks/prune.yml
-
 # External prune
 - name: Add external prune for backup
   ansible.builtin.include_tasks: "prune_external.yml"

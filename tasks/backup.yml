@@ -1,7 +1,5 @@
 ---
 
-# roles/backup-restic/tasks/backup.yml
-
 - name: Check if backup backend is valid
   ansible.builtin.assert:
     that:

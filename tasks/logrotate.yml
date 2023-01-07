@@ -1,7 +1,5 @@
 ---
 
-# roles/backup-restic/tasks/logrotate.yml
-
 - name: Install logrotate
   ansible.builtin.package:
     name: "{{ pkg_logrotate_name }}"
