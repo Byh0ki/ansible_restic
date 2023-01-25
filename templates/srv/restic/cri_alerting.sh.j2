@@ -512,17 +512,19 @@ cri_alerting_node()
     local operation_start_epoch=""
     local operation_type=""
     local node_dir=""
+    local node_user=""
 
     # Options parsing
     ## Reset OPTIND
     OPTIND=1
-    while getopts d:e:r:s:t: node_option; do
+    while getopts d:e:r:s:t:u: node_option; do
         case "${node_option}" in
             d) node_dir="${OPTARG}";;
             e) operation_end_epoch="${OPTARG}";;
             r) operation_rc="${OPTARG}";;
             s) operation_start_epoch="${OPTARG}";;
             t) operation_type="${OPTARG}";;
+            u) node_user="${OPTARG}";;
             *) echoErr "Unrecognized option"; exit 1;;
         esac
     done
@@ -536,8 +538,11 @@ cri_alerting_node()
         mkdir -p "${node_dir}"
     fi
 
+    # We need to be in the destination directory to be able to create file with non root user
+    pushd "${node_dir}" > /dev/null
+
     set -o pipefail
-    cat << EOF | sponge "${node_dir}/node_restic_${BACKUP_NAME}_${HOSTNAME}.prom"
+    cat << EOF | su "${node_user}" -s "/bin/sh" -c 'sponge "node_restic_${BACKUP_NAME}_${HOSTNAME}.prom"'
 # HELP node_restic_job_exit_value Last exit code of restic job.
 # TYPE node_restic_job_exit_value gauge
 node_restic_job_exit_value{host="${HOSTNAME}", name="${BACKUP_NAME}",operation="${operation_type}"} ${operation_rc}
@@ -550,6 +555,9 @@ node_restic_job_time_end{host="${HOSTNAME}", name="${BACKUP_NAME}",operation="${
 EOF
     local cat_rc="$?"
     set +o pipefail
+
+    # Go back to the previous dir
+    popd > /dev/null
 
     if [ "${cat_rc}" -ne 0 ]; then
         echoErr "Node exporter - File exporter alerting failed with:"
@@ -734,7 +742,7 @@ cri_alerting_handler()
     if [[ "${CRI_ALERTING_NODE}" =~ ^(y|Y) ]]; then
         cri_alerting_node -r "${operation_rc}" -t "${operation_type}" \
         -s "${operation_start_epoch}" -e "${operation_end_epoch}" \
-        -d "${CRI_ALERTING_NODE_DIR}"
+        -d "${CRI_ALERTING_NODE_DIR}" -u "${CRI_ALERTING_NODE_USER}"
     fi
 
     if [ "$operation_rc" -eq "0" ]; then

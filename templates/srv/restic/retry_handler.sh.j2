@@ -87,6 +87,7 @@ export CRI_ALERTING_DISCORD_WEBHOOK_URL="${CRI_ALERTING_DISCORD_WEBHOOK_URL:-{{ 
 {% if current_backup.prune_alerting.node.enabled | d(backup_restic_prune_alerting_node_default) | bool %}
 ## Node exporter - File exporter
 export CRI_ALERTING_NODE="${CRI_ALERTING_NODE:-y}"
+export CRI_ALERTING_NODE_USER="${CRI_ALERTING_NODE_USER:-{{ current_backup.prune_alerting.node.user | d(backup_restic_prune_alerting_node_default_user) }}}"
 export CRI_ALERTING_NODE_DIR="${CRI_ALERTING_NODE_DIR:-{{ current_backup.prune_alerting.node.dir | d(backup_restic_prune_alerting_node_default_dir) }}}"
 
 {% endif %}
@@ -165,6 +166,7 @@ export CRI_ALERTING_DISCORD_WEBHOOK_URL="${CRI_ALERTING_DISCORD_WEBHOOK_URL:-{{ 
 {% if current_backup.alerting.node.enabled | d(backup_restic_alerting_node_default) | bool %}
 ## Node exporter - File exporter
 export CRI_ALERTING_NODE="${CRI_ALERTING_NODE:-y}"
+export CRI_ALERTING_NODE_USER="${CRI_ALERTING_NODE_USER:-{{ current_backup.alerting.node.user | d(backup_restic_alerting_node_default_user) }}}"
 export CRI_ALERTING_NODE_DIR="${CRI_ALERTING_NODE_DIR:-{{ current_backup.alerting.node.dir | d(backup_restic_alerting_node_default_dir) }}}"
 
 {% endif %}

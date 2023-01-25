@@ -218,9 +218,11 @@ backup_restic_prune_alerting_discord_default_webhook_url: "{{ backup_restic_aler
 
 ### Node Exporter - File Exporter
 backup_restic_alerting_node_default: false
+backup_restic_alerting_node_default_user: "root"
 backup_restic_alerting_node_default_dir: "/var/lib/node-exporter/file_exporter/"
 
 backup_restic_prune_alerting_node_default: false
+backup_restic_prune_alerting_node_default_user: "{{ backup_restic_alerting_node_default_user }}"
 backup_restic_prune_alerting_node_default_dir: "{{ backup_restic_alerting_node_default_dir }}"
 
 ### Desktop notifications
