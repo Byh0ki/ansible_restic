@@ -10,6 +10,14 @@ All notable changes to this project will be documented in this file.
 
 - Bump default restic version to 0.15.2 which is a fix for a golang CVE
 
+## Added
+
+- Add support for scheduling using systemd-timers
+
+## Changed
+
+- Modified how to enable backup and prune schedules to accommodate for the new systemd-timers support
+
 ## [2.9.0] - 2023-01-25
 
 ### Added

@@ -58,7 +58,6 @@
 
 - name: Install logrotate and configure it
   ansible.builtin.include_tasks: "logrotate.yml"
-  when: backup_restic_logrotate
 
 - name: Get restic bin from Github releases
   ansible.builtin.get_url:

@@ -27,6 +27,7 @@ backup_restic_host_arch: "{{ backup_restic_host_arch_map[ansible_architecture] |
 backup_restic_desktop_host: false
 
 # Prune host
+is_prune_host: false
 backup_restic_prune_host: "prune.example.com"
 
 # Hostname used for the backup, restic uses it to access snapshots, etc
@@ -90,10 +91,6 @@ backup_restic_default_prune_cmd: "cri_prune"
 ## Restore
 backup_restic_default_restore_path: "/restore"
 
-## Logrotate
-backup_restic_logrotate: true
-backup_restic_log_retention_time: 12
-
 ## Extra vars
 backup_restic_default_extra_vars_export: true
 backup_restic_default_extra_vars_prune_export: true
@@ -103,21 +100,6 @@ backup_restic_default_extra_vars_prune_export: true
 ###   {var: my_var, value: my_value, export: true|false(optionnal)}
 backup_restic_default_extra_vars: []
 backup_restic_default_extra_vars_prune: []
-
-## Cron
-backup_restic_default_cron: true
-backup_restic_default_cron_minute: '0'
-backup_restic_default_cron_hour: '3'
-backup_restic_default_cron_day: '*'
-backup_restic_default_cron_weekday: '*'
-backup_restic_default_cron_month: '*'
-
-backup_restic_default_prune_cron: true
-backup_restic_default_prune_cron_minute: '0'
-backup_restic_default_prune_cron_hour: '12'
-backup_restic_default_prune_cron_day: '*'
-backup_restic_default_prune_cron_weekday: '*'
-backup_restic_default_prune_cron_month: '*'
 
 # Backups definition
 # List of dictionnaries defining the backups

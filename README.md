@@ -1,7 +1,7 @@
 # Backup-restic
 
 This role aims to deploy [restic](https://restic.net/) on a given host and to setup multiples
-backups on a host. Those backups will be scheduled using cronjobs.
+backups on a host. Those backups will be scheduled using cronjobs or systemd-timers.
 
 Restic is a CLI backup tool that offers a lot of possibilities. Among these
 features, there are, for example, a lot of built-in storage backends.
@@ -102,7 +102,7 @@ restic commands. This is very useful to access the restic repository without
 the hassle of manually setting up its configuration.
 
 ### Backup pipeline:
-cron -> retry_handler.sh -> backup_name.sh -> cri_restic_wrapper.sh -> restic
+schedule -> retry_handler.sh -> backup_name.sh -> cri_restic_wrapper.sh -> restic
                          -> cri_alerting.sh if alerting is enabled
 
 ## Why use an external host for pruning ?
@@ -339,6 +339,45 @@ backend:
   restic_repo: ""
 ```
 
+## Scheduler types
+Scheduler availables: (Tested([x]) or not([ ]))
+- [x] cron (require crontab binary)
+- [x] systemd-timers
+
+NB: to switch between scheduler types, you must:
+- disable the previous type
+- run ansible to remove it from the host
+- enable the new one
+
+This is due to the fact that we can't run the schedule tasks on a host that does
+not have the appropriate binaries, either `crontab` or systemd. For example, on
+some systemd-timers only distro, no cron implementation is available by default
+(ex: archliux), so the role would fail even if the user had set
+`backup_restic_default_schedule_type: "systemd-timers"`.
+
+### cron
+```yaml
+backup_restic_default_schedule_type: "cron"
+backup_restic_default_cron_minute: '0'
+backup_restic_default_cron_hour: '3'
+backup_restic_default_cron_day: '*'
+backup_restic_default_cron_weekday: '*'
+backup_restic_default_cron_month: '*'
+```
+By default, logrotate is configured to clean execution log for cron schedules
+
+### systemd-timers
+```yaml
+backup_restic_default_schedule_type: "systemd-timers"
+backup_restic_default_systemd_timers_hour: '3'
+backup_restic_default_systemd_timers_minute: '00'
+backup_restic_default_systemd_timers_second: '00'
+backup_restic_default_systemd_timers_day: '*'
+backup_restic_default_systemd_timers_month: '*'
+backup_restic_default_systemd_timers_year: '*'
+backup_restic_default_systemd_timers_weekday: ''
+```
+
 ## Alerting backends
 You can enable and configure multiple alerting backends for each backup.
 
@@ -512,19 +551,21 @@ backup_restic_list:
   restore_pre_hooks: []             # (default to an empty list)
   restore_post_hooks: []            # (default to an empty list)
   restore_path: "/restore"          # (optional if a default var exists)
+  backup_schedule_type: "cron"      # (optional if a default var exists)
+  backup_schedule: true             # (optional if a default var exists)
   backup_cron:
-    enable: true                    # (optional if a default var exists)
     minute: '0'                     # (optional if a default var exists)
     hour: '3'                       # (optional if a default var exists)
     day: '*'                        # (optional if a default var exists)
     weekday: '*'                    # (optional if a default var exists)
     month: '*'                      # (optional if a default var exists)
-  prune_cron:
-    enable: true                    # (optional if a default var exists)
+  prune_schedule_type: "systemd-timers" # (optional if a default var exists)
+  prune_schedule: true              # (optional if a default var exists)
+  prune_systemd_timers:
     minute: '0'                     # (optional if a default var exists)
     hour: '12'                      # (optional if a default var exists)
     day: '*'                        # (optional if a default var exists)
-    weekday: '*'                    # (optional if a default var exists)
+    weekday: 'Mon'                  # (optional if a default var exists)
     month: '*'                      # (optional if a default var exists)
   forget_policy: "--keep-daily 7 --keep-weekly 8 --keep-monthly 12 --keep-yearly 2" # (optional if a default var exists)
 ```

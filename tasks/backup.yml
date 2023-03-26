@@ -62,24 +62,8 @@
     state: absent
   when: not current_backup.enabled
 
-- name: Add a cronjob for the backup
-  ansible.builtin.cron:
-    name: "{{ inventory_hostname }} - {{ current_backup.name }} backup"
-    state: "{{ ((current_backup.enabled | d(false) | bool)
-            and current_backup.backup_cron.enable | d(backup_restic_default_cron))
-            | ternary('present', 'absent') }}"
-    minute: "{{ current_backup.backup_cron.minute | d(backup_restic_default_cron_minute) }}"
-    hour: "{{ current_backup.backup_cron.hour | d(backup_restic_default_cron_hour) }}"
-    day: "{{ current_backup.backup_cron.day | d(backup_restic_default_cron_day) }}"
-    weekday: "{{ current_backup.backup_cron.weekday | d(backup_restic_default_cron_weekday) }}"
-    month: "{{ current_backup.backup_cron.month | d(backup_restic_default_cron_month) }}"
-    user: root
-    job: >
-      {{ current_backup_path }}/retry_handler.sh
-      {{ current_backup.backup_cmd | d(backup_restic_default_backup_cmd) }}
-      >> {{ current_backup_path }}/logs/restic_backup.log
-      2>&1
+- name: Add local schedule for backup
+  ansible.builtin.include_tasks: "backup_schedule.yml"
 
 - name: Add prune scripts
   ansible.builtin.include_tasks: "prune.yml"
-  when: not (current_backup.disable_prune | d(backup_restic_default_disable_prune))
