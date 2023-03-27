@@ -7,7 +7,7 @@
         and current_backup.backend.type not in backup_restic_default_no_external_prune
 
 # Local prune
-- name: add a cronjob for the local prune
+- name: Add a cronjob for the local prune
   ansible.builtin.cron:
     name: "{{ inventory_hostname }} - {{ current_backup.name }} prune"
     state: "{{ ((current_backup.enabled | d(false) | bool)

@@ -6,3 +6,7 @@ exclude_paths:
 use_default_rules: true
 
 offline: false
+
+warn_list:
+  # TODO: reorder tasks keys
+  - key-order[task]

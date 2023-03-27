@@ -14,7 +14,7 @@
 
 - name: Enable backup
   block:
-    - name: create dir for current backup
+    - name: Create dir for current backup
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -38,7 +38,7 @@
         - "files_to_exclude"
 
     - name: Handle hooks
-      include_tasks: "hooks_handler.yml"
+      ansible.builtin.include_tasks: "hooks_handler.yml"
 
     - name: Template backup scripts and files
       ansible.builtin.template:
@@ -62,7 +62,7 @@
     state: absent
   when: not current_backup.enabled
 
-- name: add a cronjob for the backup
+- name: Add a cronjob for the backup
   ansible.builtin.cron:
     name: "{{ inventory_hostname }} - {{ current_backup.name }} backup"
     state: "{{ ((current_backup.enabled | d(false) | bool)
