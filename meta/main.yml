@@ -2,7 +2,7 @@
 
 galaxy_info:
   role_name: restic
-  author: Sevan Murriguian-Watrin <sevan@cri.epita.fr>
+  author: cri   # Sevan Murriguian-Watrin <sevan@cri.epita.fr>
   description: Restic backup for Linux
   company: CRI - EPITA
   license: GPL-3.0-or-later
