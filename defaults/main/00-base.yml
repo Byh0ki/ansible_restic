@@ -37,7 +37,7 @@ backup_restic_hostname: "{{ inventory_hostname }}"
 # Restic version
 # valid values: every version available as a release on github
 # renovate: repository="restic/restic"
-backup_restic_version: "v0.15.1"
+backup_restic_version: "v0.15.2"
 
 # Restic compression level, introduced in "0.14.0"
 # Only available for restic repository v2 which is the default for 0.14.0 and onward but legacy repositories must be
