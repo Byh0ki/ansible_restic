@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.9.0
+## [unreleased] - since 2.10.0
+
+## [2.10.0] - 2023-05-01
+
+### Changed
+
+- Bump default restic version to 0.15.2 which is a fix for a golang CVE
 
 ## [2.9.0] - 2023-01-25
 
@@ -216,7 +222,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.9.0...master
+[unreleased]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.10.0...master
+[2.10.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.9.0...2.10.0
 [2.9.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.8.1...2.9.0
 [2.8.1]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.8.0...2.8.1
 [2.8.0]: https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic/-/compare/2.7.0...2.8.0
