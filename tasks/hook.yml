@@ -5,6 +5,7 @@
     current_hook_script_name: "{{ current_hook.cmd | first }}"
 
 - name: Copy or template hook scripts if needed
+  when: current_hook_script_name not in current_backup_hooks_installed
   block:
     - name: Copy files hook scripts
       ansible.builtin.copy:
@@ -43,4 +44,3 @@
     - name: Register current hook as installed
       ansible.builtin.set_fact:
         current_backup_hooks_installed: "{{ current_backup_hooks_installed + [current_hook_script_name] }}"
-  when: current_hook_script_name not in current_backup_hooks_installed

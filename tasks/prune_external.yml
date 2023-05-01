@@ -1,6 +1,9 @@
 ---
 
 - name: Add prune for backup
+  when:
+    - current_backup.enabled
+    - not (current_backup.disable_prune | d(backup_restic_default_disable_prune))
   block:
     - name: Create dir for current backup
       ansible.builtin.file:
@@ -28,9 +31,6 @@
       vars:
         is_prune_host: true
       delegate_to: "{{ backup_restic_prune_host }}"
-  when:
-    - current_backup.enabled
-    - not (current_backup.disable_prune | d(backup_restic_default_disable_prune))
 
 - name: Remove prune for backup
   ansible.builtin.file:

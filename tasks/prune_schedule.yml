@@ -25,6 +25,13 @@
   delegate_to: "{{ backup_restic_prune_host if prune_external else omit }}"
 
 - name: Add a systemd timer for the backup pruning
+  when:
+    - (current_backup.prune_schedule_type | d(backup_restic_default_prune_schedule_type)) == "systemd-timers"
+    - prune_schedule_is_enabled
+  # Temporary switching to a fix using inventory_hostname following an issue
+  # with delegate_to and omit in a block context
+  # See https://github.com/ansible/ansible/issues/79752
+  delegate_to: "{{ backup_restic_prune_host if prune_external else inventory_hostname }}"
   block:
     - name: Template systemd unit files for the prune job
       ansible.builtin.template:
@@ -46,15 +53,15 @@
         daemon_reload: true
         enabled: true
         state: "started"
+
+- name: Remove the systemd-timer for the backup pruning
   when:
     - (current_backup.prune_schedule_type | d(backup_restic_default_prune_schedule_type)) == "systemd-timers"
-    - prune_schedule_is_enabled
+    - not prune_schedule_is_enabled
   # Temporary switching to a fix using inventory_hostname following an issue
   # with delegate_to and omit in a block context
   # See https://github.com/ansible/ansible/issues/79752
   delegate_to: "{{ backup_restic_prune_host if prune_external else inventory_hostname }}"
-
-- name: Remove the systemd-timer for the backup pruning
   block:
     - name: Check if the systemd-timer already exists
       ansible.builtin.stat:
@@ -81,10 +88,3 @@
     - name: Reload systend daemon
       ansible.builtin.systemd:
         daemon_reload: true
-  when:
-    - (current_backup.prune_schedule_type | d(backup_restic_default_prune_schedule_type)) == "systemd-timers"
-    - not prune_schedule_is_enabled
-  # Temporary switching to a fix using inventory_hostname following an issue
-  # with delegate_to and omit in a block context
-  # See https://github.com/ansible/ansible/issues/79752
-  delegate_to: "{{ backup_restic_prune_host if prune_external else inventory_hostname }}"

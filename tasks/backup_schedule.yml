@@ -23,6 +23,9 @@
   when: (current_backup.backup_schedule_type | d(backup_restic_default_schedule_type)) == "cron"
 
 - name: Add a systemd-timer for the backup
+  when:
+    - (current_backup.backup_schedule_type | d(backup_restic_default_schedule_type)) == "systemd-timers"
+    - schedule_is_enabled
   block:
     - name: Template systemd timer units for the backup
       ansible.builtin.template:
@@ -43,11 +46,11 @@
         daemon_reload: true
         enabled: true
         state: "started"
-  when:
-    - (current_backup.backup_schedule_type | d(backup_restic_default_schedule_type)) == "systemd-timers"
-    - schedule_is_enabled
 
 - name: Remove the systemd-timer for the backup
+  when:
+    - (current_backup.backup_schedule_type | d(backup_restic_default_schedule_type)) == "systemd-timers"
+    - not schedule_is_enabled
   block:
     - name: Check if the systemd-timer already exists
       ansible.builtin.stat:
@@ -74,6 +77,3 @@
     - name: Reload systemd daemon
       ansible.builtin.systemd:
         daemon_reload: true
-  when:
-    - (current_backup.backup_schedule_type | d(backup_restic_default_schedule_type)) == "systemd-timers"
-    - not schedule_is_enabled

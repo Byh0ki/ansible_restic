@@ -13,6 +13,7 @@
     current_backup_path: "{{ backup_restic_path }}/backups/{{ backup_restic_hostname }}_{{ current_backup.name }}"
 
 - name: Enable backup
+  when: current_backup.enabled
   block:
     - name: Create dir for current backup
       ansible.builtin.file:
@@ -54,7 +55,6 @@
         - {src: "retry_handler.sh", dest: "retry_handler.sh"}
       loop_control:
         loop_var: script
-  when: current_backup.enabled
 
 - name: Remove backup dir if needed
   ansible.builtin.file:

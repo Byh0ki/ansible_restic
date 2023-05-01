@@ -6,6 +6,7 @@
                           or ((inventory_hostname == backup_restic_prune_host) and backup_restic_prune_logrotate) }}"
 
 - name: Install and add config for logrotate
+  when: logrotate_is_needed
   block:
     - name: Install logrotate
       ansible.builtin.package:
@@ -19,7 +20,6 @@
         owner: root
         group: root
         mode: '0644'
-  when: logrotate_is_needed
 
 - name: Remove logrotate conf
   ansible.builtin.file:
