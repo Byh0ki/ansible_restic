@@ -1,23 +1,17 @@
 ---
 
 include:
-  - template: Security/SAST-IaC.latest.gitlab-ci.yml
-  - project: cri/iac/infrastructure
-    file: .gitlab/ci/templates.yml
+  - project: 'byh0ki-org/pipelines-templates/yaml'
+    file: '/yamllint_tasks.yml'
+    ref: "1.1.0"
 
 stages:
   - lint
-  - test
-  - qa
+
+yaml:
+  stage: lint
+  extends: .gitlab_pipelines_yaml_lint_task
 
 ansible:
-  extends: .ansible
-
-black:
-  extends: .black
-
-kics-iac-sast:
-  needs: []
-
-yamllint:
-  extends: .yamllint
+  stage: lint
+  extends: .gitlab_pipelines_ansible_lint_task

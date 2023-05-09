@@ -1,5 +1,10 @@
 # Backup-restic
 
+## :warning: Project moved :warning:
+This project was imported from the [original repository](https://gitlab.cri.epita.fr/cri/iac/ansible/roles/restic), hosted on the Epita's CRI Gitlab instance.
+The main goal of this move is to ease the maintenance process and allow to release the role on Ansible Galaxy.
+
+## Information
 This role aims to deploy [restic](https://restic.net/) on a given host and to setup multiples
 backups on a host. Those backups will be scheduled using cronjobs or systemd-timers.
 

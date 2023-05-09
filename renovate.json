@@ -1,8 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>cri/iac/infrastructure//renovate-presets"
+    "local>byh0ki-org/renovate-presets//renovate-presets"
   ],
+  "docker-compose": {
+      "enabled": false
+  },
   "regexManagers": [
     {
       "fileMatch": ["defaults/.+\\.ya?ml$"],
