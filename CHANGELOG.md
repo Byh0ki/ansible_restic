@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 2.10.0
+## [unreleased] - since 3.0.0
+
+## [3.0.0] - 2023-05-09
+
+### Changed
+
+- Scheduling reworked, added support for systemd-timers
+- Project moved to a new git repository
 
 ## [2.10.0] - 2023-05-01
 
@@ -230,7 +237,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.10.0...master
+[unreleased]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.0.0...master
+[3.0.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.10.0...3.0.0
 [2.10.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.9.0...2.10.0
 [2.9.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.8.1...2.9.0
 [2.8.1]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.8.0...2.8.1
