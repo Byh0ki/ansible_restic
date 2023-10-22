@@ -171,6 +171,7 @@ cri_backup()
     # Oh wait it's illegal...
     output_prefix="                            "
     echoInfo "Starting backup"
+    echoInfo "Restic version: $(restic version)"
     echoInfo "Files to include:
 $(grep --color=never -v '^ *#' "${CRI_BACKUP_PATH}/${includes_filename}" | sed -e "s/^/$output_prefix/")"
     echoInfo "Files to exclude:
@@ -228,6 +229,7 @@ cri_prune()
     local start_time="${SECONDS}"
 
     echoInfo "Starting prune"
+    echoInfo "Restic version: $(restic version)"
     echoInfo "Prune policy: ${BACKUP_FORGET_POLICY}"
 
     # shellcheck disable=SC2086
@@ -269,6 +271,7 @@ you want to procede ? (y/N): " user_ack
 
     echo
     echoInfo "Starting restoration"
+    echoInfo "Restic version: $(restic version)"
     echoInfo "Restoration destination: ${RESTORE_PATH}"
 
     cri_pre_hooks "${CRI_RESTORE_PRE_HOOKS[@]}"
