@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased] - since 3.0.0
 
+### Added
+
+- Add an option to automatically delete old restic binaries
+
 ## [3.0.0] - 2023-05-09
 
 ### Changed

@@ -22,6 +22,9 @@ backup_restic_host_arch_map:
 # Host arch
 backup_restic_host_arch: "{{ backup_restic_host_arch_map[ansible_architecture] | default(ansible_architecture) }}"
 
+# Bin management options
+backup_restic_nb_bin_to_keep: 4
+
 # Type of host
 # This will be used for some types of desktop alerting
 backup_restic_desktop_host: false

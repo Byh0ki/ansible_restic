@@ -81,6 +81,10 @@
     group: root
     mode: '0700'
 
+- name: Handle garbage collect for old restic binaries
+  ansible.builtin.include_tasks: "restic_bin_gc.yml"
+  when: backup_restic_nb_bin_to_keep > 0
+
 - name: Template restic wrapper scripts
   ansible.builtin.template:
     src: "srv/restic/{{ item }}.j2"
