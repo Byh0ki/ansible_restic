@@ -2,11 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 3.0.0
+## [unreleased] - since 3.1.0
+
+## [3.1.0] - 2023-10-25
 
 ### Added
 
+- Print restic version in all cri_* functions
 - Add an option to automatically delete old restic binaries
+
+### Changed
+
+- Bump default restic version to 0.16.1
 
 ## [3.0.0] - 2023-05-09
 
@@ -241,7 +248,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.0.0...master
+[unreleased]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.1.0...main
+[3.1.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.0.0...3.1.0
 [3.0.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.10.0...3.0.0
 [2.10.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.9.0...2.10.0
 [2.9.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.8.1...2.9.0
