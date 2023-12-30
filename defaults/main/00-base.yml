@@ -23,6 +23,9 @@ backup_restic_host_arch_map:
 backup_restic_host_arch: "{{ backup_restic_host_arch_map[ansible_architecture] | default(ansible_architecture) }}"
 
 # Bin management options
+# NB: This will not work properly for older versions of this role as the restic binary name did not contain
+# the `v` prefix. The ansible filter used (version_sort) is not able to sort the list of binaries if some of them
+# are viewed as int and some of them are viewed as str (ex: 0.12 -> int and v0.13 -> str)
 backup_restic_nb_bin_to_keep: 4
 
 # Type of host
