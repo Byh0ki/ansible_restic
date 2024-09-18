@@ -103,7 +103,7 @@ backup_restic_default_extra_vars_prune_export: true
 
 ### Vars are being sourced in the retry_handler *and* the backup script
 ### valid values:
-###   {var: my_var, value: my_value, export: true|false(optionnal)}
+###   {name: my_var, value: my_value, export: true|false(optionnal)}
 backup_restic_default_extra_vars: []
 backup_restic_default_extra_vars_prune: []
 
