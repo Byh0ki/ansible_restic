@@ -9,3 +9,8 @@ pkg_curl_name: "curl"
 pkg_libnotify_name: "libnotify"
 pkg_logrotate_name: "logrotate"
 pkg_moreutils_name: "moreutils"
+
+# Optional dependencies
+backup_restic_optional_dependencies: false
+
+pkg_fuse_name: "fuse"

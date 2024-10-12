@@ -52,6 +52,13 @@
       - "{{ pkg_moreutils_name }}"
     state: present
 
+- name: Install optionnal packages and dependencies
+  ansible.builtin.package:
+    name:
+      - "{{ pkg_fuse_name }}"
+    state: present
+  when: backup_restic_optional_dependencies
+
 - name: Install desktop dependencies if needed
   ansible.builtin.include_tasks: "desktop_dependencies.yml"
   when: backup_restic_desktop_host
