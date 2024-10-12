@@ -1,10 +1,3 @@
 ---
 
-pkg_bash_name: "bash"
-pkg_bc_name: "bc"
-pkg_bzip2_name: "bzip2"
-pkg_coreutils_name: "coreutils"
-pkg_curl_name: "curl"
 pkg_libnotify_name: "libnotify-bin"
-pkg_logrotate_name: "logrotate"
-pkg_moreutils_name: "moreutils"

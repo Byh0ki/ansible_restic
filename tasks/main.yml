@@ -12,7 +12,7 @@
         - "{{ ansible_distribution }}.yml"
         - "{{ ansible_os_family }}.yml"
         - "{{ ansible_system }}.yml"
-        - "defaults.yml"
+      skip: true
   loop_control:
     loop_var: vars_file
 
