@@ -2,7 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 3.1.0
+## [unreleased] - since 3.2.0
+
+## [3.2.0] - 2024-12-07
+
+### Added
+
+- Add optional dependencies handling
+
+### Changed
+
+- Bump default restic version to 0.17.3
+- Move defaults var to the default directory
 
 ## [3.1.0] - 2023-10-25
 
@@ -248,7 +259,8 @@ All notable changes to this project will be documented in this file.
     - multiple backup per host
     - multiple backends supported
 
-[unreleased]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.1.0...main
+[unreleased]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.2.0...main
+[3.2.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.1.0...3.2.0
 [3.1.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.0.0...3.1.0
 [3.0.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.10.0...3.0.0
 [2.10.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.9.0...2.10.0
