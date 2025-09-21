@@ -429,7 +429,7 @@ wheels = [
 [[package]]
 name = "restic-ansible"
 version = "0.0.1"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "ansible" },
     { name = "ansible-core" },
