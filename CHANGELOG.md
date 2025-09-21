@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased] - since 3.2.0
 
+### Changed
+
+- Bump default restic version to 0.18.0
+
 ## [3.2.0] - 2024-12-07
 
 ### Added
