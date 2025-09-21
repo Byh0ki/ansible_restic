@@ -1,6 +1,15 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
 [project]
 name = "restic-ansible"
 version = "0.0.1"
+authors = [
+  { name="Sevan Murriguian-Watrin", email="sevan@cri.epita.fr" },
+]
+license = "GPL-3"
+license-files = ["LICEN[CS]E*"]
 description = "Simple pyproject file to handle ansible versions"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -10,3 +19,5 @@ dependencies = [
     "ansible-lint>=25.9.0",
     "yamllint>=1.37.1",
 ]
+
+[tool.uv]
