@@ -40,7 +40,7 @@
         dest: "/etc/systemd/system/restic-prune-{{ inventory_hostname }}-{{ current_backup.name }}.{{ systemd_unit_type }}"
         owner: root
         group: root
-        mode: 0644
+        mode: "0644"
       loop:
         - service
         - timer
