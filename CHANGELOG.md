@@ -2,13 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased] - since 3.2.0
+## [unreleased](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.2.0...main) - since 3.2.0
 
 ### Changed
 
 - Bump default restic version to 0.18.0
 
-## [3.2.0] - 2024-12-07
+## [3.2.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.1.0...3.2.0) - 2024-12-07
 
 ### Added
 
@@ -19,7 +19,7 @@ All notable changes to this project will be documented in this file.
 - Bump default restic version to 0.17.3
 - Move defaults var to the default directory
 
-## [3.1.0] - 2023-10-25
+## [3.1.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.0.0...3.1.0) - 2023-10-25
 
 ### Added
 
@@ -30,14 +30,14 @@ All notable changes to this project will be documented in this file.
 
 - Bump default restic version to 0.16.1
 
-## [3.0.0] - 2023-05-09
+## [3.0.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.10.0...3.0.0) - 2023-05-09
 
 ### Changed
 
 - Scheduling reworked, added support for systemd-timers
 - Project moved to a new git repository
 
-## [2.10.0] - 2023-05-01
+## [2.10.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.9.0...2.10.0) - 2023-05-01
 
 ### Changed
 
@@ -51,19 +51,19 @@ All notable changes to this project will be documented in this file.
 
 - Modified how to enable backup and prune schedules to accommodate for the new systemd-timers support
 
-## [2.9.0] - 2023-01-25
+## [2.9.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.8.1...2.9.0) - 2023-01-25
 
 ### Added
 
 - Allow to create the metrics file with a specific user
 
-## [2.8.1] - 2023-01-06
+## [2.8.1](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.8.0...2.8.1) - 2023-01-06
 
 ### Fixed
 
 - Fix condition for disabling sending logs
 
-## [2.8.0] - 2023-01-04
+## [2.8.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.7.0...2.8.0) - 2023-01-04
 
 ### Added
 
@@ -74,7 +74,7 @@ All notable changes to this project will be documented in this file.
 - Fix condition on max retry attempts
 - Fix message saying failed on success
 
-## [2.7.0] - 2022-11-24
+## [2.7.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.6.1...2.7.0) - 2022-11-24
 
 ### Added
 
@@ -86,14 +86,14 @@ All notable changes to this project will be documented in this file.
 - Node-exporter alerting now writes its metrics atomically.
 - Fix restic SHA256SUMS download link when using the version type handled by renovatebot (prefixed by a `v`)
 
-## [2.6.1] - 2022-11-24
+## [2.6.1](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.6.0...2.6.1) - 2022-11-24
 
 ### Fixed
 
 - Fix restic download link when using the version type handled by renovatebot (prefixed by a `v`)
 - Add missing `bc` package to the list of installed packages
 
-## [2.6.0] - 2022-11-23
+## [2.6.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.5.0...2.6.0) - 2022-11-23
 
 ### Added
 
@@ -104,13 +104,13 @@ All notable changes to this project will be documented in this file.
 
 - Update restic default version to v0.14.0
 
-## [2.5.0] - 2022-08-21
+## [2.5.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.4.0...2.5.0) - 2022-08-21
 
 ### Added
 
 - Add automatic alerting body reduction when body is too long for API based alerting, only enabled for Slack for the moment
 
-## [2.4.0] - 2022-08-06
+## [2.4.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.3.0...2.4.0) - 2022-08-06
 
 ### Added
 
@@ -120,7 +120,7 @@ All notable changes to this project will be documented in this file.
 
 - Improved the log messages when using the "cpu load check" feature
 
-## [2.3.0] - 2022-08-04
+## [2.3.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.2.1...2.3.0) - 2022-08-04
 
 ### Changed
 
@@ -131,56 +131,56 @@ All notable changes to this project will be documented in this file.
 - Fix "disable alerting on success" feature
 - Fix shellcheck lint issue on the CPU load feature
 
-## [2.2.1] - 2022-08-04
+## [2.2.1](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.2.0...2.2.1) - 2022-08-04
 
 ### Fixed
 
 - Fix small typos on retry_handler.sh template
 
-## [2.2.0] - 2022-08-04
+## [2.2.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.1.0...2.2.0) - 2022-08-04
 
 ### Added
 
 - Add "canary" alerting when alerting is disabled on success
 
-## [2.1.0] - 2022-08-04
+## [2.1.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.0.1...2.1.0) - 2022-08-04
 
 ### Added
 
 - Add opt-in check on cpu load before any operation
 
-## [2.0.1] - 2022-08-04
+## [2.0.1](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.0.0...2.0.1) - 2022-08-04
 
 ### Fixed
 
 - Fix hooks template/copy when only one type of hook is used
 
-## [2.0.0] - 2022-08-02
+## [2.0.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.7.0...2.0.0) - 2022-08-02
 
 ### Added
 
 - Add support for non files/templates hooks
 - Add hook checking during deployment
 
-## [1.7.0] - 2022-07-19
+## [1.7.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.6.0...1.7.0) - 2022-07-19
 
 ### Added
 
 - Allow partial deployment of the backups
 
-## [1.6.0] - 2022-07-19
+## [1.6.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.5.0...1.6.0) - 2022-07-19
 
 ### Changed
 
 - Bump default restic version to 0.13.1
 
-## [1.5.0] - 2022-01-14
+## [1.5.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.4.1...1.5.0) - 2022-01-14
 
 ### Added
 
 - Install `bzip2` package as it's not installed by default on all distro
 
-## [1.4.1] - 2021-06-16
+## [1.4.1](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.4.0...1.4.1) - 2021-06-16
 
 ### Changed
 
@@ -190,19 +190,19 @@ All notable changes to this project will be documented in this file.
 
 - Fix typo in restore post hooks
 
-## [1.4.0] - 2021-06-05
+## [1.4.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.3.0...1.4.0) - 2021-06-05
 
 ### Added
 
 - Add compatibility for other CPU arch (arm, etc)
 
-## [1.3.0] - 2021-05-17
+## [1.3.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.2.0...1.3.0) - 2021-05-17
 
 ### Changed
 
 - Change `KO` tag for `FAIL` in mail alerting
 
-## [1.2.0] - 2021-05-13
+## [1.2.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.1.0...1.2.0) - 2021-05-13
 
 ### Added
 
@@ -217,7 +217,7 @@ All notable changes to this project will be documented in this file.
 
 - Add missing backup name in node exported metrics
 
-## [1.1.0] - 2021-04-05
+## [1.1.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.0.0...1.1.0) - 2021-04-05
 
 ### Added
 
@@ -227,7 +227,7 @@ All notable changes to this project will be documented in this file.
 
 - Output was not sanitized for JSON based alerting
 
-## [1.0.0] - 2021-04-01
+## [1.0.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/0.2.0...1.0.0) - 2021-04-01
 
 ### Added
 
@@ -239,7 +239,7 @@ All notable changes to this project will be documented in this file.
 
 - Update doc
 
-## [0.2.0] - 2021-04-01
+## [0.2.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/0.1.0...0.2.0) - 2021-04-01
 
 ### Added
 
@@ -255,41 +255,10 @@ All notable changes to this project will be documented in this file.
     - telegram
 - This CHANGELOG file
 
-## [0.1.0] - 2021-03-08
+## [0.1.0](https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/releases/0.1.0) - 2021-03-08
 
 ### Added
 
 - All project:
     - multiple backup per host
     - multiple backends supported
-
-[unreleased]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.2.0...main
-[3.2.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.1.0...3.2.0
-[3.1.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/3.0.0...3.1.0
-[3.0.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.10.0...3.0.0
-[2.10.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.9.0...2.10.0
-[2.9.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.8.1...2.9.0
-[2.8.1]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.8.0...2.8.1
-[2.8.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.7.0...2.8.0
-[2.7.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.6.1...2.7.0
-[2.6.1]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.6.0...2.6.1
-[2.6.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.5.0...2.6.0
-[2.5.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.4.0...2.5.0
-[2.4.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.3.0...2.4.0
-[2.3.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.2.1...2.3.0
-[2.2.1]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.2.0...2.2.1
-[2.2.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.1.0...2.2.0
-[2.1.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.0.1...2.1.0
-[2.0.1]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/2.0.0...2.0.1
-[2.0.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.7.0...2.0.0
-[1.7.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.6.0...1.7.0
-[1.6.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.5.0...1.6.0
-[1.5.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.4.1...1.5.0
-[1.4.1]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.4.0...1.4.1
-[1.4.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.3.0...1.4.0
-[1.3.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.2.0...1.3.0
-[1.2.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.1.0...1.2.0
-[1.1.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/1.0.0...1.1.0
-[1.0.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/0.2.0...1.0.0
-[0.2.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/compare/0.1.0...0.2.0
-[0.1.0]: https://gitlab.com/byh0ki-org/infra/ansible/roles/restic/-/releases/0.1.0
