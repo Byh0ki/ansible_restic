@@ -4,6 +4,15 @@
 backup_srv_path: "/srv"
 backup_restic_path: "{{ backup_srv_path }}/restic"
 
+# Cache
+## Cache modes can be:
+## - default: default behavior from restic https://restic.readthedocs.io/en/latest/manual_rest.html#caching
+## - directory: will set restic to use the path specified below
+## - disabled: set `--no-cache`
+## Warning: if you switch to anything else then `directory`, the directory will be deleted!
+backup_restic_cache_mode: "default"
+backup_restic_cache_path: "{{ backup_restic_path }}/cache"
+
 # Path for hooks outside of the role
 # Can be anything, most likely a relative path like '../../my_shared_templates'
 backup_restic_files_hooks_path: ""
