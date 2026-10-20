@@ -6,12 +6,12 @@
   "docker-compose": {
       "enabled": false
   },
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["defaults/.+\\.ya?ml$"],
-      "matchStrings": [
-        "# renovate: repository=\"?(?<depName>[^\"]*?)\"?\n *backup_restic_version: \"?(?<currentValue>[^\" ]*)\"?"
-      ],
+      "customType": "regex",
+      "managerFilePatterns": ["/defaults/.+\.ya?ml$/"],
+      "matchStrings": ["# renovate: repository=\"?(?<depName>[^\"]*?)\"?
+ *backup_restic_version: \"?(?<currentValue>[^\" ]*)\"?"],
       "datasourceTemplate": "github-releases"
     }
   ]
